@@ -2,29 +2,63 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
+import GitHubIcon from '@mui/icons-material/GitHub';
 import {
   registerWithEmail,
   loginWithEmail,
   loginWithGoogle,
   loginWithFacebook,
+  loginWithGitHub
 } from "../firebase/auth";
 import { authFire } from "../firebase/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SignUp from "../pages/Signup";
+import {login} from "../api/auth.api"
+import { useDispatch,useSelector } from "react-redux";
+import { setAuth } from "../utilities/slices/loginSlice";
+import { useNavigate } from "react-router-dom";
+export interface users{
+  name:string,
+  email:string,
+  id:string,
+  profile:string
+}
 
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<users | null>(null);
   const [signUp,setSignUp] = useState(false);
+ 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const auth = useSelector((state: RootState)=>state.authSlice.value)
+ 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(authFire, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser) {
+        setUser({name: currentUser.displayName || "", email: currentUser.email || "", id: currentUser.uid || "", profile: currentUser.photoURL || ""});
+      }
+      console.log(currentUser)
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(()=>{
+    const loginEvent=async ()=>{
+      if (user) {
+        alert("Works")
+        const result = await login({name:user.name,email:user.email,id:user.id,profile:user.profile})
+        console.log(result);
+
+        dispatch(setAuth({token:result.token,name:user.name,email:user.email,profile:user.profile,id:user.id}))
+        navigate("/home-page")
+      }
+    }
+    loginEvent();
+  },[user])
 
   const signIn=()=>{
     <SignUp/>
@@ -49,6 +83,7 @@ const SignIn = () => {
         p: 2
       }}
     >
+      {/* {auth} */}
       <Typography variant="h6">Join Smart Blog Phost</Typography>
       {/* <TextField
         label="Email"
@@ -89,6 +124,17 @@ const SignIn = () => {
       >
         Continue with Facebook
       </Button>
+
+      <Button
+        variant="contained"
+        sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
+        startIcon={<GitHubIcon />}
+        onClick={loginWithGitHub}
+        fullWidth
+      >
+        Continue with GitHub
+      </Button>
+
       <Button
        variant="contained"
         sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
@@ -100,7 +146,7 @@ const SignIn = () => {
 
       {user && (
         <Typography sx={{ mt: 2 }}>
-          Logged in as: {user.displayName || user.email}
+          Logged in as: {user.name && user.email}
         </Typography>
       )}
       {/* <Button onClick={close}>Cancel</Button>

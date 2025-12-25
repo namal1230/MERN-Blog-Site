@@ -1,43 +1,18 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
+import { AppBar, Box, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, styled, TextField, Toolbar, Typography } from '@mui/material';
+import React from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Popper from '@mui/material/Popper';
-import Paper from '@mui/material/Paper';
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GoogleIcon from "@mui/icons-material/Google";
-import {
-    registerWithEmail,
-    loginWithEmail,
-    loginWithGoogle,
-    loginWithFacebook
-} from "../firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
-import { useState, useEffect } from 'react';
-import { authFire } from '../firebase/firebaseConfig';
-import DashTopup from '../components/DashTopup';
-
-
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { email } from '../api/email.api';
+const navItems = ['Back to Home'];
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
-
 
 const Title = styled('div')({
     fontSize: 'clamp(24px, 4vw, 48px)',
     fontWeight: 'bold',
-    textAlign: 'center',
+
 });
 
 const Subtitle = styled('div')({
@@ -47,39 +22,24 @@ const Subtitle = styled('div')({
     color: '#555',
 });
 
+const ForgotCredentials = () => {
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [emailAddress, setEmailAddress] = useState<string>();
+    const [descriptions, setDescription] = useState<string>();
 
-const DashBoard = () => {
+    const sendEmail=()=>{
+        if (!emailAddress || !descriptions) {
+            console.warn('Email and description are required');
+            return;
+        }
+        console.log(emailAddress,descriptions);
+        const response = email({email:emailAddress,description:descriptions});
+        if(!response) return
+        alert("Request Send Successfully");
+        navigate(-1)
+    }
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [user, setUser] = useState<any>(null);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(authFire, (currentUser) => {
-            setUser(currentUser);
-        });
-        return () => unsubscribe();
-    }, []);
-
-
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleEmailLogin = async () => {
-        await loginWithEmail(email, password);
-    };
-
-    const handleEmailRegister = async () => {
-        await registerWithEmail(email, password);
-    };
-
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const navigate=useNavigate();
 
     const handleDrawerToggle = () => {
         setMobileOpen((prev) => !prev);
@@ -105,9 +65,6 @@ const DashBoard = () => {
             </List>
         </Box>
     );
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popper' : undefined;
 
     return (
         <>
@@ -142,22 +99,10 @@ const DashBoard = () => {
                         </Typography>
 
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#000' }}>
-                {item}
-              </Button>
-            ))}
-          </Box>
-                        <Popper
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            placement="bottom"
-                        >
-                            <Paper sx={{  borderRadius: 2, boxShadow: 3, width: "60vw", height:320 }}>
-                                <DashTopup close={() => setAnchorEl(null)} />
-                            </Paper>
-                        </Popper>
+                            <Button onClick={()=>navigate(-1)} sx={{ color: '#000' }}>
+                                Back to Home        
+                            </Button>
+                        </Box>
                     </Toolbar>
                 </AppBar>
 
@@ -187,20 +132,36 @@ const DashBoard = () => {
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
+                        mt: 20,
                         alignItems: 'center',
                         textAlign: 'center',
                     }}
                 >
                     <Toolbar />
 
-                    <Title>Developers Blog Stories & Code Ideas</Title>
-                    <img referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/a/ACg8ocJz61zsEFxu2xu7Tj-CVKzdP-mBvA3mZi16C-fCh-OCyUwHQ5Ky=s96-c" alt="image" />
-                    <Subtitle>
-                        A place to read, find and solve real problems
-                    </Subtitle>
+                    <Title>How can we help you?</Title>
 
-                    <Button
+                    <InputLabel sx={{ pt: 2 }} htmlFor="email">Your email address</InputLabel>
+                    <Input
+                        onChange={(e)=>setEmailAddress(e.target.value)}
+                        sx={{ width: 400 }}
+                        id="email"
+                        aria-describedby="component-helper-text"
+                    />
+                    <InputLabel sx={{ pt: 5 }} htmlFor="description">Description</InputLabel>
+                    <TextField
+                        onChange={(e)=>setDescription(e.target.value)}
+                        sx={{ width: 400 }}
+                        id="description"
+                        multiline
+                        rows={4}
+                        variant="standard"
+                    />
+                    {/* <Subtitle>
+                        A place to read, find and solve real problems
+                    </Subtitle> */}
+
+                    {/* <Button
                         onClick={handleClick}
                         variant="contained"
                         sx={{
@@ -216,11 +177,15 @@ const DashBoard = () => {
                         }}
                     >
                         Start Reading
+                    </Button> */}
+                    <Button onClick={()=>sendEmail()} sx={{mt:2,width:400}} variant="contained" color="success">
+                        Submit
                     </Button>
                 </Box>
             </Box>
-        </>
-    );
-};
 
-export default DashBoard;
+        </>
+    )
+}
+
+export default ForgotCredentials;
