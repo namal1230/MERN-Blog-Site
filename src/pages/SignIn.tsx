@@ -14,15 +14,15 @@ import { authFire } from "../firebase/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SignUp from "../pages/Signup";
-import {login} from "../api/auth.api"
-import { useDispatch,useSelector } from "react-redux";
+import { login } from "../api/auth.api"
+import { useDispatch, useSelector } from "react-redux";
 import { setAuth } from "../utilities/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
-export interface users{
-  name:string,
-  email:string,
-  id:string,
-  profile:string
+export interface users {
+  name: string,
+  email: string,
+  id: string,
+  profile: string
 }
 
 
@@ -30,38 +30,102 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<users | null>(null);
-  const [signUp,setSignUp] = useState(false);
- 
+  const [signUp, setSignUp] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const auth = useSelector((state: RootState)=>state.authSlice.value)
- 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(authFire, (currentUser) => {
-      if (currentUser) {
-        setUser({name: currentUser.displayName || "", email: currentUser.email || "", id: currentUser.uid || "", profile: currentUser.photoURL || ""});
-      }
-      console.log(currentUser)
-    });
-    return () => unsubscribe();
-  }, []);
 
-  useEffect(()=>{
-    const loginEvent=async ()=>{
-      if (user) {
-        alert("Works")
-        const result = await login({name:user.name,email:user.email,id:user.id,profile:user.profile})
-        console.log(result);
+  const handleGitHubLogin = async () => {
+    const loggedInUser = await loginWithGitHub();
 
-        dispatch(setAuth({token:result.token,name:user.name,email:user.email,profile:user.profile,id:user.id}))
-        navigate("/home-page")
-      }
+    if (!loggedInUser) return;
+
+    setUser(loggedInUser); // update local state
+
+    const result = await login(loggedInUser); // backend request
+    dispatch(setAuth({
+      token: result.token,
+      name: loggedInUser.name,
+      email: loggedInUser.email,
+      profile: loggedInUser.profile,
+      id: loggedInUser.id
+    }));
+
+    navigate("/home-page");
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      // Sign in with Firebase Google popup
+      const result = await loginWithGoogle(); // your existing Firebase function
+
+      console.log(result);
+      
+      // Resolve user data
+      const currentUser = result.user||"";
+      const userData = {
+        id: currentUser.uid||"", // Firebase UID
+        name: currentUser.displayName || currentUser.email?.split("@")[0],
+        email: currentUser.email || "",
+        profile: currentUser.photoURL || ""
+      };
+
+      // Update local state
+      setUser(userData);
+
+      // 🔹 Call backend login once
+      const backendResult = await login(userData);
+
+      // 🔹 Update Redux state
+      dispatch(setAuth({
+        token: backendResult.token,
+        name: userData.name,
+        email: userData.email,
+        profile: userData.profile,
+        id: userData.id
+      }));
+
+      navigate("/home-page");
+    } catch (err) {
+      console.error("Google login failed:", err);
     }
-    loginEvent();
-  },[user])
+  };
 
-  const signIn=()=>{
-    <SignUp/>
+
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(authFire, async (currentUser) => {
+  //     if (!currentUser) return;
+
+  //     await currentUser.reload(); // 🔥 IMPORTANT
+
+  //     setUser({
+  //       name: currentUser.displayName || "",
+  //       email: currentUser.email || "",
+  //       id: currentUser.uid,
+  //       profile: currentUser.photoURL || ""
+  //     });
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
+
+  // useEffect(() => {
+  //   const loginEvent = async () => {
+  //     if (user) {
+  //       alert("Works")
+  //       const result = await login({ name: user.name, email: user.email, id: user.id, profile: user.profile })
+  //       console.log(result);
+
+  //       dispatch(setAuth({ token: result.token, name: user.name, email: user.email, profile: user.profile, id: user.id }))
+  //       navigate("/home-page")
+  //     }
+  //   }
+  //   loginEvent();
+  // }, [user])
+
+  const signIn = () => {
+    <SignUp />
   }
 
   const handleEmailLogin = async () => {
@@ -109,7 +173,7 @@ const SignIn = () => {
         variant="contained"
         color="error"
         startIcon={<GoogleIcon />}
-        onClick={loginWithGoogle}
+        onClick={handleGoogleLogin}
         fullWidth
       >
         Continue with Google
@@ -129,14 +193,14 @@ const SignIn = () => {
         variant="contained"
         sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
         startIcon={<GitHubIcon />}
-        onClick={loginWithGitHub}
+        onClick={handleGitHubLogin}
         fullWidth
       >
         Continue with GitHub
       </Button>
 
       <Button
-       variant="contained"
+        variant="contained"
         sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
         startIcon={<MailOutlineIcon />}
         fullWidth

@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface AuthState {
   token: string;
-  name: string;
+  name: string | undefined;
   email: string;
   profile: string;
   id:string;
@@ -28,10 +28,17 @@ export const loginSlice = createSlice({
         console.log(state)
         console.log(action.payload);
         
+    },
+    removeAuth:(state: AuthState)=>{
+      state.email="",
+      state.id="",
+      state.profile="",
+      state.token="",
+      state.name=""
     }
   },
 })
 
-export const { setAuth } = loginSlice.actions
+export const { setAuth,removeAuth } = loginSlice.actions
 
 export default loginSlice.reducer

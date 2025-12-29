@@ -16,12 +16,34 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import type { RootState } from '../utilities/store/store';
 import NewStory from './NewStory';
 import { Link } from 'react-router-dom';
 import { SignOut } from './SignOut';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { getDashBoardStats } from '../api/admin.api';
+import { useState } from 'react';
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -65,15 +87,81 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const drawerWidth = 240;
 
-export default function HomePage() {
+export default function AdminDashBoard() {
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const image = useSelector((state: RootState) => state.profile);
-    useEffect(()=>{
-        
-        console.log(image)
- 
-    },[image])
-    
+    const [validUser, setvalidUsers] = useState();
+    const [rejectUser, setrejectUsers] = useState();
+    const [reportedUser, setreportedUser] = useState();
+    const [publishedPhosts, setpublishedPhosts] = useState();
+    const [unlistedPhosts, setunlistedPhosts] = useState();
+    const [pendingPhosts, setpendingPhosts] = useState();
+
+    const data = {
+        labels: ['Users', 'Phosts'],
+        datasets: [
+            {
+                id: 1,
+                label: 'Valid Users',
+                data: [validUser, 0],
+                backgroundColor: 'rgba(102, 187, 106, 0.7)', // soft green
+            },
+            {
+                id: 2,
+                label: 'Rejected Users',
+                data: [rejectUser, 0],
+                backgroundColor: 'rgba(239, 154, 154, 0.7)', // soft red/pink
+            },
+            {
+                id: 2,
+                label: 'Reported Users',
+                data: [reportedUser, 0],
+                backgroundColor: 'rgba(239, 198, 154, 0.7)', // soft red/pink
+            },
+            {
+                id: 3,
+                label: 'Published Phosts',
+                data: [0, publishedPhosts],
+                backgroundColor: 'rgba(100, 181, 246, 0.7)', // soft blue
+            },
+            {
+                id: 4,
+                label: 'Unlisted Phosts',
+                data: [0, unlistedPhosts],
+                backgroundColor: 'rgba(255, 224, 130, 0.7)', // soft yellow
+            },
+            {
+                id: 5,
+                label: 'Pending Phosts',
+                data: [0, pendingPhosts],
+                backgroundColor: 'rgba(186, 104, 200, 0.7)', // soft purple
+            },
+        ],
+    };
+
+    useEffect(() => {
+        const getDrafts = async () => {
+            const result = await getDashBoardStats();
+            //   setTitle(result.title);
+            //   setLines(result.body);
+            //   setCode(result.code || "");
+            // //   setCreatedAt(result.createdAt);
+            //   setUpdatedAt(result.updatedAt);
+            //   setStatus(result.status);
+            console.log(result);
+            setpublishedPhosts(result.phosts.published);
+            setunlistedPhosts(result.phosts.unlisted);
+            setpendingPhosts(result.phosts.pending);
+            setvalidUsers(result.users.valid);
+            setrejectUsers(result.users.rejected);
+            setreportedUser(result.users.reported);
+        };
+
+        getDrafts();
+
+    }, [])
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -134,7 +222,7 @@ export default function HomePage() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={handleMenuClose}><SignOut/></MenuItem>
+            <MenuItem onClick={handleMenuClose}><SignOut /></MenuItem>
         </Menu>
     );
 
@@ -221,7 +309,7 @@ export default function HomePage() {
                     >
                         Smart Blog Phost
                     </Typography>
-                    <Search>
+                    {/* <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -229,23 +317,23 @@ export default function HomePage() {
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
                         />
-                    </Search>
+                    </Search> */}
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <Link to={"/new-story"}>
+                        {/* <Link to={"/new-story"}>
                             <IconButton sx={{pt:2.3,color:"black"}} size="large" aria-label="show 4 new mails" color="inherit">
                                 <Badge>
                                     <EditNoteIcon/> <Typography sx={{pl:1,pr:2}}>Write</Typography>   
                                 </Badge>
                             </IconButton>
-                        </Link>
+                        </Link> */}
                         <IconButton
                             size="large"
                             aria-label="show 17 new notifications"
                             color="inherit"
                         >
-                            <Badge badgeContent={19}  color="default">
-                                <NotificationsNoneIcon/>
+                            <Badge badgeContent={19} color="default">
+                                <NotificationsNoneIcon />
                             </Badge>
                         </IconButton>
                         <IconButton
@@ -282,7 +370,7 @@ export default function HomePage() {
                     onClose={() => setMobileOpen(false)}
                     ModalProps={{ keepMounted: true }}
                     sx={{
-                          display: 'block', 
+                        display: 'block',
                         '& .MuiDrawer-paper': { width: drawerWidth },
                     }}
                 >
@@ -303,6 +391,7 @@ export default function HomePage() {
             </nav>
             {renderMobileMenu}
             {renderMenu}
+            <Bar data={data} />;
         </Box>
     );
 }
