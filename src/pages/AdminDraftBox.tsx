@@ -12,7 +12,7 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState,useEffect } from "react";
 import { Link,useNavigate } from "react-router-dom";
-import { deletePhost } from "../api/draftPhosts.api";
+import { deletePhost, approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
 interface propTypes{
     draftId:string;
     image:string |  null | undefined;
@@ -20,8 +20,9 @@ interface propTypes{
     createdAt:string;
     status:string;
 }
+import BeenhereIcon from '@mui/icons-material/Beenhere';
 
-const DraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
+const AdminDraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
@@ -44,6 +45,18 @@ const DraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
     settitle(title);
     setcreatedAt(formatted);
   },[]);
+
+  const approvePhost = async ()=>{
+    if(!darftIds) return
+    const result = await approvePhosts(darftIds)
+    console.log(result);
+  }
+
+  const rejectPhost = async ()=>{
+    if(!darftIds) return
+    const result = await rejectPhosts(darftIds)
+    console.log(result);
+  }
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -87,9 +100,9 @@ const DraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
 
       {/* More Icon */}
       <Tooltip title="More" placement="left">
-        {status=="pending"?<IconButton onClick={handleClick} sx={{ ml: "auto" }}>
-          <MoreHorizIcon />
-        </IconButton>:<h1></h1>}
+        <IconButton onClick={handleClick} sx={{ ml: "auto" }}>
+          <BeenhereIcon />
+        </IconButton>
       </Tooltip>
 
       {/* Top-up Menu */}
@@ -107,12 +120,12 @@ const DraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
         }}
         sx={{width:"120vw"}}
       >
-        <MenuItem onClick={()=>navigate(`/edit-post-page?id=${darftIds}`)}>Edit</MenuItem>
-        <MenuItem onClick={()=>deletePhosts()}>Delete</MenuItem>
+        <MenuItem onClick={()=>approvePhost()}>Approve</MenuItem>
+        {status=="phost-upload"&&<MenuItem onClick={()=>rejectPhost()}>Reject</MenuItem>}
         <MenuItem onClick={()=>navigate(`/post-page?id=${darftIds}`)}>Preview</MenuItem>
       </Menu>
     </Card>
   );
 };
 
-export default DraftBox;
+export default AdminDraftBox;

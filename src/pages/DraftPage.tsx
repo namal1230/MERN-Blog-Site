@@ -91,7 +91,7 @@ const DraftPage = () => {
         console.log("log is worked", name, email);
 
         const getDrafts = async () => {
-            if(!value) return
+            if(!value || !name) return
             const result = await draftPhosts({ name, email, value })
             console.log(result);
             setdraftData(result);

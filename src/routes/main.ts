@@ -7,7 +7,8 @@ import DraftPage from "../pages/DraftPage";
 import PostUI from "../pages/PostUI";
 import EditPhost from "../pages/EditPhost";
 import AdminDashBoard from "../pages/AdminDashBoard";
-
+import EmailBox from "../pages/EmailBox";
+import PublishedUI from "../pages/PublishedUI";
 const routes = createBrowserRouter([
     {path:"/", Component:DashBoard},
     {path:"/request-credentials",Component:ForgotCredentials},
@@ -17,6 +18,9 @@ const routes = createBrowserRouter([
     {path:"/post-page",Component:PostUI},
     {path:"/edit-post-page",Component:EditPhost},
     {path:"/admin",Component:AdminDashBoard},
+    {path:"/admin-email",Component:EmailBox},
+    {path:"/publihed-post-page",Component:PublishedUI},
 ])
+
 
 export default routes;

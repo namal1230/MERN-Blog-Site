@@ -43,3 +43,47 @@ export const editPhost= async (id:string,data: { name: string; email: string; co
         throw err;
     }
 }
+
+export const getAllPendingPhost= async ()=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/get-all-pending");
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export const approvePhosts= async (id:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/approve-phost?id="+id);
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export const rejectPhosts= async (id:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/reject-phost?id="+id);
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export const getAllReportPhost= async ()=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/get-all-report");
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}

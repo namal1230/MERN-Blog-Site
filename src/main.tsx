@@ -9,12 +9,12 @@ import {persistor, store} from "./utilities/store/store.ts";
 import { PersistGate } from 'redux-persist/integration/react'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
        <PersistGate loading={null} persistor={persistor}>
       <RouterProvider router={routes}/>
       <App />
        </PersistGate>
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

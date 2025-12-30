@@ -34,7 +34,7 @@ export interface phost {
 
 export default function NewStory() {
   const image = useSelector((state: RootState) => state.profile);
-  const name = useSelector((state: RootState) => state.name);
+  const name:string = useSelector((state: RootState) => state.name) || "";
   const email = useSelector((state: RootState) => state.email);
 
   const [postUIState, setpostUIState] = useState(false)

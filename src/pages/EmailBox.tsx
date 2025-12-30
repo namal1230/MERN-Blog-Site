@@ -17,14 +17,27 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { RootState } from '../utilities/store/store';
 import NewStory from './NewStory';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { SignOut } from './SignOut';
-import { getPublishedPhosts } from '../api/sendPhosts.api';
 import DraftBox from './DraftBox';
-import PublishedPosts from './PublishedPosts';
+import { getAllEmail } from '../api/email.api';
+import EmailContent from './EmailContent';
+import { getAllPendingPhost, getAllReportPhost } from '../api/draftPhosts.api';
+import AdminDraftBox from './AdminDraftBox';
+
+export interface emailTemplate {
+    _id: string;
+    email?: string;
+    source: string;
+    title?: string;
+    body?: string;
+    createdAt: string;
+    updatedAt: string;
+    userProfile:string;
+}
 
 export interface draft {
     _id: string;
@@ -75,69 +88,53 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const drawerWidth = 240;
 
-export default function HomePage() {
-    const [draftData, setdraftData] = useState<draft[]>([]);
-    const [lastId, setlastIds] = useState<string | null>(null);
-    const [loading, setloading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
-
-    const [mobileOpen, setMobileOpen] = useState(false);
+const EmailBox = () => {
+    const [mobileOpen, setMobileOpen] = React.useState(false);
     const image = useSelector((state: RootState) => state.profile);
+
+    const name = useSelector((state: RootState) => state.name);
     const email = useSelector((state: RootState) => state.email);
+    const [emails, setEmails] = useState<emailTemplate[]>([]);
+    const [draftData, setdraftData] = useState<draft[]>([]);
+    const [reportData, setreportData] = useState<draft[]>([]);
 
-    const fetchingRef = useRef(false);
-
-    const fetchPosts = async () => {
-        if (loading || !hasMore || fetchingRef.current) return;
-
-        fetchingRef.current = true;
-        setloading(true);
-
-        try {
-            const res = await getPublishedPhosts(lastId, email);
-
-            setdraftData(prev => {
-                const existingIds = new Set(prev.map(p => p._id));
-                const newData = res.data.filter((p: draft) => !existingIds.has(p._id));
-                return [...prev, ...newData];
-            });
-            setlastIds(res.nextCursor);
-            setHasMore(Boolean(res.nextCursor));
-
-            console.log("Loaded posts ->", res.data);
-        } catch (err) {
-            console.error("Failed to fetch posts", err);
-        } finally {
-            fetchingRef.current = false;
-            setloading(false);
-        }
-    };
+    // const [param,setParam] = useSearchParams();
+    const [params] = useSearchParams();
+    const value = params.get("value");
 
     useEffect(() => {
-        if (
-            !loading &&
-            hasMore &&
-            document.body.offsetHeight < window.innerHeight
-        ) {
-            fetchPosts();
-        }
-    }, [draftData]);
-
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (
-                window.scrollY > 0 &&
-                window.innerHeight + window.scrollY >=
-                document.body.offsetHeight - 200
-            ) {
-                fetchPosts();
+        if(!value) return
+        if(value === "login-issue"){
+            const getEmails = async () => {
+                const result = await getAllEmail(value)
+                // console.log(result);
+                setEmails(result);
             }
-        };
+            getEmails();
+        }else if(value==="phost-upload"){
+            const getPendingPhosts = async () => {
+                const result = await getAllPendingPhost()
+                console.log(result);
+                setdraftData(result.data);
+            }
+            getPendingPhosts();
+        }else if(value==="report-phost"){
+             const getPendingPhosts = async () => {
+                const result = await getAllReportPhost()
+                console.log(result);
+                setreportData(result.data);
+            }
+            getPendingPhosts();
+        }
+        // console.log("log is worked", name, email);
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [value]);
+
+    useEffect(() => {
+
+        console.log(image)
+
+    }, [image])
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -199,7 +196,6 @@ export default function HomePage() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={handleMenuClose}><SignOut /></MenuItem>
         </Menu>
     );
 
@@ -297,13 +293,13 @@ export default function HomePage() {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <Link to={"/new-story"}>
+                        {/* <Link to={"/new-story"}>
                             <IconButton sx={{ pt: 2.3, color: "black" }} size="large" aria-label="show 4 new mails" color="inherit">
                                 <Badge>
                                     <EditNoteIcon /> <Typography sx={{ pl: 1, pr: 2 }}>Write</Typography>
                                 </Badge>
                             </IconButton>
-                        </Link>
+                        </Link> */}
                         <IconButton
                             size="large"
                             aria-label="show 17 new notifications"
@@ -366,20 +362,63 @@ export default function HomePage() {
                     {drawer}
                 </Drawer> */}
             </nav>
-            {draftData.map((draft) => (
-                <PublishedPosts
+            <Typography sx={{ mt: 7, ml: 5 }} variant="h4" gutterBottom>
+                Email Box
+            </Typography>
+            <div>
+                {value}
+
+            </div>
+            <Box sx={{ display: "flex", justifyContent: "space-between", width: "80%", ml: 8, mt: 5 }}>
+                <NavLink style={{ textDecoration: "none" }} to="/admin-email?value=login-issue">
+                    login-issue
+                </NavLink>
+                <NavLink style={{ textDecoration: "none" }} to="/admin-email?value=phost-upload">
+                    phost-upload
+                </NavLink>
+                <NavLink style={{ textDecoration: "none" }} to="/admin-email?value=report-user">
+                    report-user
+                </NavLink>
+                <NavLink style={{ textDecoration: "none" }} to="/admin-email?value=report-phost">
+                    report-phost
+                </NavLink>
+            </Box>
+            <hr />
+            {value=="login-issue"&&emails.map((email) => (
+                <EmailContent 
+                key={email._id}
+                emailId={email._id} 
+                email={email.email || ""}
+                source={email.source}
+                title={email.title}
+                body={email.body}
+                createdAt={email.createdAt}
+                updatedAt={email.updatedAt}
+                profile={email.userProfile}  />
+            ))}
+            {value=="phost-upload"&&draftData.map((draft) => (
+                <AdminDraftBox
                     key={draft._id}          // React identity
                     draftId={draft._id}      // Coding identity
                     title={draft.title}
                     createdAt={draft.createdAt}
                     image={draft.image}
-                    status={""}
+                    status={value||""}
                 />
             ))}
-            {renderMobileMenu}
-            {renderMenu}
 
-
+            {value=="report-phost"&&reportData.map((draft) => (
+                <AdminDraftBox
+                    key={draft._id}          // React identity
+                    draftId={draft._id}      // Coding identity
+                    title={draft.title}
+                    createdAt={draft.createdAt}
+                    image={draft.image}
+                    status={value||""}
+                />
+            ))}
         </Box>
     );
 }
+
+export default EmailBox;
