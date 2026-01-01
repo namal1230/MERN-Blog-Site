@@ -1,36 +1,32 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import type { RootState } from '../utilities/store/store';
-import NewStory from './NewStory';
-import { Link } from 'react-router-dom';
 import { SignOut } from './SignOut';
 import { getPublishedPhosts } from '../api/sendPhosts.api';
-import DraftBox from './DraftBox';
 import PublishedPosts from './PublishedPosts';
+import { Header } from '../components/Header';
 
 export interface draft {
     _id: string;
     title: string;
     createdAt: string;
     image?: string | null;
+    username: string;
+    likeCount:number;
+    commentCount:number;
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -49,42 +45,14 @@ const Search = styled('div')(({ theme }) => ({
     },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
-
-const drawerWidth = 240;
-
 export default function HomePage() {
     const [draftData, setdraftData] = useState<draft[]>([]);
     const [lastId, setlastIds] = useState<string | null>(null);
     const [loading, setloading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [dataStatus, setdataStatus] = useState(true);
 
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const image = useSelector((state: RootState) => state.profile);
     const email = useSelector((state: RootState) => state.email);
-
     const fetchingRef = useRef(false);
 
     const fetchPosts = async () => {
@@ -95,7 +63,6 @@ export default function HomePage() {
 
         try {
             const res = await getPublishedPhosts(lastId, email);
-
             setdraftData(prev => {
                 const existingIds = new Set(prev.map(p => p._id));
                 const newData = res.data.filter((p: draft) => !existingIds.has(p._id));
@@ -139,7 +106,7 @@ export default function HomePage() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
 
@@ -159,26 +126,9 @@ export default function HomePage() {
         handleMobileMenuClose();
     };
 
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-
-    const drawer = (
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h6">Smart Blog</Typography>
-            <Divider sx={{ my: 2 }} />
-            <List>
-                {['Home', 'Posts', 'Profile', 'Settings'].map((text) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
+    const changeDataState=(value:boolean)=>{
+        setdataStatus(value);
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -256,124 +206,18 @@ export default function HomePage() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static"
-                sx={{
-                    // width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    // ml: { sm: `${drawerWidth}px` },
-                    color: "black",
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                }} elevation={0}>
-                <Toolbar disableGutters sx={{
-                    minHeight: 48, // or 'auto'
-                    px: 2,
-                }}>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={() => setMobileOpen((prev) => !prev)}
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        Smart Blog Phost
-                    </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <Link to={"/new-story"}>
-                            <IconButton sx={{ pt: 2.3, color: "black" }} size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge>
-                                    <EditNoteIcon /> <Typography sx={{ pl: 1, pr: 2 }}>Write</Typography>
-                                </Badge>
-                            </IconButton>
-                        </Link>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={19} color="default">
-                                <NotificationsNoneIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <Avatar alt="Remy Sharp" src={image} />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            <nav>
-                {/* Mobile */}
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={() => setMobileOpen(false)}
-                    ModalProps={{ keepMounted: true }}
-                    sx={{
-                        display: 'block',
-                        '& .MuiDrawer-paper': { width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-
-                {/* Desktop */}
-                {/* <Drawer
-                    variant="temporary"
-                    open
-                    sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer> */}
-            </nav>
-            {draftData.map((draft) => (
+            <Header action={changeDataState}/>
+            {dataStatus && draftData.map((draft) => (
                 <PublishedPosts
-                    key={draft._id}          // React identity
-                    draftId={draft._id}      // Coding identity
+                    key={draft._id}
+                    draftId={draft._id}
                     title={draft.title}
                     createdAt={draft.createdAt}
                     image={draft.image}
+                    name={draft.username}
                     status={""}
+                    like={draft.likeCount}
+                    comment={draft.commentCount}
                 />
             ))}
             {renderMobileMenu}

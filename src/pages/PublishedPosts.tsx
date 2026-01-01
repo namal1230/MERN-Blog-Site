@@ -9,7 +9,8 @@ import {
   Menu,
   MenuItem,
   Badge,
-  Button
+  Button,
+  Stack
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState, useEffect } from "react";
@@ -19,23 +20,30 @@ import BeenhereIcon from '@mui/icons-material/Beenhere';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import { downloadsPDF } from "../api/sendPhosts.api";
 import ReportContent from "./ReportContent";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+
 interface propTypes {
   draftId: string;
   image: string | null | undefined;
   title: string;
   createdAt: string;
   status: string;
+  name:string;
+  like:number;
+  comment:number;
 }
 
-const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes) => {
+const PublishedPosts = ({ draftId, image, title, createdAt, status,name, like,comment }: propTypes) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorsEl, setAnchorsEl] = useState<null | HTMLElement>(null);
 
-
+  const [visible, setvisible] = useState<boolean>(false);
   const [darftIds, setdarftId] = useState<string>();
   const [images, setimage] = useState<string>();
   const [titles, settitle] = useState<string>();
   const [createdAts, setcreatedAt] = useState<string>();
+  const [names, setnames] = useState<string>();
 
   const navigate = useNavigate();
 
@@ -50,6 +58,7 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes)
     setimage(image ? image : "");
     settitle(title);
     setcreatedAt(formatted);
+    setnames(name);
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -93,11 +102,12 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes)
 
   const open = Boolean(anchorEl);
   const open2 = Boolean(anchorsEl);
-  const deletePhosts = async () => {
-    if (!darftIds) return;
+  const reportContent = async () => {
+    setvisible(!visible);
 
-    const result = await deletePhost(darftIds);
-    console.log(result);
+
+    // const result = await deletePhost(darftIds);
+    // console.log(result);
 
   }
 
@@ -115,10 +125,24 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes)
       <Link key={darftIds} to={`/publihed-post-page?id=${darftIds}`}>
         <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
           <CardContent sx={{ p: 0 }}>
-            <Typography variant="h6">{titles}</Typography>
+            <Typography variant="h6">{titles} | {names}</Typography>
             <Typography variant="subtitle2" color="text.secondary">
               {createdAts}
             </Typography>
+            <Stack direction="row" spacing={2} alignItems="center">
+
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <IconButton color="error" disabled>
+                  <FavoriteIcon /> 
+                </IconButton>
+                <Typography variant="body2">{like}</Typography>
+              </Stack>
+
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <ChatBubbleOutlineIcon fontSize="small"/>
+                <Typography variant="body2">{comment}</Typography>
+              </Stack>
+            </Stack>
           </CardContent>
         </Box>
       </Link>
@@ -135,7 +159,7 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes)
             <MoreHorizIcon />
           </IconButton>
         </Tooltip> */}
-        <Tooltip title="More" placement="left">
+        <Tooltip title="Report" placement="left">
           <IconButton onClick={handlePrivacyClick} sx={{ ml: "auto" }}>
             <BeenhereIcon />
           </IconButton>
@@ -176,10 +200,10 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status }: propTypes)
         }}
         sx={{ width: "120vw" }}
       >
-        <MenuItem onClick={() => deletePhosts()}>Reported Content</MenuItem>
+        <MenuItem onClick={() => reportContent()}>Reported Content</MenuItem>
       </Menu>
 
-     {/* <ReportContent/> */}
+     {visible==true && <ReportContent ids={draftId} visibility={reportContent}/>}
 
     </Card>
   );

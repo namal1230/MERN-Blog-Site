@@ -9,7 +9,8 @@ import {
   fetchSignInMethodsForEmail,
   GithubAuthProvider,
   GoogleAuthProvider,
-  updateProfile
+  updateProfile,
+  EmailAuthProvider,
 } from "firebase/auth";
 
 export const loginWithGitHub = async () => {
@@ -58,7 +59,7 @@ export const loginWithGitHub = async () => {
       console.error("Missing email or pending credential");
       return;
     }
-    
+
 
     // 🔹 Find existing sign-in methods
     const methods = await fetchSignInMethodsForEmail(authFire, email);
@@ -125,6 +126,20 @@ export const registerWithEmail = async (email: string, password: string) => {
   await createUserWithEmailAndPassword(authFire, email, password);
 };
 
+export const linkEmailToCurrentUser = async (
+  email: string,
+  password: string
+) => {
+  const user = authFire.currentUser;
+
+  if (!user) {
+    throw new Error("No logged-in user to link email to");
+  }
+
+  const credential = EmailAuthProvider.credential(email, password);
+  return await linkWithCredential(user, credential);
+};
+
 export const loginWithEmail = async (email: string, password: string) => {
   await signInWithEmailAndPassword(authFire, email, password);
 };
@@ -137,8 +152,29 @@ export const loginWithGoogle = async () => {
 
 
 export const loginWithFacebook = async () => {
-  await signInWithPopup(authFire, facebookProvider);
+  const result = await signInWithPopup(authFire, facebookProvider);
+
+  const user = result.user;
+
+  // Facebook sometimes has no displayName
+  const name =
+    user.displayName ||
+    user.email?.split("@")[0] ||
+    "Facebook User";
+
+  if (!user.displayName) {
+    await updateProfile(user, { displayName: name });
+    await user.reload();
+  }
+
+  return {
+    id: user.uid,
+    name,
+    email: user.email || "",
+    profile: user.photoURL || ""
+  };
 };
+
 
 export const logout = async () => {
   await signOut(authFire);

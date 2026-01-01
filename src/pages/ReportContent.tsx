@@ -1,7 +1,10 @@
 import { Box, Button, TextField, Typography, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
 import { useEffect, useState } from "react";
+import { reportPhost } from "../api/sendPhosts.api";
+import { useSelector } from "react-redux";
+import type { RootState } from "../utilities/store/store";
 
-export default function ReportContent({ onClose, onSubmit }: any) {
+export default function ReportContent({ids, visibility}:{ids:string,visibility:any}) {
     const [form, setForm] = useState({
         reportType: "POST",
         reason: "",
@@ -11,11 +14,17 @@ export default function ReportContent({ onClose, onSubmit }: any) {
         acknowledge: false,
     });
 
+    const email = useSelector((state: RootState) => state.email);
+    
     const handleChange = (e: any) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
+    useEffect(()=>{
+        console.log(form);
+        
+    },[form])
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (
             !form.reason ||
             !form.description ||
@@ -25,8 +34,10 @@ export default function ReportContent({ onClose, onSubmit }: any) {
             alert("Please fill all required fields");
             return;
         }
-
-        onSubmit(form);
+        const response = await reportPhost(ids,email,form);
+        console.log(response);
+        
+        // onSubmit(form);
     };
 
     return (
@@ -47,6 +58,7 @@ export default function ReportContent({ onClose, onSubmit }: any) {
                 boxShadow: 6,
             }}
         >
+            {ids}
             <Typography variant="h5" gutterBottom>
                 🚩 Report Content
             </Typography>
@@ -133,7 +145,7 @@ export default function ReportContent({ onClose, onSubmit }: any) {
             />
 
             <Box mt={2} display="flex" justifyContent="flex-end" gap={2}>
-                <Button variant="outlined" color="secondary" onClick={onClose}>
+                <Button variant="outlined" color="secondary" onClick={visibility}>
                     Cancel
                 </Button>
                 <Button variant="contained" color="error" onClick={handleSubmit}>

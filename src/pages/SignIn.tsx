@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -8,14 +8,13 @@ import {
   loginWithEmail,
   loginWithGoogle,
   loginWithFacebook,
-  loginWithGitHub
+  loginWithGitHub,
+  linkEmailToCurrentUser
 } from "../firebase/auth";
 import { authFire } from "../firebase/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import SignUp from "../pages/Signup";
 import { login } from "../api/auth.api"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { setAuth } from "../utilities/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
 export interface users {
@@ -29,21 +28,20 @@ export interface users {
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState<users | null>(null);
-  const [signUp, setSignUp] = useState(false);
+  const [user, setUser] = useState<users>();
+  const [emailstate, setemailstate] = useState<boolean>(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const auth = useSelector((state: RootState)=>state.authSlice.value)
 
   const handleGitHubLogin = async () => {
     const loggedInUser = await loginWithGitHub();
 
     if (!loggedInUser) return;
 
-    setUser(loggedInUser); // update local state
+    setUser(loggedInUser);
 
-    const result = await login(loggedInUser); // backend request
+    const result = await login(loggedInUser);
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,
@@ -57,27 +55,24 @@ const SignIn = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      // Sign in with Firebase Google popup
-      const result = await loginWithGoogle(); // your existing Firebase function
+      const result = await loginWithGoogle();
 
       console.log(result);
-      
-      // Resolve user data
-      const currentUser = result.user||"";
-      const userData = {
-        id: currentUser.uid||"", // Firebase UID
-        name: currentUser.displayName || currentUser.email?.split("@")[0],
+
+      const currentUser = result.user || "";
+      const userData:users = {
+        id: currentUser.uid || "",
+        name: currentUser.displayName || currentUser.email?.split("@")[0] || "",
         email: currentUser.email || "",
         profile: currentUser.photoURL || ""
       };
 
-      // Update local state
-      setUser(userData);
+      if (userData) {
+        setUser(userData);
+      }
 
-      // 🔹 Call backend login once
       const backendResult = await login(userData);
 
-      // 🔹 Update Redux state
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -92,52 +87,114 @@ const SignIn = () => {
     }
   };
 
+  const handleFacebookLogin = async () => {
+    try {
+      const fbUser = await loginWithFacebook();
+      if (!fbUser) return;
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(authFire, async (currentUser) => {
-  //     if (!currentUser) return;
+      setUser(fbUser);
 
-  //     await currentUser.reload(); // 🔥 IMPORTANT
+      const backendResult = await login(fbUser);
 
-  //     setUser({
-  //       name: currentUser.displayName || "",
-  //       email: currentUser.email || "",
-  //       id: currentUser.uid,
-  //       profile: currentUser.photoURL || ""
-  //     });
-  //   });
+      dispatch(setAuth({
+        token: backendResult.token,
+        name: fbUser.name,
+        email: fbUser.email,
+        profile: fbUser.profile,
+        id: fbUser.id
+      }));
 
-  //   return unsubscribe;
-  // }, []);
-
-  // useEffect(() => {
-  //   const loginEvent = async () => {
-  //     if (user) {
-  //       alert("Works")
-  //       const result = await login({ name: user.name, email: user.email, id: user.id, profile: user.profile })
-  //       console.log(result);
-
-  //       dispatch(setAuth({ token: result.token, name: user.name, email: user.email, profile: user.profile, id: user.id }))
-  //       navigate("/home-page")
-  //     }
-  //   }
-  //   loginEvent();
-  // }, [user])
-
-  const signIn = () => {
-    <SignUp />
-  }
+      navigate("/home-page");
+    } catch (err) {
+      console.error("Facebook login failed:", err);
+    }
+  };
 
   const handleEmailLogin = async () => {
-    await loginWithEmail(email, password);
+    try {
+      await loginWithEmail(email, password);
+      const currentUser = authFire.currentUser;
+
+      if (!currentUser) return;
+
+      const userData = {
+        id: currentUser.uid,
+        name: currentUser.displayName || email.split("@")[0],
+        email: currentUser.email || "",
+        profile: currentUser.photoURL || ""
+      };
+
+      const backendResult = await login(userData);
+
+      dispatch(setAuth({
+        token: backendResult.token,
+        name: userData.name,
+        email: userData.email,
+        profile: userData.profile,
+        id: userData.id
+      }));
+
+      navigate("/home-page");
+    } catch (err) {
+      handleEmailRegister();
+    }
   };
+
+  const EmailRegister = async () => {
+    try {
+      await registerWithEmail(email, password);
+
+    } catch (err: any) {
+
+      if (err.code === "auth/email-already-in-use") {
+        if (authFire.currentUser) {
+          await linkEmailToCurrentUser(email, password);
+          alert("Email successfully linked to your account");
+        }
+        else {
+          alert("Email already exists. Please login instead.");
+          return;
+        }
+
+      } else {
+        alert("Registration failed");
+        return;
+      }
+    }
+
+    const currentUser = authFire.currentUser;
+    if (!currentUser) return;
+
+    const userData = {
+      id: currentUser.uid,
+      name: currentUser.displayName || email.split("@")[0],
+      email: currentUser.email || "",
+      profile: currentUser.photoURL || ""
+    };
+
+    const backendResult = await login(userData);
+
+    dispatch(setAuth({
+      token: backendResult.token,
+      name: userData.name,
+      email: userData.email,
+      profile: userData.profile,
+      id: userData.id
+    }));
+
+    navigate("/home-page");
+  };
+
+
 
   const handleEmailRegister = async () => {
-    await registerWithEmail(email, password);
+    setemailstate(false)
   };
 
+
+
   return (
-    <Box
+    emailstate ? (<Box
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -147,27 +204,7 @@ const SignIn = () => {
         p: 2
       }}
     >
-      {/* {auth} */}
       <Typography variant="h6">Join Smart Blog Phost</Typography>
-      {/* <TextField
-        label="Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      /> */}
-      {/* <TextField
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      /> */}
-
-      {/* <Button variant="contained" onClick={handleEmailLogin} fullWidth>
-        Login with Email
-      </Button> */}
-      {/* <Button variant="outlined" onClick={handleEmailRegister} fullWidth>
-        Register with Email
-      </Button> */}
 
       <Button
         variant="contained"
@@ -183,7 +220,7 @@ const SignIn = () => {
         variant="contained"
         sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
         startIcon={<FacebookIcon />}
-        onClick={loginWithFacebook}
+        onClick={handleFacebookLogin}
         fullWidth
       >
         Continue with Facebook
@@ -204,6 +241,7 @@ const SignIn = () => {
         sx={{ backgroundColor: "#1877F2", "&:hover": { backgroundColor: "#145dbf" } }}
         startIcon={<MailOutlineIcon />}
         fullWidth
+        onClick={handleEmailRegister}
       >
         CONTINUE WITH EMAIL
       </Button>
@@ -213,10 +251,33 @@ const SignIn = () => {
           Logged in as: {user.name && user.email}
         </Typography>
       )}
-      {/* <Button onClick={close}>Cancel</Button>
-      <Button onClick={()=>setSignUp(true)}>Already have an account? Sign Up</Button> */}
-      {/* {signUp && <SignUp/>} */}
-    </Box>
+    </Box>) :
+      (<Box>
+        <TextField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+        />
+
+        <Button variant="contained" onClick={handleEmailLogin} fullWidth>
+          Login with Email
+        </Button>
+
+        <Button variant="outlined" onClick={EmailRegister} fullWidth>
+          Register with Email
+        </Button>
+
+      </Box>)
   );
 };
 

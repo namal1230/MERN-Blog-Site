@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import CodeIcon from "@mui/icons-material/Code";
 import CropOriginalIcon from "@mui/icons-material/CropOriginal";
 import { useSelector } from 'react-redux';
@@ -34,7 +32,7 @@ export interface phost {
 
 export default function NewStory() {
   const image = useSelector((state: RootState) => state.profile);
-  const name:string = useSelector((state: RootState) => state.name) || "";
+  const name: string = useSelector((state: RootState) => state.name) || "";
   const email = useSelector((state: RootState) => state.email);
 
   const [postUIState, setpostUIState] = useState(false)
@@ -52,21 +50,14 @@ export default function NewStory() {
   const [activeLine, setActiveLine] = useState<number | 'title'>(0.1);
   const LINE_HEIGHT = 60;
 
-  const sendPhostRequest= async ()=>{
-    const result = await sendPhosts({name,email,body:lines,code,title});
-    console.log(result);
-    
+  const sendPhostRequest = async () => {
+    await sendPhosts({ name, email, body: lines, code, title });
   }
-
-  React.useEffect(()=>{
-    console.log(code);
-    
-  },[code])
 
   React.useEffect(() => {
     console.log(lines);
     console.log(title);
-    
+
     if (lines[lines.length - 1].type === "IMG" || lines[lines.length - 1].type === "VEDIO") {
       const last = lines[lines.length - 1];
       const prev = lines[lines.length - 2];
@@ -131,45 +122,33 @@ export default function NewStory() {
   }
 
   const uploadUnsplash = () => {
-    console.log("unsplas upload set value trigger");
-    
     setLines((prev) => {
       const index = activeLine === 'title' ? 0 : (activeLine as number) + 1;
       const newLines = [...prev];
-        newLines.splice(index, 0, { type: "UNSPLASH", value: "" });
-      // newLines.push({ type: "TEXT", value: "" })
+      newLines.splice(index, 0, { type: "UNSPLASH", value: "" });
       return newLines;
     });
   }
 
-  const setEmbedImage=(img:string)=>{
-    console.log("trigger")
-    console.log(img);
-    console.log(" 22 unsplas upload set value trigger");
-
+  const setEmbedImage = (img: string) => {
     setLines((prev) => {
       const index = activeLine === 'title' ? 0 : (activeLine as number) + 1;
       const newLines = [...prev];
-        console.log("this boolean condi");
-        
-        newLines.splice(index, 0, { type: "UNSPLASH", value: img }); // insert image at cursor
-        setimageState(false);
-      
+
+      newLines.splice(index, 0, { type: "UNSPLASH", value: img }); // insert image at cursor
+      setimageState(false);
+
       newLines.push({ type: "TEXT", value: "" })
 
       const lastIndex = newLines.length - 1;
-  const beforeLastIndex = lastIndex - 1;
+      const beforeLastIndex = lastIndex - 1;
 
-  // if last is TEXT and before-last is UNSPLASH → remove UNSPLASH
-  if (
-    newLines[lastIndex]?.type === "TEXT" &&
-    newLines[beforeLastIndex]?.type === "UNSPLASH"
-  ) {
-    newLines.splice(beforeLastIndex, 1);
-  }
-
-      console.log(newLines);
-      
+      if (
+        newLines[lastIndex]?.type === "TEXT" &&
+        newLines[beforeLastIndex]?.type === "UNSPLASH"
+      ) {
+        newLines.splice(beforeLastIndex, 1);
+      }
       return newLines;
     });
 
@@ -177,8 +156,6 @@ export default function NewStory() {
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (e.key === 'Enter') {
-      console.log(query);
-
       const data = await searchImages(query);
       setImages(data);
       setimageState(true);
@@ -188,12 +165,12 @@ export default function NewStory() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (e.key === 'Backspace') {
       const currentLine = lines[index];
-     if (currentLine.value === "" && index > 0) {
-      const newline = [...lines];
-      newline.splice(index - 1, 1);
-      setLines(newline)
-      setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
-    }
+      if (currentLine.value === "" && index > 0) {
+        const newline = [...lines];
+        newline.splice(index - 1, 1);
+        setLines(newline)
+        setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
+      }
     }
 
     if (e.key === 'Enter') {
@@ -224,7 +201,6 @@ export default function NewStory() {
       const newLines = [...lines];
       newLines.push({ type: "TEXT", value: "" });
       setLines(newLines);
-      console.log("lines new ", lines);
       e.preventDefault();
       setActiveLine(index);
       setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
@@ -240,24 +216,14 @@ export default function NewStory() {
           </Typography>
           Draft in {name}
           <Box sx={{ flexGrow: 1 }} />
-          <Button onClick={()=>setpostUIState(true)} variant="contained" sx={{borderRadius:"20px",height:"30px",width:"70px",fontSize:"12px"}} color="success">
+          <Button onClick={() => setpostUIState(true)} variant="contained" sx={{ borderRadius: "20px", height: "30px", width: "70px", fontSize: "12px" }} color="success">
             Publish
           </Button>
-          <IconButton onClick={()=>setcodeState(!codeState)} sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
+          <IconButton onClick={() => setcodeState(!codeState)} sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
             <Badge>
               <Tooltip title="Add code Block">
                 <DataObjectIcon />
               </Tooltip>
-            </Badge>
-          </IconButton>
-          {/* <IconButton sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
-            <Badge>
-              <EditNoteIcon /> <Typography sx={{ pl: 1, pr: 2 }}>Write</Typography>
-            </Badge>
-          </IconButton> */}
-          <IconButton size="large" aria-label="notifications" color="inherit">
-            <Badge badgeContent={19} color="default">
-              <NotificationsNoneIcon />
             </Badge>
           </IconButton>
           <IconButton size="large" edge="end" aria-label="account of current user" onClick={handleProfileMenuOpen} color="inherit">
@@ -318,7 +284,7 @@ export default function NewStory() {
           inputRef={titleRef}
           sx={{ fontSize: "2.2rem", fontWeight: "bold", mb: 3 }}
           onFocus={() => setActiveLine('title')}
-          onChange={(e)=>setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
         {lines.map((line, index) => (
@@ -385,43 +351,43 @@ export default function NewStory() {
                       }}
                       onKeyDown={(e) => handleSearch(e, index)}
                     />
-                    :line.type == "UNSPLASH"?
-                     <img key={index} src={line.value} alt="file" />
-                    : <TextField
-                      key={index}
-                      fullWidth
-                      variant="standard"
-                      multiline
-                      rows={1}
-                      value={line.value || ""}
-                      placeholder={index === 0 ? "Tell your story..." : ""}
-                      inputRef={(el) => (lineRefs.current[index] = el)}
-                      InputProps={{ disableUnderline: true }}
-                      sx={{
-                        letterSpacing: "2px",
-                        p: 1,
-                        fontSize: "200%",
-                        width: "80%",
-                        ml: 0,
-                        mt: 2,
-                      }}
-                      onFocus={() => setActiveLine(index)}
-                      onChange={(e) => {
-                        const newLines = [...lines];
-                        newLines[index] = { ...newLines[index], value: e.target.value };
-                        setLines(newLines);
-                      }}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                    />
+                    : line.type == "UNSPLASH" ?
+                      <img key={index} src={line.value} alt="file" />
+                      : <TextField
+                        key={index}
+                        fullWidth
+                        variant="standard"
+                        multiline
+                        rows={1}
+                        value={line.value || ""}
+                        placeholder={index === 0 ? "Tell your story..." : ""}
+                        inputRef={(el) => (lineRefs.current[index] = el)}
+                        InputProps={{ disableUnderline: true }}
+                        sx={{
+                          letterSpacing: "2px",
+                          p: 1,
+                          fontSize: "200%",
+                          width: "80%",
+                          ml: 0,
+                          mt: 2,
+                        }}
+                        onFocus={() => setActiveLine(index)}
+                        onChange={(e) => {
+                          const newLines = [...lines];
+                          newLines[index] = { ...newLines[index], value: e.target.value };
+                          setLines(newLines);
+                        }}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                      />
         ))}
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
-          {imageState && images.map((img,index) => (
+          {imageState && images.map((img, index) => (
             <Box
-            onClick={()=>setEmbedImage(img.urls.small)}
-            key={index}
+              onClick={() => setEmbedImage(img.urls.small)}
+              key={index}
               sx={{
-                width:"20vw",
+                width: "20vw",
                 position: "relative",
                 overflow: "hidden",
                 borderRadius: 2,
@@ -439,7 +405,7 @@ export default function NewStory() {
                 src={img.urls.small}
                 alt={img.alt_description}
                 style={{
-                  width:"200px",
+                  width: "200px",
                   transition: "all 0.3s ease",
                 }}
               />
@@ -466,38 +432,38 @@ export default function NewStory() {
         </div>
       </Box>
 
-  {codeState && <div style={{ width: "100%" }}>
-      
-      <select
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        {LANGUAGES.map((lang) => (
-          <option key={lang.value} value={lang.value}>
-            {lang.label}
-          </option>
-        ))}
-      </select>
+      {codeState && <div style={{ width: "100%" }}>
 
-      
-      <Editor
-        height="400px"
-        theme="vs-dark"
-        language={language}
-        value={code}
-        onChange={(value) => setCode(value || "")}
-        options={{
-          fontSize: 14,
-          minimap: { enabled: false },
-          automaticLayout: true
-        }}
-      />
-    </div>}
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          {LANGUAGES.map((lang) => (
+            <option key={lang.value} value={lang.value}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
 
-      {postUIState && <div style={{zIndex:"10",color:"black",backgroundColor:"white",width:"50%",height:"50%",position:"absolute",top:"0",bottom:"0",left:"0",right:"0",margin:"auto",alignItems:"center"}}>
 
- <h2>⚠️ Confirm Publish Post</h2>
+        <Editor
+          height="400px"
+          theme="vs-dark"
+          language={language}
+          value={code}
+          onChange={(value) => setCode(value || "")}
+          options={{
+            fontSize: 14,
+            minimap: { enabled: false },
+            automaticLayout: true
+          }}
+        />
+      </div>}
+
+      {postUIState && <div style={{ zIndex: "10", color: "black", backgroundColor: "white", width: "50%", height: "50%", position: "absolute", top: "0", bottom: "0", left: "0", right: "0", margin: "auto", alignItems: "center" }}>
+
+        <h2>Confirm Publish Post</h2>
         <p>Are you sure you want to publish this post?</p>
         <ul>
           <li>1. Your post will first go to the Draft box. You can update or delete it there.</li>
@@ -506,7 +472,7 @@ export default function NewStory() {
           <li>4. Once published to everyone, your post cannot be changed or deleted.</li>
         </ul>
         <div>
-          <Button onClick={()=>setpostUIState(false)} variant="outlined" color="secondary">Cancel</Button> <Button onClick={()=>sendPhostRequest()} variant="outlined" color="info">Publish</Button>
+          <Button onClick={() => setpostUIState(false)} variant="outlined" color="secondary">Cancel</Button> <Button onClick={() => sendPhostRequest()} variant="outlined" color="info">Publish</Button>
         </div>
       </div>}
       <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={handleMenuClose}>

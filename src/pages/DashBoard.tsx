@@ -154,7 +154,7 @@ const DashBoard = () => {
                             anchorEl={anchorEl}
                             placement="bottom"
                         >
-                            <Paper sx={{  borderRadius: 2, boxShadow: 3, width: "60vw", height:320 }}>
+                            <Paper sx={{  borderRadius: 2, boxShadow: 3, width: "60vw", height:360 }}>
                                 <DashTopup close={() => setAnchorEl(null)} />
                             </Paper>
                         </Popper>
@@ -195,7 +195,6 @@ const DashBoard = () => {
                     <Toolbar />
 
                     <Title>Developers Blog Stories & Code Ideas</Title>
-                    <img referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/a/ACg8ocJz61zsEFxu2xu7Tj-CVKzdP-mBvA3mZi16C-fCh-OCyUwHQ5Ky=s96-c" alt="image" />
                     <Subtitle>
                         A place to read, find and solve real problems
                     </Subtitle>
