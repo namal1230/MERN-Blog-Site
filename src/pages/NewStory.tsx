@@ -30,7 +30,7 @@ export interface phost {
   value?: string
 }
 
-export default function NewStory() {
+const NewStory: React.FC = ()=>{
   const image = useSelector((state: RootState) => state.profile);
   const name: string = useSelector((state: RootState) => state.name) || "";
   const email = useSelector((state: RootState) => state.email);
@@ -483,3 +483,4 @@ export default function NewStory() {
   );
 }
 
+export default NewStory;

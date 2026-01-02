@@ -18,7 +18,7 @@ export interface phost {
   value?: string;
 }
 
-const PostUI = () => {
+const PostUI: React.FC = () => {
   const [params] = useSearchParams();
   const value = params.get("id");
 

@@ -33,7 +33,7 @@ export interface draft {
     image?: string | null;
 }
 
-const DraftPage = () => {
+const DraftPage: React.FC = () => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const image = useSelector((state: RootState) => state.profile);
 

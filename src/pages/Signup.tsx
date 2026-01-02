@@ -25,7 +25,7 @@ export interface users {
 }
 
 
-const Signup = () => {
+const Signup: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<users>();

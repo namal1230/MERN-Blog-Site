@@ -45,7 +45,7 @@ const Search = styled('div')(({ theme }) => ({
     },
 }));
 
-export default function HomePage() {
+const  HomePage: React.FC = ()=>{
     const [draftData, setdraftData] = useState<draft[]>([]);
     const [lastId, setlastIds] = useState<string | null>(null);
     const [loading, setloading] = useState(false);
@@ -227,3 +227,5 @@ export default function HomePage() {
         </Box>
     );
 }
+
+export default HomePage;

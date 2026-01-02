@@ -35,7 +35,7 @@ export interface comments {
   profilePicture?:string;
 }
 
-const PublishedUI = () => {
+const PublishedUI: React.FC = () => {
   const [params] = useSearchParams();
   const value = params.get("id");
 

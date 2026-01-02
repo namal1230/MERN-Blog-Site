@@ -87,7 +87,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const drawerWidth = 240;
 
-export default function AdminDashBoard() {
+const AdminDashBoard: React.FC = ()=>{
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const image = useSelector((state: RootState) => state.profile);
@@ -395,3 +395,5 @@ export default function AdminDashBoard() {
         </Box>
     );
 }
+
+export default AdminDashBoard;

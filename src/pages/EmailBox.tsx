@@ -88,7 +88,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const drawerWidth = 240;
 
-const EmailBox = () => {
+const EmailBox: React.FC = () => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const image = useSelector((state: RootState) => state.profile);
 

@@ -22,7 +22,7 @@ interface propTypes{
 }
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 
-const AdminDraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
+const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 

@@ -25,17 +25,7 @@ interface EmailContentProps {
     status?: string;
 }
 
-const EmailContent = ({
-    emailId,
-    email,
-    source,
-    title,
-    body,
-    createdAt,
-    updatedAt,
-    profile,
-    status
-}: EmailContentProps) => {
+const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,body,createdAt,updatedAt,profile,status}) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const navigate = useNavigate();
 

@@ -4,7 +4,12 @@ import { reportPhost } from "../api/sendPhosts.api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../utilities/store/store";
 
-export default function ReportContent({ids, visibility}:{ids:string,visibility:any}) {
+interface ReportContentProps {
+  ids: string;
+  visibility: any;
+}
+
+const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
     const [form, setForm] = useState({
         reportType: "POST",
         reason: "",
@@ -155,3 +160,5 @@ export default function ReportContent({ids, visibility}:{ids:string,visibility:a
         </Box>
     );
 }
+
+export default ReportContent;

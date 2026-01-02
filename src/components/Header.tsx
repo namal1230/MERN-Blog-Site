@@ -16,6 +16,8 @@ import {
   ListItemButton,
   ListItemText,
   Drawer,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,6 +31,7 @@ import type { RootState } from "../utilities/store/store";
 import { searchPhosts, getNotifications, setNotificationStatus } from "../api/sendPhosts.api";
 import PublishedPosts from "../pages/PublishedPosts";
 import { Title } from "chart.js";
+import { logout } from "../firebase/auth"; 
 
 export interface reaction {
   comment: string;
@@ -173,11 +176,22 @@ export const Header = ({ action }: { action: any }) => {
           console.error("Failed to fetch posts", err);
         }
       }
-      // console.log("trigger: " + search);
-      // const data = await searchImages(query);
-      // setImages(data);
-      // setimageState(true);
     }
+  };
+
+  const handleEditProfile = () => {
+    navigate("/edit-profile");
+    setAnchorEl(null);
+  };
+
+  const handleSignOut = async () => {
+     try {
+      await logout(); 
+      setAnchorEl(null);
+      navigate(-1);
+     }catch(error){
+      console.error("Failed to sign out:", error);
+     }
   };
 
   useEffect(() => {
@@ -405,7 +419,22 @@ export const Header = ({ action }: { action: any }) => {
           </Box>
         )}
       </Box>
-
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+      </Menu>
     </AppBar>
   );
 };

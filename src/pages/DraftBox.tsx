@@ -21,7 +21,7 @@ interface propTypes{
     status:string;
 }
 
-const DraftBox = ({draftId,image,title,createdAt,status}:propTypes) => {
+const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 

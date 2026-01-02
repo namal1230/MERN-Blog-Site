@@ -34,7 +34,7 @@ export interface phost {
   value?: string
 }
 
-export default function EditPhost() {
+const EditPhost: React.FC = ()=>{
   const image = useSelector((state: RootState) => state.profile);
   const name = useSelector((state: RootState) => state.name);
   const email = useSelector((state: RootState) => state.email);
@@ -539,3 +539,4 @@ export default function EditPhost() {
   );
 }
 
+export default EditPhost;

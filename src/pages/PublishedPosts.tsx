@@ -22,6 +22,7 @@ import { downloadsPDF } from "../api/sendPhosts.api";
 import ReportContent from "./ReportContent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import PersonIcon from '@mui/icons-material/Person';
 
 interface propTypes {
   draftId: string;
@@ -34,7 +35,7 @@ interface propTypes {
   comment:number;
 }
 
-const PublishedPosts = ({ draftId, image, title, createdAt, status,name, like,comment }: propTypes) => {
+const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, status,name, like,comment }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorsEl, setAnchorsEl] = useState<null | HTMLElement>(null);
 
@@ -149,16 +150,16 @@ const PublishedPosts = ({ draftId, image, title, createdAt, status,name, like,co
 
       {/* More Icon */}
       <Box sx={{ ml: "auto" }}>
+        <Tooltip title="View profile" placement="left">
+          <IconButton onClick={()=>navigate("/user-profile?name="+name)} sx={{ ml: "auto" }}>
+            <PersonIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Download pdf" placement="left">
           <IconButton onClick={downloadPdf} sx={{ ml: "auto" }}>
             <SimCardDownloadIcon />
           </IconButton>
         </Tooltip>
-        {/* <Tooltip title="More" placement="left">
-          <IconButton onClick={handleClick} sx={{ ml: "auto" }}>
-            <MoreHorizIcon />
-          </IconButton>
-        </Tooltip> */}
         <Tooltip title="Report" placement="left">
           <IconButton onClick={handlePrivacyClick} sx={{ ml: "auto" }}>
             <BeenhereIcon />

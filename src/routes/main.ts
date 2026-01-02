@@ -9,6 +9,9 @@ import EditPhost from "../pages/EditPhost";
 import AdminDashBoard from "../pages/AdminDashBoard";
 import EmailBox from "../pages/EmailBox";
 import PublishedUI from "../pages/PublishedUI";
+import UserProfile from "../pages/UserProfile";
+import EditUserInfo from "../pages/EditUserInfo";
+
 const routes = createBrowserRouter([
     {path:"/", Component:DashBoard},
     {path:"/request-credentials",Component:ForgotCredentials},
@@ -20,6 +23,8 @@ const routes = createBrowserRouter([
     {path:"/admin",Component:AdminDashBoard},
     {path:"/admin-email",Component:EmailBox},
     {path:"/publihed-post-page",Component:PublishedUI},
+    {path:"/user-profile",Component:UserProfile},
+    {path:"/edit-profile",Component:EditUserInfo},
 ])
 
 

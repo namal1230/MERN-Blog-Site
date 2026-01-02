@@ -6,7 +6,7 @@ import { removeAuth } from '../utilities/slices/loginSlice'
 import { signOut } from "firebase/auth";
 import { authFire } from "../firebase/firebaseConfig";
 
-export const SignOut = () => {
+export const SignOut: React.FC = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();

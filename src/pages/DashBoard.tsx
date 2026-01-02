@@ -48,7 +48,7 @@ const Subtitle = styled('div')({
 });
 
 
-const DashBoard = () => {
+const DashBoard: React.FC = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

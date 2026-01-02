@@ -22,7 +22,7 @@ const Subtitle = styled('div')({
     color: '#555',
 });
 
-const ForgotCredentials = () => {
+const ForgotCredentials: React.FC = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [emailAddress, setEmailAddress] = useState<string>();
     const [descriptions, setDescription] = useState<string>();
