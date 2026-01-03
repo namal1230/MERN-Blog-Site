@@ -12,6 +12,8 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import EmailResponse from "./EmailResponse";
 
 interface EmailContentProps {
     emailId: string;
@@ -27,6 +29,8 @@ interface EmailContentProps {
 
 const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,body,createdAt,updatedAt,profile,status}) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [emailbox,setEmailBox] = useState<boolean>(false);
+
     const navigate = useNavigate();
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -107,6 +111,11 @@ const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,b
                 >
                     {formattedDate}
                 </Typography>
+                <Tooltip title="Mark as Read">
+                    <IconButton onClick={()=>setEmailBox(!emailbox)}>
+                        <MarkEmailReadIcon/>
+                    </IconButton>
+                </Tooltip>
             </Box>
 
             {/* More Actions */}
@@ -132,6 +141,7 @@ const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,b
                 <MenuItem>Edit</MenuItem>
                 <MenuItem>Delete</MenuItem>
             </Menu>
+            {emailbox && <EmailResponse emailIds={emailId}/>}
         </Card>
     );
 };

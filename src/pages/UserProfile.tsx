@@ -28,7 +28,7 @@ const UserProfile: React.FC = () => {
   const name = search.get("name");
   const [nam, setnam] = useState<string>();
 
-  const currentUser: string = useSelector((state: RootState) => state.name) || "";
+  const currentUser: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
 
   const [profile, setprofile] = useState<string>("");
 

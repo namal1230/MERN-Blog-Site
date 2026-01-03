@@ -16,13 +16,9 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GoogleIcon from "@mui/icons-material/Google";
 import {
     registerWithEmail,
-    loginWithEmail,
-    loginWithGoogle,
-    loginWithFacebook
+    loginWithEmail
 } from "../firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from 'react';
@@ -49,9 +45,6 @@ const Subtitle = styled('div')({
 
 
 const DashBoard: React.FC = () => {
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [user, setUser] = useState<any>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -65,18 +58,6 @@ const DashBoard: React.FC = () => {
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(anchorEl ? null : event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleEmailLogin = async () => {
-        await loginWithEmail(email, password);
-    };
-
-    const handleEmailRegister = async () => {
-        await registerWithEmail(email, password);
     };
 
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -142,19 +123,19 @@ const DashBoard: React.FC = () => {
                         </Typography>
 
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#000' }}>
-                {item}
-              </Button>
-            ))}
-          </Box>
+                            {navItems.map((item) => (
+                                <Button key={item} sx={{ color: '#000' }}>
+                                    {item}
+                                </Button>
+                            ))}
+                        </Box>
                         <Popper
                             id={id}
                             open={open}
                             anchorEl={anchorEl}
                             placement="bottom"
                         >
-                            <Paper sx={{  borderRadius: 2, boxShadow: 3, width: "60vw", height:360 }}>
+                            <Paper sx={{ borderRadius: 2, boxShadow: 3, width: "60vw", height: 360 }}>
                                 <DashTopup close={() => setAnchorEl(null)} />
                             </Paper>
                         </Popper>

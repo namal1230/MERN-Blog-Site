@@ -26,12 +26,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../utilities/store/store";
 import { searchPhosts, getNotifications, setNotificationStatus } from "../api/sendPhosts.api";
 import PublishedPosts from "../pages/PublishedPosts";
 import { Title } from "chart.js";
 import { logout } from "../firebase/auth"; 
+import { removeAuth } from "../utilities/slices/loginSlice";
 
 export interface reaction {
   comment: string;
@@ -114,6 +115,9 @@ const drawer = (
       <Box sx={{ pt: 2 }}>
         <Link to={"/stories"}>My Library</Link>
       </Box>
+       <Box sx={{ pt: 2 }}>
+        <Link to={"/follow-phosts"}>Followers Story</Link>
+      </Box>
     </List>
   </Box>
 );
@@ -132,12 +136,15 @@ export const Header = ({ action }: { action: any }) => {
   const [topReactions, setTopReactions] = useState<notifications[]>([]);
   const [showTopUp, setShowTopUp] = useState(false);
 
-  const email = useSelector((state: RootState) => state.email);
-  const image = useSelector((state: RootState) => state.profile);
-  const name: string = useSelector((state: RootState) => state.name) || "";
+  const email = useSelector((state: RootState) => state.persistedReducer.email);
+  const image = useSelector((state: RootState) => state.persistedReducer.profile);
+  const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
 
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
+
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -188,7 +195,8 @@ export const Header = ({ action }: { action: any }) => {
      try {
       await logout(); 
       setAnchorEl(null);
-      navigate(-1);
+      dispatch(removeAuth());
+      navigate("/");
      }catch(error){
       console.error("Failed to sign out:", error);
      }

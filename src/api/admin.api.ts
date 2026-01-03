@@ -10,3 +10,14 @@ export const getDashBoardStats= async ()=>{
         throw err;
     }
 }
+
+export const sendResolveLogin = async (emailId:string, message:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/admin/resole-login?emailId="+emailId+"&message="+message);
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}

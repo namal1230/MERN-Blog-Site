@@ -1,96 +1,25 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import type { RootState } from '../utilities/store/store';
-import NewStory from './NewStory';
-import { Link } from 'react-router-dom';
 import { SignOut } from './SignOut';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
+import {Chart as ChartJS,CategoryScale,LinearScale,Title,Tooltip,Legend,BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { getDashBoardStats } from '../api/admin.api';
 import { useState } from 'react';
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import AdminHeader from '../components/AdminHeader';
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
-
-const drawerWidth = 240;
+ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend);
 
 const AdminDashBoard: React.FC = ()=>{
 
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-    const image = useSelector((state: RootState) => state.profile);
     const [validUser, setvalidUsers] = useState();
     const [rejectUser, setrejectUsers] = useState();
     const [reportedUser, setreportedUser] = useState();
@@ -105,37 +34,37 @@ const AdminDashBoard: React.FC = ()=>{
                 id: 1,
                 label: 'Valid Users',
                 data: [validUser, 0],
-                backgroundColor: 'rgba(102, 187, 106, 0.7)', // soft green
+                backgroundColor: 'rgba(102, 187, 106, 0.7)',
             },
             {
                 id: 2,
                 label: 'Rejected Users',
                 data: [rejectUser, 0],
-                backgroundColor: 'rgba(239, 154, 154, 0.7)', // soft red/pink
+                backgroundColor: 'rgba(239, 154, 154, 0.7)',
             },
             {
                 id: 2,
                 label: 'Reported Users',
                 data: [reportedUser, 0],
-                backgroundColor: 'rgba(239, 198, 154, 0.7)', // soft red/pink
+                backgroundColor: 'rgba(239, 198, 154, 0.7)',
             },
             {
                 id: 3,
                 label: 'Published Phosts',
                 data: [0, publishedPhosts],
-                backgroundColor: 'rgba(100, 181, 246, 0.7)', // soft blue
+                backgroundColor: 'rgba(100, 181, 246, 0.7)',
             },
             {
                 id: 4,
                 label: 'Unlisted Phosts',
                 data: [0, unlistedPhosts],
-                backgroundColor: 'rgba(255, 224, 130, 0.7)', // soft yellow
+                backgroundColor: 'rgba(255, 224, 130, 0.7)',
             },
             {
                 id: 5,
                 label: 'Pending Phosts',
                 data: [0, pendingPhosts],
-                backgroundColor: 'rgba(186, 104, 200, 0.7)', // soft purple
+                backgroundColor: 'rgba(186, 104, 200, 0.7)',
             },
         ],
     };
@@ -143,13 +72,7 @@ const AdminDashBoard: React.FC = ()=>{
     useEffect(() => {
         const getDrafts = async () => {
             const result = await getDashBoardStats();
-            //   setTitle(result.title);
-            //   setLines(result.body);
-            //   setCode(result.code || "");
-            // //   setCreatedAt(result.createdAt);
-            //   setUpdatedAt(result.updatedAt);
-            //   setStatus(result.status);
-            console.log(result);
+
             setpublishedPhosts(result.phosts.published);
             setunlistedPhosts(result.phosts.unlisted);
             setpendingPhosts(result.phosts.pending);
@@ -162,9 +85,8 @@ const AdminDashBoard: React.FC = ()=>{
 
     }, [])
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-        React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -181,27 +103,6 @@ const AdminDashBoard: React.FC = ()=>{
         setAnchorEl(null);
         handleMobileMenuClose();
     };
-
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-
-    const drawer = (
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h6">Smart Blog</Typography>
-            <Divider sx={{ my: 2 }} />
-            <List>
-                {['Home', 'Posts', 'Profile', 'Settings'].map((text) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -279,116 +180,7 @@ const AdminDashBoard: React.FC = ()=>{
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static"
-                sx={{
-                    // width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    // ml: { sm: `${drawerWidth}px` },
-                    color: "black",
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                }} elevation={0}>
-                <Toolbar disableGutters sx={{
-                    minHeight: 48, // or 'auto'
-                    px: 2,
-                }}>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={() => setMobileOpen((prev) => !prev)}
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        Smart Blog Phost
-                    </Typography>
-                    {/* <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search> */}
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        {/* <Link to={"/new-story"}>
-                            <IconButton sx={{pt:2.3,color:"black"}} size="large" aria-label="show 4 new mails" color="inherit">
-                                <Badge>
-                                    <EditNoteIcon/> <Typography sx={{pl:1,pr:2}}>Write</Typography>   
-                                </Badge>
-                            </IconButton>
-                        </Link> */}
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={19} color="default">
-                                <NotificationsNoneIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <Avatar alt="Remy Sharp" src={image} />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            <nav>
-                {/* Mobile */}
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={() => setMobileOpen(false)}
-                    ModalProps={{ keepMounted: true }}
-                    sx={{
-                        display: 'block',
-                        '& .MuiDrawer-paper': { width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-
-                {/* Desktop */}
-                {/* <Drawer
-                    variant="temporary"
-                    open
-                    sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { width: drawerWidth },
-                    }}
-                >
-                    {drawer}
-                </Drawer> */}
-            </nav>
+            <AdminHeader/>
             {renderMobileMenu}
             {renderMenu}
             <Bar data={data} />;

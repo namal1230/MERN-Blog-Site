@@ -49,16 +49,19 @@ const SignIn: React.FC = () => {
       profile: loggedInUser.profile,
       id: loggedInUser.id
     }));
-
-    navigate("/home-page");
+    if(result.user.role==="user"){
+      navigate("/home-page");
+    }else if(result.user.role==="admin"){
+        navigate("/admin");
+    }
   };
 
   const handleGoogleLogin = async () => {
     try {
       const result = await loginWithGoogle();
 
-      console.log(result);
-
+      // console.log(result);
+      // console.log("login->",result);
       const currentUser = result.user || "";
       const userData:users = {
         id: currentUser.uid || "",
@@ -72,7 +75,8 @@ const SignIn: React.FC = () => {
       }
 
       const backendResult = await login(userData);
-
+      console.log("backend login->",backendResult);
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -80,8 +84,12 @@ const SignIn: React.FC = () => {
         profile: userData.profile,
         id: userData.id
       }));
-
-      navigate("/home-page");
+      console.log(role);
+      if(role==="user"){
+        navigate("/home-page");
+      }else if(role==="admin"){
+        navigate("/admin");
+      }
     } catch (err) {
       console.error("Google login failed:", err);
     }
@@ -95,7 +103,7 @@ const SignIn: React.FC = () => {
       setUser(fbUser);
 
       const backendResult = await login(fbUser);
-
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: fbUser.name,
@@ -104,7 +112,11 @@ const SignIn: React.FC = () => {
         id: fbUser.id
       }));
 
-      navigate("/home-page");
+       if(role==="user"){
+        navigate("/home-page");
+      }else if(role==="admin"){
+        navigate("/admin");
+      }
     } catch (err) {
       console.error("Facebook login failed:", err);
     }
@@ -125,7 +137,7 @@ const SignIn: React.FC = () => {
       };
 
       const backendResult = await login(userData);
-
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -134,7 +146,11 @@ const SignIn: React.FC = () => {
         id: userData.id
       }));
 
-      navigate("/home-page");
+      if(role==="user"){
+        navigate("/home-page");
+      }else if(role==="admin"){
+        navigate("/admin");
+      }
     } catch (err) {
       handleEmailRegister();
     }
@@ -173,7 +189,7 @@ const SignIn: React.FC = () => {
     };
 
     const backendResult = await login(userData);
-
+    const role = backendResult.user.role;
     dispatch(setAuth({
       token: backendResult.token,
       name: userData.name,
@@ -182,7 +198,11 @@ const SignIn: React.FC = () => {
       id: userData.id
     }));
 
-    navigate("/home-page");
+      if(role==="user"){
+        navigate("/home-page");
+      }else if(role==="admin"){
+        navigate("/admin");
+      }
   };
 
 

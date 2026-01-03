@@ -19,7 +19,7 @@ const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
         acknowledge: false,
     });
 
-    const email = useSelector((state: RootState) => state.email);
+    const email = useSelector((state: RootState) => state.persistedReducer.email);
     
     const handleChange = (e: any) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -65,7 +65,7 @@ const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
         >
             {ids}
             <Typography variant="h5" gutterBottom>
-                🚩 Report Content
+                Report Content
             </Typography>
 
             <TextField

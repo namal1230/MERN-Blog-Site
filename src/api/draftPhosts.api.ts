@@ -22,6 +22,23 @@ export const getDraftPhost= async (id:string)=>{
     }
 }
 
+export const getReportedPhost= async (id:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/get-reported-phost?phostId="+id);
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+
+export const getDraftPhostByReportId = async (reportId: string) => {
+  const response = await axios.get(`http://localhost:3000/phosts/get-draft-phost?id=${reportId}`);
+  return response.data;
+};
+
 export const deletePhost= async (id:string)=>{
     try{
         const response = await axios.delete("http://localhost:3000/phosts/delete-phost?id="+id);
@@ -66,6 +83,17 @@ export const approvePhosts= async (id:string)=>{
     }
 }
 
+export const deleteReport= async (id:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/remove-report?phostId="+id);
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
 export const rejectPhosts= async (id:string)=>{
     try{
         const response = await axios.get("http://localhost:3000/phosts/reject-phost?id="+id);
@@ -80,6 +108,17 @@ export const rejectPhosts= async (id:string)=>{
 export const getAllReportPhost= async ()=>{
     try{
         const response = await axios.get("http://localhost:3000/phosts/get-all-report");
+        return response.data;
+        
+    }catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export const getReportEmail= async (id:string)=>{
+    try{
+        const response = await axios.get("http://localhost:3000/phosts/get-report-email?id="+id);
         return response.data;
         
     }catch(err) {

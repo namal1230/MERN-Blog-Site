@@ -65,7 +65,6 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
 
   return (
     <Card sx={{ display: "flex", alignItems: "center", p: 1 }}>
-      {/* Image */}
       <CardMedia
         component="img"
         sx={{ width: 151, height: 120, objectFit: "cover" }}
@@ -73,7 +72,6 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
         alt="cover"
       />
 
-      {/* Text Content */}
       <Link key={darftIds} to={`/post-page?id=${darftIds}`}>
       <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
         <CardContent sx={{ p: 0 }}>
@@ -85,14 +83,12 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
       </Box>
       </Link>
 
-      {/* More Icon */}
       <Tooltip title="More" placement="left">
         {status=="pending"?<IconButton onClick={handleClick} sx={{ ml: "auto" }}>
           <MoreHorizIcon />
         </IconButton>:<h1></h1>}
       </Tooltip>
 
-      {/* Top-up Menu */}
       <Menu
         anchorEl={anchorEl}
         open={open}

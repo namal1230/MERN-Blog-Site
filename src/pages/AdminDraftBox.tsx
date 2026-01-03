@@ -9,10 +9,9 @@ import {
   Menu,
   MenuItem
 } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState,useEffect } from "react";
 import { Link,useNavigate } from "react-router-dom";
-import { deletePhost, approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
+import { approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
 interface propTypes{
     draftId:string;
     image:string |  null | undefined;
@@ -68,17 +67,8 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
 
   const open = Boolean(anchorEl);
 
-  const deletePhosts= async ()=>{
-    if (!darftIds) return;
-    
-    const result = await deletePhost(darftIds);
-    console.log(result);
-    
-  }
-
   return (
     <Card sx={{ display: "flex", alignItems: "center", p: 1 }}>
-      {/* Image */}
       <CardMedia
         component="img"
         sx={{ width: 151, height: 120, objectFit: "cover" }}
@@ -86,7 +76,6 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
         alt="cover"
       />
 
-      {/* Text Content */}
       <Link key={darftIds} to={`/post-page?id=${darftIds}`}>
       <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
         <CardContent sx={{ p: 0 }}>
@@ -98,14 +87,12 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
       </Box>
       </Link>
 
-      {/* More Icon */}
       <Tooltip title="More" placement="left">
         <IconButton onClick={handleClick} sx={{ ml: "auto" }}>
           <BeenhereIcon />
         </IconButton>
       </Tooltip>
 
-      {/* Top-up Menu */}
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -121,8 +108,8 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
         sx={{width:"120vw"}}
       >
         <MenuItem onClick={()=>approvePhost()}>Approve</MenuItem>
-        {status=="phost-upload"&&<MenuItem onClick={()=>rejectPhost()}>Reject</MenuItem>}
-        <MenuItem onClick={()=>navigate(`/post-page?id=${darftIds}`)}>Preview</MenuItem>
+        <MenuItem onClick={()=>rejectPhost()}>Reject</MenuItem>
+        <MenuItem onClick={()=>navigate(`/post-page?id=${darftIds}&status=draft`)}>Preview</MenuItem>
       </Menu>
     </Card>
   );

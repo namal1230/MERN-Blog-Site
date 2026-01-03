@@ -29,22 +29,6 @@ export interface draft {
     commentCount:number;
 }
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
-
 const  HomePage: React.FC = ()=>{
     const [draftData, setdraftData] = useState<draft[]>([]);
     const [lastId, setlastIds] = useState<string | null>(null);
@@ -52,7 +36,7 @@ const  HomePage: React.FC = ()=>{
     const [hasMore, setHasMore] = useState(true);
     const [dataStatus, setdataStatus] = useState(true);
 
-    const email = useSelector((state: RootState) => state.email);
+    const email = useSelector((state: RootState) => state.persistedReducer.email);
     const fetchingRef = useRef(false);
 
     const fetchPosts = async () => {

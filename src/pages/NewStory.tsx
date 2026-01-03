@@ -31,9 +31,9 @@ export interface phost {
 }
 
 const NewStory: React.FC = ()=>{
-  const image = useSelector((state: RootState) => state.profile);
-  const name: string = useSelector((state: RootState) => state.name) || "";
-  const email = useSelector((state: RootState) => state.email);
+  const image = useSelector((state: RootState) => state.persistedReducer.profile);
+  const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
+  const email = useSelector((state: RootState) => state.persistedReducer.email);
 
   const [postUIState, setpostUIState] = useState(false)
   const [title, setTitle] = useState<string>("");

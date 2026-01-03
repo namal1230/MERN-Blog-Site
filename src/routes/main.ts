@@ -11,7 +11,8 @@ import EmailBox from "../pages/EmailBox";
 import PublishedUI from "../pages/PublishedUI";
 import UserProfile from "../pages/UserProfile";
 import EditUserInfo from "../pages/EditUserInfo";
-
+import FollowerPhosts from "../pages/FollowersPhosts";
+import ViewReportEmail from "../pages/ViewReportEmail";
 const routes = createBrowserRouter([
     {path:"/", Component:DashBoard},
     {path:"/request-credentials",Component:ForgotCredentials},
@@ -25,6 +26,8 @@ const routes = createBrowserRouter([
     {path:"/publihed-post-page",Component:PublishedUI},
     {path:"/user-profile",Component:UserProfile},
     {path:"/edit-profile",Component:EditUserInfo},
+    {path:"/follow-phosts",Component:FollowerPhosts},
+    {path:"/report-email",Component:ViewReportEmail},
 ])
 
 

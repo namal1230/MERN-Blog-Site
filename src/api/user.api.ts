@@ -53,3 +53,13 @@ export const followUserCount = async (name:string)=>{
         throw err;
     }
 }
+
+export const getFollowingPhosts = async (name:string)=>{
+     try {
+        const response = await axios.get("http://localhost:3000/customer/get-following-phosts?currentUser="+name);
+        return response.data;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}

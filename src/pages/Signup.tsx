@@ -42,6 +42,7 @@ const Signup: React.FC = () => {
     setUser(loggedInUser);
 
     const result = await login(loggedInUser);
+    console.log("login->",result);
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,

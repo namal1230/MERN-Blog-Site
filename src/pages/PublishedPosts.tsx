@@ -54,7 +54,7 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
     const date = new Date(createdAt);
     const formatted = date.toString().split(" GMT")[0];
 
-    console.log(formatted);
+    console.log("title->",title);
     setdarftId(draftId);
     setimage(image ? image : "");
     settitle(title);

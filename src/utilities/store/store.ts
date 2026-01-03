@@ -9,20 +9,20 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; 
+import storage from 'redux-persist/lib/storage';
 import loginReducer from '../slices/loginSlice'
 
-
 const persistConfig = {
-  key:"root",
+  key: "root",
   storage,
 }
 
 const persistedReducer = persistReducer(persistConfig, loginReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
-
+  reducer: {
+    persistedReducer
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

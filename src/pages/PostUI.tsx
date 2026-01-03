@@ -9,7 +9,7 @@ import {
   Stack,
   Divider
 } from '@mui/material';
-import { getDraftPhost } from '../api/draftPhosts.api';
+import { getDraftPhost,getReportedPhost } from '../api/draftPhosts.api';
 
 type Format = "IMG" | "TEXT" | "VIDEO" | "EMBED" | "UNSPLASH";
 
@@ -21,7 +21,7 @@ export interface phost {
 const PostUI: React.FC = () => {
   const [params] = useSearchParams();
   const value = params.get("id");
-
+  const review = params.get("status");
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
   const [lines, setLines] = useState<phost[]>([]);
@@ -32,14 +32,26 @@ const PostUI: React.FC = () => {
   useEffect(() => {
     if (!value) return;
 
+    let result;
     const getDrafts = async () => {
-      const result = await getDraftPhost(value);
-      setTitle(result.title);
-      setLines(result.body);
-      setCode(result.code || "");
-      setCreatedAt(result.createdAt);
-      setUpdatedAt(result.updatedAt);
-      setStatus(result.status);
+      if (review == "draft") {
+        result = await getDraftPhost(value);
+        setTitle(result.title);
+        setLines(result.body);
+        setCode(result.code || "");
+        setCreatedAt(result.createdAt);
+        setUpdatedAt(result.updatedAt);
+        setStatus(result.status);
+      }else if(review=="report"){
+        result = await getReportedPhost(value);
+        setTitle(result.title);
+        setLines(result.body);
+        setCode(result.code || "");
+        setCreatedAt(result.createdAt);
+        setUpdatedAt(result.updatedAt);
+        setStatus(result.status);
+      }
+
     };
 
     getDrafts();

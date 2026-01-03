@@ -1,13 +1,12 @@
-import * as React from 'react';
 import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import CodeIcon from "@mui/icons-material/Code";
 import CropOriginalIcon from "@mui/icons-material/CropOriginal";
 import { useSelector } from 'react-redux';
 import type { RootState } from '../utilities/store/store';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { fileTransfer } from '../api/fileTransfer.api';
 import DeblurIcon from '@mui/icons-material/Deblur';
@@ -35,9 +34,9 @@ export interface phost {
 }
 
 const EditPhost: React.FC = ()=>{
-  const image = useSelector((state: RootState) => state.profile);
-  const name = useSelector((state: RootState) => state.name);
-  const email = useSelector((state: RootState) => state.email);
+  const image = useSelector((state: RootState) => state.persistedReducer.profile);
+  const name = useSelector((state: RootState) => state.persistedReducer.name);
+  const email = useSelector((state: RootState) => state.persistedReducer.email);
 
   const [postUIState, setpostUIState] = useState(false)
   const [title, setTitle] = useState<string>("");
@@ -63,7 +62,7 @@ const EditPhost: React.FC = ()=>{
     
   }
 
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!value) return;
 
     const getDrafts = async () => {
@@ -71,20 +70,12 @@ const EditPhost: React.FC = ()=>{
       setTitle(result.title);
       setLines(result.body);
       setCode(result.code || "");
-    //   setCreatedAt(result.createdAt);
-    //   setUpdatedAt(result.updatedAt);
-    //   setStatus(result.status);
     };
 
     getDrafts();
   },[value])
 
-  React.useEffect(()=>{
-    console.log(code);
-    
-  },[code])
-
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(lines);
     console.log(title);
     
@@ -97,7 +88,7 @@ const EditPhost: React.FC = ()=>{
     }
   }, [lines])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectedFile) return;
 
     const upload = async () => {
@@ -158,7 +149,6 @@ const EditPhost: React.FC = ()=>{
       const index = activeLine === 'title' ? 0 : (activeLine as number) + 1;
       const newLines = [...prev];
         newLines.splice(index, 0, { type: "UNSPLASH", value: "" });
-      // newLines.push({ type: "TEXT", value: "" })
       return newLines;
     });
   }
@@ -181,7 +171,6 @@ const EditPhost: React.FC = ()=>{
       const lastIndex = newLines.length - 1;
   const beforeLastIndex = lastIndex - 1;
 
-  // if last is TEXT and before-last is UNSPLASH → remove UNSPLASH
   if (
     newLines[lastIndex]?.type === "TEXT" &&
     newLines[beforeLastIndex]?.type === "UNSPLASH"
@@ -271,11 +260,6 @@ const EditPhost: React.FC = ()=>{
               </Tooltip>
             </Badge>
           </IconButton>
-          {/* <IconButton sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
-            <Badge>
-              <EditNoteIcon /> <Typography sx={{ pl: 1, pr: 2 }}>Write</Typography>
-            </Badge>
-          </IconButton> */}
           <IconButton size="large" aria-label="notifications" color="inherit">
             <Badge badgeContent={19} color="default">
               <NotificationsNoneIcon />
@@ -519,7 +503,7 @@ const EditPhost: React.FC = ()=>{
 
       {postUIState && <div style={{zIndex:"10",color:"black",backgroundColor:"white",width:"50%",height:"50%",position:"absolute",top:"0",bottom:"0",left:"0",right:"0",margin:"auto",alignItems:"center"}}>
 
- <h2>⚠️ Confirm Publish Post</h2>
+ <h2> Confirm Publish Post</h2>
         <p>Are you sure you want to publish this post?</p>
         <ul>
           <li>1. Your post will first go to the Draft box. You can update or delete it there.</li>

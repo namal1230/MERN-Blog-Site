@@ -31,8 +31,8 @@ const EditUserInfo: React.FC = () => {
         skills: "",
     });
 
-    const image = useSelector((state: RootState) => state.profile);
-    const email = useSelector((state: RootState) => state.email);
+    const image = useSelector((state: RootState) => state.persistedReducer.profile);
+    const email = useSelector((state: RootState) => state.persistedReducer.email);
 
     const [name, setname] = useState<string>("");
     const [emails, setemails] = useState<string>("");

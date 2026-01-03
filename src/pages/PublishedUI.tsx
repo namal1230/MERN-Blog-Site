@@ -39,8 +39,8 @@ const PublishedUI: React.FC = () => {
   const [params] = useSearchParams();
   const value = params.get("id");
 
-  const image = useSelector((state: RootState) => state.profile);
-  const name: string = useSelector((state: RootState) => state.name) || "";
+  const image = useSelector((state: RootState) => state.persistedReducer.profile);
+  const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
 
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
