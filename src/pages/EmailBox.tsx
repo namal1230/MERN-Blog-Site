@@ -10,6 +10,7 @@ import AdminDraftBox from './AdminDraftBox';
 import AdminHeader from '../components/AdminHeader';
 import { Divider } from '@mui/material';
 import AdminReportedPhost from './AdminReportedPhost';
+import ReportUsers from './ReportUsers';
 
 export interface emailTemplate {
     _id: string;
@@ -117,6 +118,7 @@ const EmailBox: React.FC = () => {
                     status={value||""}
                 />
             ))}
+            {value=="report-user"&&<ReportUsers/>}
         </Box>
     );
 }

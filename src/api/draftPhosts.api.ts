@@ -94,6 +94,7 @@ export const deleteReport= async (id:string)=>{
     }
 }
 
+
 export const rejectPhosts= async (id:string)=>{
     try{
         const response = await axios.get("http://localhost:3000/phosts/reject-phost?id="+id);

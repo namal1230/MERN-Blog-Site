@@ -1,21 +1,47 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Badge, Avatar, Drawer, Divider, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box, Badge, Avatar, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import type { RootState } from '../utilities/store/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Link } from "react-router-dom"
+import { logout } from '../firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { removeAuth } from '../utilities/slices/loginSlice';
 
 const AdminHeader = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [anchorEls, setAnchorEls] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
     const image = useSelector((state: RootState) => state.persistedReducer.profile);
 
     const menuId = 'primary-search-account-menu';
     const mobileMenuId = 'primary-search-account-menu-mobile';
     const drawerWidth = 240;
+
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
+    const handleMobileMenuOpenSmall = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEls(event.currentTarget);
+    };
+
+    const handleMobileMenuClose = () => {
+        setAnchorEls(null);
+    };
+
+    const handleSignOut = async () => {
+        try {
+            await logout();
+            setAnchorEls(null);
+            dispatch(removeAuth());
+            navigate("/");
+        } catch (error) {
+            console.error("Failed to sign out:", error);
+        }
+    };
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -68,15 +94,6 @@ const AdminHeader = () => {
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                     <IconButton
                         size="large"
-                        aria-label="show 17 new notifications"
-                        color="inherit"
-                    >
-                        <Badge badgeContent={19} color="default">
-                            <NotificationsNoneIcon />
-                        </Badge>
-                    </IconButton>
-                    <IconButton
-                        size="large"
                         edge="end"
                         aria-label="account of current user"
                         aria-controls={menuId}
@@ -93,7 +110,7 @@ const AdminHeader = () => {
                         aria-label="show more"
                         aria-controls={mobileMenuId}
                         aria-haspopup="true"
-                        onClick={handleMobileMenuOpen}
+                        onClick={handleMobileMenuOpenSmall}
                         color="inherit"
                     >
                         <MoreIcon />
@@ -115,6 +132,39 @@ const AdminHeader = () => {
                     {drawer}
                 </Drawer>
             </nav>
+
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                id={mobileMenuId}
+                open={Boolean(anchorEls)}
+                onClose={handleMobileMenuClose}
+            >
+                <MenuItem onClick={handleMobileMenuClose}>
+                    <Avatar sx={{ width: 24, height: 24, ml: 2 }} src={image} />
+                </MenuItem>
+                <MenuItem onClick={handleSignOut}>
+                    <Typography variant="body2">Sign Out</Typography>
+                </MenuItem>
+            </Menu>
+
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+            >
+                <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+            </Menu>
+
         </AppBar>
     )
 }

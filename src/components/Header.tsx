@@ -135,6 +135,7 @@ export const Header = ({ action }: { action: any }) => {
   const [totalreacts, settotalreacts] = useState<number>(0);
   const [topReactions, setTopReactions] = useState<notifications[]>([]);
   const [showTopUp, setShowTopUp] = useState(false);
+   const [anchorEls, setAnchorEls] = useState<null | HTMLElement>(null);
 
   const email = useSelector((state: RootState) => state.persistedReducer.email);
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
@@ -152,6 +153,10 @@ export const Header = ({ action }: { action: any }) => {
     setAnchorEl(event.currentTarget);
   };
 
+   const handleMobileMenuClose = () => {
+        setAnchorEls(null);
+    };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -163,6 +168,10 @@ export const Header = ({ action }: { action: any }) => {
     }
 
   }
+
+  const handleMobileMenuOpenSmall = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEls(event.currentTarget);
+    };
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
@@ -338,18 +347,18 @@ export const Header = ({ action }: { action: any }) => {
             <Avatar alt="Remy Sharp" src={image} />
           </IconButton>
         </Box>
-        <Box sx={{ display: { xs: "flex", md: "none" } }}>
-          <IconButton
-            size="large"
-            aria-label="show more"
-            aria-controls={mobileMenuId}
-            aria-haspopup="true"
-            onClick={handleMobileMenuOpen}
-            color="inherit"
-          >
-            <MoreIcon />
-          </IconButton>
-        </Box>
+        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <IconButton
+                        size="large"
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        onClick={handleMobileMenuOpenSmall}
+                        color="inherit"
+                    >
+                        <MoreIcon />
+                    </IconButton>
+                </Box>
       </Toolbar>
       {currentdata &&
         draftData.map((draft) => (
@@ -427,6 +436,23 @@ export const Header = ({ action }: { action: any }) => {
           </Box>
         )}
       </Box>
+
+      <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                id={mobileMenuId}
+                open={Boolean(anchorEls)}
+                onClose={handleMobileMenuClose}
+            >
+                <MenuItem onClick={handleMobileMenuClose}>
+                    <Avatar sx={{ width: 24, height: 24, ml: 2 }} src={image} />
+                </MenuItem>
+                <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+                <MenuItem onClick={handleSignOut}>
+                    <Typography variant="body2">Sign Out</Typography>
+                </MenuItem>
+            </Menu>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

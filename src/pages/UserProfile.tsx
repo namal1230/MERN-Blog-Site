@@ -25,7 +25,7 @@ export interface User {
 const UserProfile: React.FC = () => {
   const [followers, setFollowers] = useState<number>(124);
   const [search, setSearch] = useSearchParams();
-  const name = search.get("name");
+  const names = search.get("name");
   const [nam, setnam] = useState<string>();
 
   const currentUser: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
@@ -34,8 +34,8 @@ const UserProfile: React.FC = () => {
 
   const followUsers= async ()=>{
     console.log(name,currentUser);
-    if(name && currentUser){
-      const response = await followUser(name,currentUser);
+    if(names && currentUser){
+      const response = await followUser(names,currentUser);
       console.log(response);
       
     }
@@ -56,10 +56,10 @@ const UserProfile: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!name) return;
+    if (!names) return;
 
     const getInfo = async () => {
-      const response = await getInfobyName(name);
+      const response = await getInfobyName(names);
       console.log(response);
       
       setForm({

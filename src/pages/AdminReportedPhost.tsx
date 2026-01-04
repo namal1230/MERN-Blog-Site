@@ -124,7 +124,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
                 <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}&status=report`)}>Preview</MenuItem>
                 <MenuItem onClick={() => deleteReports()}>Cancel</MenuItem>
             </Menu>
-            {visibility && <ViewReportEmail id={draftId}/>}
+            {visibility && <ViewReportEmail id={draftId} status="phost"/>}
         </Card>
     );
 };

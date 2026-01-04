@@ -8,6 +8,7 @@ import { getReportEmail } from "../api/draftPhosts.api";
 
 interface ReportProps {
     id: string;
+    status:string;
 }
 
 interface Report {
@@ -25,7 +26,7 @@ interface Report {
     _id: string;
 }
 
-const ViewReportEmail: React.FC<ReportProps> = ({ id }) => {
+const ViewReportEmail: React.FC<ReportProps> = ({ id,status }) => {
     const [report, setReport] = useState<Report | null>(null);
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const ViewReportEmail: React.FC<ReportProps> = ({ id }) => {
         const fetchReport = async () => {
             const response = await getReportEmail(id);
             console.log("email ->", response);
-            setReport(response.data); // single object
+            setReport(response.data);
         };
 
         fetchReport();
