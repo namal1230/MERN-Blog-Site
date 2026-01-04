@@ -14,7 +14,7 @@ import {
 import { authFire } from "../firebase/firebaseConfig";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { login } from "../api/auth.api"
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAuth } from "../utilities/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
 export interface users {
@@ -23,9 +23,15 @@ export interface users {
   id: string,
   profile: string
 }
+import UseAuth from "../context/UseAuth";
+import type { User } from "../types/User";
 
 
 const SignIn: React.FC = () => {
+
+  const { setUser: setUserAuth } = UseAuth();
+
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<users>();
@@ -49,10 +55,10 @@ const SignIn: React.FC = () => {
       profile: loggedInUser.profile,
       id: loggedInUser.id
     }));
-    if(result.user.role==="user"){
+    if (result.user.role === "user") {
       navigate("/home-page");
-    }else if(result.user.role==="admin"){
-        navigate("/admin");
+    } else if (result.user.role === "admin") {
+      navigate("/admin");
     }
   };
 
@@ -63,7 +69,7 @@ const SignIn: React.FC = () => {
       // console.log(result);
       // console.log("login->",result);
       const currentUser = result.user || "";
-      const userData:users = {
+      const userData: users = {
         id: currentUser.uid || "",
         name: currentUser.displayName || currentUser.email?.split("@")[0] || "",
         email: currentUser.email || "",
@@ -75,8 +81,10 @@ const SignIn: React.FC = () => {
       }
 
       const backendResult = await login(userData);
-      console.log("backend login->",backendResult);
+      console.log("backend login->", backendResult);
       const role = backendResult.user.role;
+      console.log("role->", role);
+
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -84,10 +92,20 @@ const SignIn: React.FC = () => {
         profile: userData.profile,
         id: userData.id
       }));
-      console.log(role);
-      if(role==="user"){
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: "admin", // TS now knows it's valid
+        token: "abc123token",
+      };
+
+      setUserAuth(userFromApi);
+      // console.log(backendResult.token);
+      // setContextAuth({ token: "abc123", role: undefined });
+
+      if (role === "user") {
         navigate("/home-page");
-      }else if(role==="admin"){
+      } else if (role === "admin") {
         navigate("/admin");
       }
     } catch (err) {
@@ -112,9 +130,9 @@ const SignIn: React.FC = () => {
         id: fbUser.id
       }));
 
-       if(role==="user"){
+      if (role === "user") {
         navigate("/home-page");
-      }else if(role==="admin"){
+      } else if (role === "admin") {
         navigate("/admin");
       }
     } catch (err) {
@@ -146,9 +164,9 @@ const SignIn: React.FC = () => {
         id: userData.id
       }));
 
-      if(role==="user"){
+      if (role === "user") {
         navigate("/home-page");
-      }else if(role==="admin"){
+      } else if (role === "admin") {
         navigate("/admin");
       }
     } catch (err) {
@@ -198,11 +216,11 @@ const SignIn: React.FC = () => {
       id: userData.id
     }));
 
-      if(role==="user"){
-        navigate("/home-page");
-      }else if(role==="admin"){
-        navigate("/admin");
-      }
+    if (role === "user") {
+      navigate("/home-page");
+    } else if (role === "admin") {
+      navigate("/admin");
+    }
   };
 
 

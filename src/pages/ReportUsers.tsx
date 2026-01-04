@@ -10,7 +10,7 @@ import {
     Avatar
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import BeenhereIcon from "@mui/icons-material/Beenhere";
 import { getReportedUser } from "../api/admin.api";
 import PersonIcon from '@mui/icons-material/Person';
@@ -19,6 +19,7 @@ import { deleteReport } from "../api/draftPhosts.api";
 import { rejectedUserAccount } from "../api/admin.api";
 import ViewReportEmail from "./ViewReportEmail";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
 interface User {
     _id: string;
     name: string;
@@ -135,7 +136,7 @@ const ReportUsers = () => {
                         <MenuItem onClick={() => rejectUser(user.name,user.reportId)}>Reported</MenuItem>
                         <MenuItem onClick={() => deleteReports(user.reportId)}>Cancel</MenuItem>
                     </Menu>
-                    {visibility && <ViewReportEmail id={user.reportId} status="user"/>}
+                    {visibility && <Link to={`/report-email?id=${user.reportId}`}><ViewReportEmail/></Link>}
                 </Card>
             ))}
         </Box>

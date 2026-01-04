@@ -1,20 +1,40 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, type PropsWithChildren,useContext,useState } from "react";
+import type { User } from "../types/User";
 
-interface AuthContextType {
-  auth: any;
-  setAuth: React.Dispatch<React.SetStateAction<any>>;
+type AuthContextType = {
+  user: User | null;
+  setUser: (user: User | null) => void;
+};
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+
+
+
+type AuthProviderProps = PropsWithChildren & {
+  isSignedIn?: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState<any>(null);
+
+export const AuthProvider = ({ children, isSignedIn }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(
+    isSignedIn
+      ? { id: 1, role: "user", token: "demo-token" }
+      : null
+  );
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthContext;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used inside an AuthProvider");
+  }
+  return context; // { user, setUser }
+};

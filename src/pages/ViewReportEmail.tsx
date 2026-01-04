@@ -5,11 +5,7 @@ import {
     Divider,
 } from "@mui/material";
 import { getReportEmail } from "../api/draftPhosts.api";
-
-interface ReportProps {
-    id: string;
-    status:string;
-}
+import { useSearchParams } from "react-router-dom";
 
 interface Report {
     acknowledge: string;
@@ -26,8 +22,11 @@ interface Report {
     _id: string;
 }
 
-const ViewReportEmail: React.FC<ReportProps> = ({ id,status }) => {
+const ViewReportEmail: React.FC = () => {
     const [report, setReport] = useState<Report | null>(null);
+    
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get("id");
 
     useEffect(() => {
         if (!id) return;
