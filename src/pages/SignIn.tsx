@@ -54,7 +54,8 @@ const SignIn: React.FC = () => {
       name: loggedInUser.name,
       email: loggedInUser.email,
       profile: loggedInUser.profile,
-      id: loggedInUser.id
+      id: loggedInUser.id,
+      role: result.user.role, 
     }));
 
     const userFromApi: User = {
@@ -96,7 +97,8 @@ const SignIn: React.FC = () => {
         name: userData.name,
         email: userData.email,
         profile: userData.profile,
-        id: userData.id
+        id: userData.id,
+         role: backendResult.user.role, 
       }));
       const token = backendResult.token;
       const userFromApi: User = {
@@ -130,7 +132,8 @@ const SignIn: React.FC = () => {
         name: fbUser.name,
         email: fbUser.email,
         profile: fbUser.profile,
-        id: fbUser.id
+        id: fbUser.id,
+        role: backendResult.user.role,
       }));
 
       const token = backendResult.token;
@@ -171,7 +174,8 @@ const SignIn: React.FC = () => {
         name: userData.name,
         email: userData.email,
         profile: userData.profile,
-        id: userData.id
+        id: userData.id,
+         role: backendResult.user.role,
       }));
 
       const token = backendResult.token;
@@ -231,7 +235,8 @@ const SignIn: React.FC = () => {
       name: userData.name,
       email: userData.email,
       profile: userData.profile,
-      id: userData.id
+      id: userData.id,
+       role: backendResult.user.role,
     }));
     const token = backendResult.token;
     const userFromApi: User = {

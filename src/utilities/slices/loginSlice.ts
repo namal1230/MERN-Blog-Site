@@ -7,6 +7,7 @@ interface AuthState {
   email: string;
   profile: string;
   id:string;
+  role: "user" | "admin" | null;
 }
 
 export const loginSlice = createSlice({
@@ -16,7 +17,8 @@ export const loginSlice = createSlice({
     name:"",
     email:"",
     profile:"",
-    id:""
+    id:"",
+    role:null
   } as AuthState,
   reducers: {
     setAuth:(state: AuthState, action: PayloadAction<AuthState>)=>{
@@ -25,13 +27,15 @@ export const loginSlice = createSlice({
         state.email=action.payload.email;
         state.profile=action.payload.profile;
         state.id=action.payload.id;
+        state.role=action.payload.role;
     },
     removeAuth:(state: AuthState)=>{
       state.email="",
       state.id="",
       state.profile="",
       state.token="",
-      state.name=""
+      state.name="",
+      state.role=null
     }
   },
 })

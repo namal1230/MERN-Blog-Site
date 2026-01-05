@@ -11,7 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import loginReducer from '../slices/loginSlice'
-
+import authSlice from '../slices/authSlice';
 const persistConfig = {
   key: "root",
   storage,
@@ -21,7 +21,8 @@ const persistedReducer = persistReducer(persistConfig, loginReducer);
 
 export const store = configureStore({
   reducer: {
-    persistedReducer
+    persistedReducer,
+    auth: authSlice, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -40,3 +41,4 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
