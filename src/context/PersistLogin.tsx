@@ -29,12 +29,6 @@ const PersistLogin = ({children}:ProtectedRouteProps)=>{
          verifyRefreshToken();
     },[refresh, user?.token])
 
-    useEffect(()=>{
-        console.log(`isLoading: ${isLoading}`);
-        console.log(`aT: ${JSON.stringify(user?.token)}`);
-        
-    },[isLoading])
-
 
     if (isLoading) {
         return <div>Loading...</div>;
