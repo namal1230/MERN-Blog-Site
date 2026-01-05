@@ -9,14 +9,13 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { AuthProvider } from './context/AuthContext.tsx'
 import AuthBootstrap from './context/AuthBootstrap.tsx';
 createRoot(document.getElementById('root')!).render(
+  <AuthProvider isSignedIn={false}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <AuthProvider isSignedIn={false}>
-        <AuthBootstrap>
-          <RouterProvider router={routes} />
+        <AuthBootstrap> <RouterProvider router={routes} />
           <App />
         </AuthBootstrap>
-        </AuthProvider>
       </PersistGate>
     </Provider>
+  </AuthProvider>
 )

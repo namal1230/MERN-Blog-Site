@@ -20,7 +20,7 @@ const AuthBootstrap = ({ children }: AuthBootstrapProps) => {
   }, [dispatch]);
 
   // Show loader while fetching user
-  if (isLoading) return <div>Checking authentication...</div>;
+//   if (isLoading) return <div>Checking authentication...</div>;
 
   // Optionally redirect if not authenticated
   // if (!user) return <Navigate to="/login" />;
