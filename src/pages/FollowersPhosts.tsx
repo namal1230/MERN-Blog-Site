@@ -5,7 +5,6 @@ import { Divider } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import type { RootState } from '../utilities/store/store';
-import DraftBox from './DraftBox';
 import { Header } from '../components/Header';
 import { getFollowingPhosts } from '../api/user.api';
 import PublishedPosts from './PublishedPosts';

@@ -24,12 +24,10 @@ const PostUI: React.FC = () => {
   const [params] = useSearchParams();
   const value = params.get("id");
   const review = params.get("status");
-  const publi = params.get("value");
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
   const [lines, setLines] = useState<phost[]>([]);
   const [createdAt, setCreatedAt] = useState("");
-  const [updatedAt, setUpdatedAt] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -43,7 +41,6 @@ const PostUI: React.FC = () => {
         setLines(result.body);
         setCode(result.code || "");
         setCreatedAt(result.createdAt);
-        setUpdatedAt(result.updatedAt);
         setStatus(result.status);
       } else if (review == "report") {
         result = await getReportedPhost(axiosPrivate, value);
@@ -51,7 +48,6 @@ const PostUI: React.FC = () => {
         setLines(result.body);
         setCode(result.code || "");
         setCreatedAt(result.createdAt);
-        setUpdatedAt(result.updatedAt);
         setStatus(result.status);
       } else {
         result = await approvePhosts(axiosPrivate, value);
@@ -59,7 +55,6 @@ const PostUI: React.FC = () => {
         setLines(result.data.body);
         setCode(result.data.code || "");
         setCreatedAt(result.data.createdAt);
-        setUpdatedAt(result.data.updatedAt);
         setStatus(result.data.status);
       }
 
@@ -72,19 +67,16 @@ const PostUI: React.FC = () => {
     <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
       <Card elevation={3}>
         <CardContent>
-          {/* Title */}
           <Typography variant="h4" fontWeight={600} gutterBottom>
             {title}
           </Typography>
 
-          {/* Meta */}
           <Typography variant="body2" color="text.secondary">
             Status: {status} • Created: {new Date(createdAt).toLocaleDateString()}
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Body */}
           <Stack spacing={3}>
             {lines.map((block, index) => {
               switch (block.type) {

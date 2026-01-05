@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { deleteReport, approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
+import { deleteReport, rejectPhosts } from "../api/draftPhosts.api";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 interface propTypes {
@@ -25,7 +25,7 @@ import ReportIcon from '@mui/icons-material/Report';
 import ViewReportEmail from "./ViewReportEmail";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, createdAt, status }) => {
+const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, createdAt }) => {
     const axiosPrivate = useAxiosPrivate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -52,7 +52,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
     const rejectPhost = async () => {
         if (!darftIds) return
-        const result = await rejectPhosts(axiosPrivate, darftIds)
+        await rejectPhosts(axiosPrivate, darftIds)
     }
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -68,7 +68,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
     const deleteReports = async () => {
         if (!darftIds) return;
 
-        const result = await deleteReport(axiosPrivate, darftIds);
+        await deleteReport(axiosPrivate, darftIds);
 
     }
 

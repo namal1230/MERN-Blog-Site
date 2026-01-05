@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import BeenhereIcon from "@mui/icons-material/Beenhere";
 import { getReportedUser } from "../api/admin.api";
 import PersonIcon from '@mui/icons-material/Person';
 import ReportIcon from '@mui/icons-material/Report';
@@ -36,7 +35,6 @@ const ReportUsers: React.FC = () => {
     const axiosPrivate = useAxiosPrivate();
     const [users, setUsers] = useState<User[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [selectedId, setSelectedId] = useState<string | null>(null);
     const [visibility, setVisibility] = useState<boolean>(false);
 
     const navigate = useNavigate();
@@ -65,12 +63,12 @@ const ReportUsers: React.FC = () => {
 
     const deleteReports = async (id: string) => {
         if (!id) return;
-        const response = await deleteReport(axiosPrivate, id);
+        await deleteReport(axiosPrivate, id);
     }
 
     const rejectUser = async (name: string, reportId: string) => {
         if (!name) return;
-        const response = await rejectedUserAccount(axiosPrivate, name, reportId);
+        await rejectedUserAccount(axiosPrivate, name, reportId);
     }
 
     return (

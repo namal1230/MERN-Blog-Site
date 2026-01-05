@@ -36,8 +36,6 @@ const EditUserInfo: React.FC = () => {
     const image = useSelector((state: RootState) => state.persistedReducer.profile);
     const email = useSelector((state: RootState) => state.persistedReducer.email);
 
-    const [name, setname] = useState<string>("");
-    const [emails, setemails] = useState<string>("");
     const [profile, setprofile] = useState<string>("");
 
     useEffect(() => {
@@ -57,8 +55,6 @@ const EditUserInfo: React.FC = () => {
                 skills: response.user.skills?.join(", ") || ""
 
             })
-            setname(response.user.name);
-            setemails(response.user.email);
             setprofile(response.user.profileUrl);
         }
         getInfoReq();
@@ -88,7 +84,7 @@ const EditUserInfo: React.FC = () => {
                 profileUrl: image || ""
             };
 
-            const result = await saveInfo(axiosPrivate, payload);
+            await saveInfo(axiosPrivate, payload);
             alert("User info saved!");
         } catch (error) {
             alert("Failed to save user info.");

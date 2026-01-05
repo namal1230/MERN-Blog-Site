@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Button, Icon } from "@mui/material";
+import { useState } from "react";
+import { Box, Button } from "@mui/material";
 import SignUp from "../pages/Signup";
 import SignIn from "../pages/SignIn";
 import ClearIcon from '@mui/icons-material/Clear';

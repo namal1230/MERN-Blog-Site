@@ -1,7 +1,6 @@
 import {
     Box,
     Card,
-    CardContent,
     IconButton,
     Typography,
     Tooltip,
@@ -10,8 +9,7 @@ import {
     Avatar
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import EmailResponse from "./EmailResponse";
 
@@ -27,11 +25,9 @@ interface EmailContentProps {
     status?: string;
 }
 
-const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, source, title, body, createdAt, updatedAt, profile, status }) => {
+const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, title, body, createdAt, profile, status }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [emailbox, setEmailBox] = useState<boolean>(false);
-
-    const navigate = useNavigate();
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -61,7 +57,6 @@ const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, source, tit
                 "&:hover": { boxShadow: 4 }
             }}
         >
-            {/* Avatar */}
             <Avatar
                 alt={email}
                 src={profile}
@@ -72,7 +67,6 @@ const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, source, tit
                 }}
             />
 
-            {/* Text Content */}
             <Box
                 sx={{
                     display: "flex",
@@ -118,7 +112,6 @@ const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, source, tit
                 </Tooltip>
             </Box>
 
-            {/* More Actions */}
             {status === "pending" && (
                 <Tooltip title="More" placement="left">
                     <IconButton

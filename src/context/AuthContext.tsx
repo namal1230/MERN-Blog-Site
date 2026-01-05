@@ -1,6 +1,5 @@
 import { createContext, type PropsWithChildren,useContext,useState } from "react";
 import type { User } from "../types/User";
-import useRefreshToken from "../hooks/useRefreshToken";
 
 type AuthContextType = {
   user: User | null;

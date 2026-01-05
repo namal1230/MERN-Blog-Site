@@ -22,7 +22,7 @@ interface propTypes {
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, status }) => {
+const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt }) => {
 
   const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -49,13 +49,13 @@ const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, 
 
   const approvePhost = async () => {
     if (!darftIds) return
-    const result = await approvePhosts(axiosPrivate, darftIds)
+   await approvePhosts(axiosPrivate, darftIds)
     
   }
 
   const rejectPhost = async () => {
     if (!darftIds) return
-    const result = await rejectPhosts(axiosPrivate, darftIds)
+    await rejectPhosts(axiosPrivate, darftIds)
     
   }
 

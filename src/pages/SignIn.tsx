@@ -25,11 +25,9 @@ export interface users {
 }
 import UseAuth from "../context/UseAuth";
 import type { User } from "../types/User";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 
 const SignIn: React.FC = () => {
-  const axiosPrivate = useAxiosPrivate();
   const { setUser: setUserAuth } = UseAuth();
 
 
@@ -138,7 +136,7 @@ const SignIn: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: role, // TS now knows it's valid
+        role: role,
         token: token,
       };
       setUserAuth(userFromApi);

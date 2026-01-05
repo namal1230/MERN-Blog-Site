@@ -57,7 +57,7 @@ const Signup: React.FC = () => {
     }));
     const userFromApi: User = {
       id: 123,
-      role: role, // TS now knows it's valid
+      role: role,
       token: token,
     };
 
@@ -99,7 +99,7 @@ const Signup: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: role, // TS now knows it's valid
+        role: role,
         token: token,
       };
 
@@ -133,7 +133,7 @@ const Signup: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: role, // TS now knows it's valid
+        role: role,
         token: token,
       };
       setUserAuth(userFromApi);
@@ -174,7 +174,7 @@ const Signup: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: role, // TS now knows it's valid
+        role: role,
         token: token,
       };
       setUserAuth(userFromApi);
@@ -233,7 +233,7 @@ const Signup: React.FC = () => {
     const token = backendResult.token;
     const userFromApi: User = {
       id: 123,
-      role: role, // TS now knows it's valid
+      role: role,
       token: token,
     };
     setUserAuth(userFromApi);

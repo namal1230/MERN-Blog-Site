@@ -58,7 +58,7 @@ const DraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, statu
   const deletePhosts = async () => {
     if (!darftIds) return;
 
-    const result = await deletePhost(axiosPrivate, darftIds);
+     await deletePhost(axiosPrivate, darftIds);
 
   }
 

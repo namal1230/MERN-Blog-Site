@@ -48,19 +48,17 @@ const PublishedUI: React.FC = () => {
   const [code, setCode] = useState("");
   const [lines, setLines] = useState<phost[]>([]);
   const [createdAt, setCreatedAt] = useState("");
-  const [updatedAt, setUpdatedAt] = useState("");
   const [status, setStatus] = useState("");
 
   const [liked, setLiked] = React.useState(false);
   const [likeds, setLikeds] = React.useState(false);
-  const [likeCount, setLikeCount] = React.useState(12); // backend later
+  const [likeCount, setLikeCount] = React.useState(12);
   const [comment, setComment] = React.useState<string>("");
   const [comments, setComments] = React.useState<comments[]>([]);
   const [active, setactive] = React.useState<boolean>(false);
   const [activeLike, setactiveLike] = React.useState<boolean>(false);
 
   const sendReactionTrigger = async () => {
-    // alert("trigger reaction")
     if (active || activeLike) {
       alert(`trigger comment reaction ${comment}`)
 
@@ -77,7 +75,7 @@ const PublishedUI: React.FC = () => {
 
 
       const sendAPI = async () => {
-        const response = await sendReaction(axiosPrivate,value || "", liked, "", name, image)
+        await sendReaction(axiosPrivate,value || "", liked, "", name, image)
       }
 
       sendAPI();
@@ -95,7 +93,6 @@ const PublishedUI: React.FC = () => {
       setLines(result.body);
       setCode(result.code || "");
       setCreatedAt(result.createdAt);
-      setUpdatedAt(result.updatedAt);
       setStatus(result.status);
     };
 

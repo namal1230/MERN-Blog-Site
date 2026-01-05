@@ -1,6 +1,6 @@
 import { useEffect, type PropsWithChildren } from "react";
 import { useAuth } from "./AuthContext";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Role = "user" | "admin";
 

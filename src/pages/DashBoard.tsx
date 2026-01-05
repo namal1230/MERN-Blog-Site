@@ -16,10 +16,6 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import {
-    registerWithEmail,
-    loginWithEmail
-} from "../firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from 'react';
 import { authFire } from '../firebase/firebaseConfig';
@@ -45,12 +41,11 @@ const Subtitle = styled('div')({
 
 
 const DashBoard: React.FC = () => {
-    const [user, setUser] = useState<any>(null);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(authFire, (currentUser) => {
-            setUser(currentUser);
+            return currentUser;
         });
         return () => unsubscribe();
     }, []);

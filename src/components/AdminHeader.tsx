@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Badge, Avatar, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Drawer, Divider, Menu, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import type { RootState } from '../utilities/store/store';
@@ -13,7 +13,6 @@ const AdminHeader = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [anchorEls, setAnchorEls] = useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
     const image = useSelector((state: RootState) => state.persistedReducer.profile);
 
     const menuId = 'primary-search-account-menu';
@@ -45,10 +44,6 @@ const AdminHeader = () => {
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-    };
-
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
     };
 
     const drawer = (

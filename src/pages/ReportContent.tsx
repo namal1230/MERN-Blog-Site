@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { reportPhost } from "../api/sendPhosts.api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../utilities/store/store";
@@ -37,7 +37,7 @@ const ReportContent: React.FC<ReportContentProps> = ({ ids, visibility }) => {
             alert("Please fill all required fields");
             return;
         }
-        const response = await reportPhost(axiosPrivate, ids, email, form);
+        await reportPhost(axiosPrivate, ids, email, form);
 
     };
 

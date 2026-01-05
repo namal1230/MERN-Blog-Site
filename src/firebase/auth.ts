@@ -8,7 +8,6 @@ import {
   linkWithCredential,
   fetchSignInMethodsForEmail,
   GithubAuthProvider,
-  GoogleAuthProvider,
   updateProfile,
   EmailAuthProvider,
 } from "firebase/auth";
@@ -174,7 +173,7 @@ getRedirectResult(authFire)
     }
   })
   .catch((error) => {
-    
+    console.error(error);
   });
 
 

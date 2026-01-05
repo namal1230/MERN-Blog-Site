@@ -1,16 +1,12 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import { Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import type { RootState } from '../utilities/store/store';

@@ -13,7 +13,6 @@ import DeblurIcon from '@mui/icons-material/Deblur';
 import { searchImages } from '../api/image.api';
 import Editor from "@monaco-editor/react";
 import DataObjectIcon from '@mui/icons-material/DataObject';
-import { sendPhosts } from '../api/sendPhosts.api';
 import { useSearchParams } from 'react-router-dom';
 import { editPhost, getDraftPhost } from '../api/draftPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
@@ -59,9 +58,7 @@ const EditPhost: React.FC = () => {
   const value = params.get("id");
 
   const sendPhostRequest = async () => {
-    const result = await editPhost(axiosPrivate, value || "", { name, email, body: lines, code, title });
-
-
+    await editPhost(axiosPrivate, value || "", { name:name||"", email, body: lines, code, title });
   }
 
   useEffect(() => {
@@ -178,7 +175,7 @@ const EditPhost: React.FC = () => {
 
   }
 
-  const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleSearch = async (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter') {
 
       const data = await searchImages(axiosPrivate, query);
@@ -187,7 +184,7 @@ const EditPhost: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, index: number) => {
     if (e.key === 'Backspace') {
       const currentLine = lines[index];
       if (currentLine.value === "" && index > 0) {
@@ -221,7 +218,7 @@ const EditPhost: React.FC = () => {
     }
   };
 
-  const handleKeyDownEmbed = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleKeyDownEmbed = (e: React.KeyboardEvent<HTMLElement>, index: number) => {
     if (e.key === 'Enter') {
       const newLines = [...lines];
       newLines.push({ type: "TEXT", value: "" });
@@ -380,7 +377,7 @@ const EditPhost: React.FC = () => {
                       onChange={(e) => {
                         setQuery(e.target.value)
                       }}
-                      onKeyDown={(e) => handleSearch(e, index)}
+                      onKeyDown={(e) => handleSearch(e)}
                     />
                     : line.type == "UNSPLASH" ?
                       <img key={index} src={line.value} alt="file" />

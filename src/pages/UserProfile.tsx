@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Button, Card, CardContent, Chip, Divider, Grid, IconButton, Stack, Typography, } from "@mui/material";
+import { Avatar, Box, Button, CardContent, Chip, Divider, Grid, IconButton, Stack, Typography, } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -26,9 +26,8 @@ export interface User {
 const UserProfile: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
   const [followers, setFollowers] = useState<number>(124);
-  const [search, setSearch] = useSearchParams();
+  const [search] = useSearchParams();
   const names = search.get("name");
-  const [nam, setnam] = useState<string>();
 
   const currentUser: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
 
@@ -37,9 +36,7 @@ const UserProfile: React.FC = () => {
   const followUsers = async () => {
     
     if (names && currentUser) {
-      const response = await followUser(axiosPrivate, names, currentUser);
-      
-
+      await followUser(axiosPrivate, names, currentUser);
     }
   }
 

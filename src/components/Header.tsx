@@ -8,18 +8,14 @@ import {
   Avatar,
   styled,
   InputBase,
-  TextField,
   alpha,
   Divider,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  MenuItem,
   Drawer,
   Menu,
-  MenuItem,
 } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
@@ -30,7 +26,6 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../utilities/store/store";
 import { searchPhosts, getNotifications, setNotificationStatus } from "../api/sendPhosts.api";
 import PublishedPosts from "../pages/PublishedPosts";
-import { Title } from "chart.js";
 import { logout } from "../firebase/auth";
 import { removeAuth } from "../utilities/slices/loginSlice";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -92,7 +87,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -129,8 +123,6 @@ export const Header = ({ action }: { action: any }) => {
   const axiosPrivate = useAxiosPrivate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    useState<null | HTMLElement>(null);
   const [search, setSearch] = useState<string>("");
   const [draftData, setdraftData] = useState<draft[]>([]);
   const [currentdata, setcurrentdata] = useState<boolean>(false);
@@ -159,9 +151,6 @@ export const Header = ({ action }: { action: any }) => {
     setAnchorEls(null);
   };
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
 
   const setNotificationUpdate = async () => {
     if (showTopUp == false) {
@@ -299,7 +288,7 @@ export const Header = ({ action }: { action: any }) => {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
-            onKeyDown={(e) => handleSearch(e)}
+            onKeyDown={handleSearch}
             onChange={(e) => setSearch(e.target.value)}
           />
         </Search>

@@ -16,13 +16,6 @@ const Title = styled('div')({
 
 });
 
-const Subtitle = styled('div')({
-    fontSize: '16px',
-    marginTop: '16px',
-    textAlign: 'center',
-    color: '#555',
-});
-
 const ForgotCredentials: React.FC = () => {
     const axiosPrivate = useAxiosPrivate();
     const [mobileOpen, setMobileOpen] = useState(false);

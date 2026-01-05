@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
 import { useAuth } from "../context/AuthContext";

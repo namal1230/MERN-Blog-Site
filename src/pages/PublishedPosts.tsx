@@ -8,14 +8,10 @@ import {
   Tooltip,
   Menu,
   MenuItem,
-  Badge,
-  Button,
   Stack
 } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { deletePhost } from "../api/draftPhosts.api";
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import { downloadsPDF } from "../api/sendPhosts.api";
@@ -36,9 +32,8 @@ interface propTypes {
   comment: number;
 }
 
-const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, status, name, like, comment }) => {
+const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, name, like, comment }) => {
   const axiosPrivate = useAxiosPrivate();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorsEl, setAnchorsEl] = useState<null | HTMLElement>(null);
 
   const [visible, setvisible] = useState<boolean>(false);
@@ -62,11 +57,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
     setcreatedAt(formatted);
     setnames(name);
   }, []);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
 
   const downloadPdf = async () => {
     try {
@@ -94,15 +84,10 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
     setAnchorsEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleClose2 = () => {
     setAnchorsEl(null);
   };
 
-  const open = Boolean(anchorEl);
   const open2 = Boolean(anchorsEl);
   const reportContent = async () => {
     setvisible(!visible);
@@ -111,7 +96,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
 
   return (
     <Card sx={{ display: "flex", alignItems: "center", p: 1 }}>
-      {/* Image */}
       <CardMedia
         component="img"
         sx={{ width: 151, height: 120, objectFit: "cover" }}
@@ -119,7 +103,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
         alt="cover"
       />
 
-      {/* Text Content */}
       <Link key={darftIds} to={`/publihed-post-page?id=${darftIds}`}>
         <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
           <CardContent sx={{ p: 0 }}>
@@ -145,7 +128,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
         </Box>
       </Link>
 
-      {/* More Icon */}
       <Box sx={{ ml: "auto" }}>
         <Tooltip title="View profile" placement="left">
           <IconButton onClick={() => navigate("/user-profile?name=" + name)} sx={{ ml: "auto" }}>

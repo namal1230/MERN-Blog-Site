@@ -155,7 +155,7 @@ const NewStory: React.FC = () => {
 
   }
 
-  const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleSearch = async (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter') {
       const data = await searchImages(axiosPrivate, query);
       setImages(data);
@@ -163,7 +163,7 @@ const NewStory: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, index: number) => {
     if (e.key === 'Backspace') {
       const currentLine = lines[index];
       if (currentLine.value === "" && index > 0) {
@@ -197,7 +197,7 @@ const NewStory: React.FC = () => {
     }
   };
 
-  const handleKeyDownEmbed = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+  const handleKeyDownEmbed = (e: React.KeyboardEvent<HTMLElement>, index: number) => {
     if (e.key === 'Enter') {
       const newLines = [...lines];
       newLines.push({ type: "TEXT", value: "" });
@@ -350,7 +350,7 @@ const NewStory: React.FC = () => {
                       onChange={(e) => {
                         setQuery(e.target.value)
                       }}
-                      onKeyDown={(e) => handleSearch(e, index)}
+                      onKeyDown={(e) => handleSearch(e)}
                     />
                     : line.type == "UNSPLASH" ?
                       <img key={index} src={line.value} alt="file" />
