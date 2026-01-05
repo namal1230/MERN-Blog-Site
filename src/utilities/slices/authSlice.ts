@@ -14,20 +14,20 @@ export const fetchCurrentUser = createAsyncThunk(
 );
 
 interface AuthState {
-  user: null | {
+  user: {
        id: string;
     name: string;
     email: string;
     role: "user" | "admin";
     status?: string;
-};
+} | null ;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
 };
 

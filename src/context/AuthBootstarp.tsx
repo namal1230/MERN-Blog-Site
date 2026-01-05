@@ -8,15 +8,16 @@ type AuthBootstrapProps = {
 };
 
 const AuthBootstrap = ({ children }: AuthBootstrapProps) => {
-   const dispatch = useDispatch<AppDispatch>();
-    const { user } = useSelector((state: RootState) => state.auth);
-  
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-      if (!user) {
+    if (!user) {
       dispatch(fetchCurrentUser());
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
+
+  if (isLoading) return <div>Checking authentication...</div>;
 
   return <>{children}</>;
 };

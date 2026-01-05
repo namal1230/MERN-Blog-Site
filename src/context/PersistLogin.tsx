@@ -29,7 +29,6 @@ const PersistLogin = ({children}:ProtectedRouteProps)=>{
          verifyRefreshToken();
     },[refresh, user?.token])
 
-
     if (isLoading) {
         return <div>Loading...</div>;
     }
