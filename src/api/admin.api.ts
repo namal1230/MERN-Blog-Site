@@ -1,5 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate";
-
 const BASE_URL = "/admin";
 export const getDashBoardStats= async (axiosInstance:any)=>{
     try{

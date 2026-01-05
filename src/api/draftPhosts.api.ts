@@ -1,4 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate"; 
 const BASE_URL = "/phosts";
 export const draftPhosts= async (axiosInstance:any,data: { name: string; email: string; value:string })=>{
     try{
@@ -32,12 +31,6 @@ export const getReportedPhost= async (axiosInstance:any,id:string)=>{
         throw err;
     }
 }
-
-
-export const getDraftPhostByReportId = async (reportId: string) => {
-  const response = await axiosPrivate.get(BASE_URL+`/get-draft-phost?id=${reportId}`);
-  return response.data;
-};
 
 export const deletePhost= async (axiosInstance:any,id:string)=>{
     try{

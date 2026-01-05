@@ -1,4 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate";
 const BASE_URL = "/customer";
 export const saveInfo = async (axiosInstance:any,data: {name: string;email: string;bio?: string;jobTitle?:string;
     experienceYears?: string;portfolioUrl?: string; githubUrl?:string;linkdinUrl?:string;

@@ -1,5 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate";
-
 const BASE_URL = "/api";
 export const fileTransfer= async (axiosInstance:any,data: { file:File | null })=>{
     try{

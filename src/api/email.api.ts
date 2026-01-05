@@ -1,4 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate";
 const BASE_URL = "/email";
 export const email= async (axiosInstance:any,data: { email: string ; description: string; })=>{
     try{

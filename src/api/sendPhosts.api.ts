@@ -1,4 +1,3 @@
-import { axiosPrivate } from "./axiosPrivate";
 const BASE_URL = "/phosts";
 export const sendPhosts= async (axiosInstance:any,data: { name: string; email: string; code: string; body:Array<{type:string; value?:string}>; title:string; })=>{
     try{
