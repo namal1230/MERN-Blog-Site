@@ -8,7 +8,7 @@ export const apiRequest = async (apiCall: () => Promise<any>) => {
       try {
 
         const { data } = await axios.get(
-          "https://mern-be-sigma.vercel.app/customer/refresh-token",
+          "https://blog-phost3.vercel.app/customer/refresh-token",
           { withCredentials: true } 
         );
 
