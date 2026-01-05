@@ -19,91 +19,91 @@ const routes = createBrowserRouter([
   { path: "/", element: <DashBoard /> },
   {
     path: "/request-credentials", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <ForgotCredentials />
       </RequireAuth>
     ),
   },
   {
     path: "/home-page", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <HomePage />
       </RequireAuth>
     ),
   },
   {
     path: "/new-story", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <NewStory />
       </RequireAuth>
     ),
   },
   {
     path: "/stories", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <DraftPage />
       </RequireAuth>
     ),
   },
   {
     path: "/post-page", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <PostUI />
       </RequireAuth>
     ),
   },
   {
     path: "/edit-post-page", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <EditPhost />
       </RequireAuth>
     ),
   },
   {
     path: "/admin", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["admin"]}>
         <AdminDashBoard />
       </RequireAuth>
     ),
   },
   {
     path: "/admin-email", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["admin"]}>
         <EmailBox />
       </RequireAuth>
     ),
   },
   {
     path: "/publihed-post-page", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["admin","user"]}>
         <PublishedUI />
       </RequireAuth>
     ),
   },
   {
     path: "/user-profile", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["admin","user"]}>
         <UserProfile />
       </RequireAuth>
     ),
   },
   {
     path: "/edit-profile", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <EditUserInfo />
       </RequireAuth>
     ),
   },
   {
     path: "/follow-phosts", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <FollowerPhosts />
       </RequireAuth>
     ),
   },
   {
     path: "/report-email", element: (
-      <RequireAuth>
+      <RequireAuth allowedRoles={["user"]}>
         <ViewReportEmail />
       </RequireAuth>
     ),

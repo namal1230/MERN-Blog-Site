@@ -22,6 +22,8 @@ export const AuthProvider = ({ children, isSignedIn }: AuthProviderProps) => {
     isSignedIn
       ? { id: 1, role: "user", token: "demo-token" }
       : null
+
+    // if()
   );
 
   return (

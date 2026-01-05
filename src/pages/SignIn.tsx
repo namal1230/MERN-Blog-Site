@@ -95,8 +95,8 @@ const SignIn: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: "admin", // TS now knows it's valid
-        token: "abc123token",
+        role: role, // TS now knows it's valid
+        token: token,
       };
 
       setUserAuth(userFromApi);
