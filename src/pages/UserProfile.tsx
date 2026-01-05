@@ -7,22 +7,24 @@ import { useSearchParams } from "react-router-dom";
 import { getInfobyName } from "../api/user.api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../utilities/store/store";
-import { followUser,followUserCount } from "../api/user.api";
+import { followUser, followUserCount } from "../api/user.api";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 export interface User {
   name: string;
   email: string;
   bio?: string;
   experienceYears?: string;
   portfolioUrl?: string;
-  anotherUrl?:string;
-  githubUrl?:string;
-  jobTitle?:string;
-  linkdinUrl?:string;
+  anotherUrl?: string;
+  githubUrl?: string;
+  jobTitle?: string;
+  linkdinUrl?: string;
   skills?: string[];
 }
 
 
 const UserProfile: React.FC = () => {
+  const axiosPrivate = useAxiosPrivate();
   const [followers, setFollowers] = useState<number>(124);
   const [search, setSearch] = useSearchParams();
   const names = search.get("name");
@@ -32,12 +34,12 @@ const UserProfile: React.FC = () => {
 
   const [profile, setprofile] = useState<string>("");
 
-  const followUsers= async ()=>{
-    console.log(name,currentUser);
-    if(names && currentUser){
-      const response = await followUser(names,currentUser);
-      console.log(response);
+  const followUsers = async () => {
+    
+    if (names && currentUser) {
+      const response = await followUser(axiosPrivate, names, currentUser);
       
+
     }
   }
 
@@ -48,10 +50,10 @@ const UserProfile: React.FC = () => {
     bio: "",
     experienceYears: "",
     portfolioUrl: "",
-    anotherUrl:"",
-    githubUrl:"",
-    jobTitle:"",
-    linkdinUrl:"",
+    anotherUrl: "",
+    githubUrl: "",
+    jobTitle: "",
+    linkdinUrl: "",
     skills: [],
   });
 
@@ -59,19 +61,19 @@ const UserProfile: React.FC = () => {
     if (!names) return;
 
     const getInfo = async () => {
-      const response = await getInfobyName(names);
-      console.log(response);
-      
+      const response = await getInfobyName(axiosPrivate, names);
+     
+
       setForm({
         name: response.user.name,
         email: response.user.email,
         bio: response.user.bio,
         experienceYears: response.user.experienceYears,
         portfolioUrl: response.user.portfolioUrl,
-        anotherUrl:response.user.anotherUrl,
-        githubUrl:response.user.githubUrl,
-        jobTitle:response.user.jobTitle,
-        linkdinUrl:response.user.linkdinUrl,
+        anotherUrl: response.user.anotherUrl,
+        githubUrl: response.user.githubUrl,
+        jobTitle: response.user.jobTitle,
+        linkdinUrl: response.user.linkdinUrl,
         skills: response.user.skills,
       });
       setprofile(response.user.profileUrl);
@@ -82,16 +84,16 @@ const UserProfile: React.FC = () => {
   }, [name]);
 
   useEffect(() => {
-  if (!form.name) return;
+    if (!form.name) return;
 
-  const setFollowersCount = async () => {
-    const response = await followUserCount(form.name);
-    console.log(response);
-    setFollowers(response.followers);
-  };
-  
-  setFollowersCount();
-}, [form.name]);
+    const setFollowersCount = async () => {
+      const response = await followUserCount(axiosPrivate, form.name);
+      
+      setFollowers(response.followers);
+    };
+
+    setFollowersCount();
+  }, [form.name]);
 
 
   return (
@@ -124,20 +126,20 @@ const UserProfile: React.FC = () => {
             </Typography>
           </Box>
         </Stack>
-         <Box sx={{pl:0}}>
-            <Button sx={{ color: "white", backgroundColor: "#1976D2",mt:2 }} onClick={followUsers}>Follow</Button>
-          </Box>
+        <Box sx={{ pl: 0 }}>
+          <Button sx={{ color: "white", backgroundColor: "#1976D2", mt: 2 }} onClick={followUsers}>Follow</Button>
+        </Box>
 
         <Stack direction="row" justifyContent="center" sx={{ pl: 9 }} spacing={1} mt={1}>
-          {form.githubUrl!=""?<IconButton component="a" href={form.githubUrl} target="_blank">
+          {form.githubUrl != "" ? <IconButton component="a" href={form.githubUrl} target="_blank">
             <GitHubIcon />
-          </IconButton>:<h1></h1>}
-          {form.linkdinUrl!=""?<IconButton component="a" href={form.linkdinUrl} target="_blank">
+          </IconButton> : <h1></h1>}
+          {form.linkdinUrl != "" ? <IconButton component="a" href={form.linkdinUrl} target="_blank">
             <LinkedInIcon />
-          </IconButton>:<h1></h1>}
-          {form.anotherUrl!=""?<IconButton component="a" href={form.anotherUrl} target="_blank">
+          </IconButton> : <h1></h1>}
+          {form.anotherUrl != "" ? <IconButton component="a" href={form.anotherUrl} target="_blank">
             <LanguageIcon />
-          </IconButton>:<h1></h1>}
+          </IconButton> : <h1></h1>}
         </Stack>
 
         <Grid sx={{ xs: 12, md: 8, mt: 3 }}>

@@ -1,6 +1,7 @@
-import axios from "axios"; 
+import { axiosPrivate } from "./axiosPrivate";
 
-export const fileTransfer= async (data: { file:File | null })=>{
+const BASE_URL = "/api";
+export const fileTransfer= async (axiosInstance:any,data: { file:File | null })=>{
     try{
         if(!data.file) return;
 
@@ -9,7 +10,7 @@ export const fileTransfer= async (data: { file:File | null })=>{
         if(data.file.type.startsWith("image")){
             formData.append("image",data.file);
         
-            const response = await axios.post("http://localhost:3000/api/upload/image",formData,{
+            const response = await axiosInstance.post(BASE_URL+"/upload/image",formData,{
             headers:{
                 "Content-Type": "multipart/form-data",
             },
@@ -21,7 +22,7 @@ export const fileTransfer= async (data: { file:File | null })=>{
         if(data.file.type.startsWith("video")){
             formData.append("vedio",data.file);
 
-             const response = await axios.post("http://localhost:3000/api/upload/video",formData,{
+             const response = await axiosInstance.post(BASE_URL+"/upload/video",formData,{
             headers:{
                 "Content-Type": "multipart/form-data",
             },
@@ -30,7 +31,7 @@ export const fileTransfer= async (data: { file:File | null })=>{
         }
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }

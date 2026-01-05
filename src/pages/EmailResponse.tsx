@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
 import { sendResolveLogin } from "../api/admin.api";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface EmailResponseProps {
   emailIds: string;
 }
 
-const EmailResponse: React.FC<EmailResponseProps> = ({emailIds}) => {
+const EmailResponse: React.FC<EmailResponseProps> = ({ emailIds }) => {
+  const axiosPrivate = useAxiosPrivate();
   const [description, setDescription] = useState("Thank you for contacting us. We have received your request and please check again now.");
   const [error, setError] = useState("");
 
@@ -16,8 +18,8 @@ const EmailResponse: React.FC<EmailResponseProps> = ({emailIds}) => {
       return;
     }
 
-    const sendEmail = async ()=>{
-        await sendResolveLogin(emailIds,description);
+    const sendEmail = async () => {
+      await sendResolveLogin(axiosPrivate, emailIds, description);
     }
 
     sendEmail();
@@ -31,7 +33,7 @@ const EmailResponse: React.FC<EmailResponseProps> = ({emailIds}) => {
       <Typography variant="h6" gutterBottom>
         Send Email Response
       </Typography>
-    {emailIds}
+      {emailIds}
       <Typography variant="body1" sx={{ mb: 2 }}>
         To: <strong>{""}</strong>
       </Typography>

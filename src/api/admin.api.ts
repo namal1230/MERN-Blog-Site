@@ -1,45 +1,46 @@
-import axios from "axios"; 
+import { axiosPrivate } from "./axiosPrivate";
 
-export const getDashBoardStats= async ()=>{
+const BASE_URL = "/admin";
+export const getDashBoardStats= async (axiosInstance:any)=>{
     try{
-        const response = await axios.get("http://localhost:3000/admin/get-stats",);
+        const response = await axiosInstance.get(BASE_URL+"/get-stats",);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const sendResolveLogin = async (emailId:string, message:string)=>{
+export const sendResolveLogin = async (axiosInstance:any,emailId:string, message:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/admin/resole-login?emailId="+emailId+"&message="+message);
+        const response = await axiosInstance.get(BASE_URL+"/resole-login?emailId="+emailId+"&message="+message);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getReportedUser = async ()=>{
+export const getReportedUser = async (axiosInstance:any,)=>{
     try{
-        const response = await axios.get("http://localhost:3000/admin/get-reported-users");
+        const response = await axiosInstance.get(BASE_URL+"/get-reported-users");
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const rejectedUserAccount= async (name:string,reportId:string)=>{
+export const rejectedUserAccount= async (axiosInstance:any,name:string,reportId:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/admin/rejected-user?name="+name+"&reportId="+reportId);
+        const response = await axiosInstance.get(BASE_URL+"/rejected-user?name="+name+"&reportId="+reportId);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+       
         throw err;
     }
 }

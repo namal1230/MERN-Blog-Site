@@ -25,10 +25,11 @@ export interface users {
 }
 import UseAuth from "../context/UseAuth";
 import type { User } from "../types/User";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 
 const SignIn: React.FC = () => {
-
+  const axiosPrivate = useAxiosPrivate();
   const { setUser: setUserAuth } = UseAuth();
 
 
@@ -48,6 +49,8 @@ const SignIn: React.FC = () => {
     setUser(loggedInUser);
 
     const result = await login(loggedInUser);
+    const role = result.user.role;
+    const token = result.token;
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,
@@ -55,6 +58,14 @@ const SignIn: React.FC = () => {
       profile: loggedInUser.profile,
       id: loggedInUser.id
     }));
+
+    const userFromApi: User = {
+      id: 123,
+      role: role,
+      token: token,
+    };
+
+    setUserAuth(userFromApi);
     if (result.user.role === "user") {
       navigate("/home-page");
     } else if (result.user.role === "admin") {
@@ -65,9 +76,6 @@ const SignIn: React.FC = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await loginWithGoogle();
-
-      // console.log(result);
-      // console.log("login->",result);
       const currentUser = result.user || "";
       const userData: users = {
         id: currentUser.uid || "",
@@ -81,9 +89,9 @@ const SignIn: React.FC = () => {
       }
 
       const backendResult = await login(userData);
-      console.log("backend login->", backendResult);
+
       const role = backendResult.user.role;
-      console.log("role->", role);
+
 
       dispatch(setAuth({
         token: backendResult.token,
@@ -95,21 +103,18 @@ const SignIn: React.FC = () => {
       const token = backendResult.token;
       const userFromApi: User = {
         id: 123,
-        role: role, // TS now knows it's valid
+        role: role,
         token: token,
       };
 
       setUserAuth(userFromApi);
-      // console.log(backendResult.token);
-      // setContextAuth({ token: "abc123", role: undefined });
-
       if (role === "user") {
         navigate("/home-page");
       } else if (role === "admin") {
         navigate("/admin");
       }
     } catch (err) {
-      console.error("Google login failed:", err);
+
     }
   };
 
@@ -130,13 +135,20 @@ const SignIn: React.FC = () => {
         id: fbUser.id
       }));
 
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: role, // TS now knows it's valid
+        token: token,
+      };
+      setUserAuth(userFromApi);
       if (role === "user") {
         navigate("/home-page");
       } else if (role === "admin") {
         navigate("/admin");
       }
     } catch (err) {
-      console.error("Facebook login failed:", err);
+
     }
   };
 
@@ -163,6 +175,14 @@ const SignIn: React.FC = () => {
         profile: userData.profile,
         id: userData.id
       }));
+
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: role,
+        token: token,
+      };
+      setUserAuth(userFromApi);
 
       if (role === "user") {
         navigate("/home-page");
@@ -215,7 +235,13 @@ const SignIn: React.FC = () => {
       profile: userData.profile,
       id: userData.id
     }));
-
+    const token = backendResult.token;
+    const userFromApi: User = {
+      id: 123,
+      role: role,
+      token: token,
+    };
+    setUserAuth(userFromApi);
     if (role === "user") {
       navigate("/home-page");
     } else if (role === "admin") {

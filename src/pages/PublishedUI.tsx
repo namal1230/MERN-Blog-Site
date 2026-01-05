@@ -20,6 +20,7 @@ import TextField from "@mui/material/TextField";
 import type { RootState } from '../utilities/store/store';
 import { useSelector } from 'react-redux';
 import { sendReaction, getReaction } from '../api/sendPhosts.api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 type Format = "IMG" | "TEXT" | "VIDEO" | "EMBED" | "UNSPLASH";
 
@@ -36,6 +37,7 @@ export interface comments {
 }
 
 const PublishedUI: React.FC = () => {
+  const axiosPrivate = useAxiosPrivate();
   const [params] = useSearchParams();
   const value = params.get("id");
 
@@ -61,9 +63,9 @@ const PublishedUI: React.FC = () => {
     // alert("trigger reaction")
     if (active || activeLike) {
       alert(`trigger comment reaction ${comment}`)
-      console.log(liked);
+
       
-      await sendReaction(value || "", liked, comment, name, image)
+      await sendReaction(axiosPrivate,value || "", liked, comment, name, image)
       setComment("");
       setactive(false)
     }
@@ -75,7 +77,7 @@ const PublishedUI: React.FC = () => {
 
 
       const sendAPI = async () => {
-        const response = await sendReaction(value || "", liked, "", name, image)
+        const response = await sendReaction(axiosPrivate,value || "", liked, "", name, image)
       }
 
       sendAPI();
@@ -88,7 +90,7 @@ const PublishedUI: React.FC = () => {
     if (!value) return;
 
     const getDrafts = async () => {
-      const result = await getDraftPhost(value);
+      const result = await getDraftPhost(axiosPrivate,value);
       setTitle(result.title);
       setLines(result.body);
       setCode(result.code || "");
@@ -102,8 +104,8 @@ const PublishedUI: React.FC = () => {
 
   useEffect(() => {
     const getReactions = async () => {
-      const response = await getReaction(value || "",name);
-      console.log(response);
+      const response = await getReaction(axiosPrivate,value || "",name);
+
       setLikeCount(response.totalLikes);
       setLikeds(response.isLikedByUser); 
       const commentsData = response.comments.map((c: any) => ({
@@ -113,7 +115,6 @@ const PublishedUI: React.FC = () => {
         profilePicture:c.profilePicture,
       }));
       setComments(commentsData);
-      // setprofile(response.comments.profilePicture);
       
     }
     getReactions();
@@ -123,19 +124,17 @@ const PublishedUI: React.FC = () => {
     <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
       <Card elevation={3}>
         <CardContent>
-          {/* Title */}
+
           <Typography variant="h4" fontWeight={600} gutterBottom>
             {title}
           </Typography>
 
-          {/* Meta */}
           <Typography variant="body2" color="text.secondary">
             Status: {status} • Created: {new Date(createdAt).toLocaleDateString()}
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Body */}
           <Stack spacing={3}>
             {lines.map((block, index) => {
               switch (block.type) {
@@ -187,7 +186,6 @@ const PublishedUI: React.FC = () => {
             })}
           </Stack>
 
-          {/* Code Block */}
           {code && (
             <>
               <Divider sx={{ my: 4 }} />
@@ -256,9 +254,7 @@ const PublishedUI: React.FC = () => {
 
         <IconButton
           color="primary"
-          // disabled={!comment.trim()}
           onClick={() => {
-            // setComment("");
             sendReactionTrigger();
             setactive(true);
           }}

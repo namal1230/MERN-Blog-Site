@@ -25,7 +25,7 @@ const Unauthorized = () => {
       </Typography>
 
       <Typography color="text.secondary" maxWidth={400}>
-        You do not have permission to access this page.  
+        You do not have permission to access this page.
         Please login with an authorized account.
       </Typography>
 

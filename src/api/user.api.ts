@@ -1,65 +1,64 @@
-import { current } from "@reduxjs/toolkit";
-import axios from "axios"; 
-
-export const saveInfo = async (data: {name: string;email: string;bio?: string;jobTitle?:string;
+import { axiosPrivate } from "./axiosPrivate";
+const BASE_URL = "/customer";
+export const saveInfo = async (axiosInstance:any,data: {name: string;email: string;bio?: string;jobTitle?:string;
     experienceYears?: string;portfolioUrl?: string; githubUrl?:string;linkdinUrl?:string;
     anotherUrl?:string;skills?: string[];profileUrl?: string;
 }) => {
     try {
-        const response = await axios.post("http://localhost:3000/customer/save-info",data);
+        const response = await axiosInstance.post(BASE_URL+"/save-info",data);
         return response.data;
     } catch (err) {
-        console.error(err);
+      
         throw err;
     }
 };
 
-export const getInfo = async (email:string) => {
+export const getInfo = async (axiosInstance:any,email:string) => {
     try {
-        const response = await axios.get("http://localhost:3000/customer/get-info?email="+email);
+        const response = await axiosInstance.get(BASE_URL+"/get-info?email="+email);
         return response.data;
     } catch (err) {
-        console.error(err);
+       
         throw err;
     }
 };
 
-export const getInfobyName = async (name:string) => {
+export const getInfobyName = async (axiosInstance:any,name:string) => {
     try {
-        const response = await axios.get("http://localhost:3000/customer/get-name-info?name="+name);
+        const response = await axiosInstance.get(BASE_URL+"/get-name-info?name="+name);
         return response.data;
     } catch (err) {
-        console.error(err);
+       
         throw err;
     }
 };
 
-export const followUser = async (name:string,currentUser:string)=>{
+export const followUser = async (axiosInstance:any,name:string,currentUser:string)=>{
     try {
-        const response = await axios.get("http://localhost:3000/customer/follow-user?name="+name+"&currentUser="+currentUser);
+        const response = await axiosInstance.get(BASE_URL+"/follow-user?name="+name+"&currentUser="+currentUser);
         return response.data;
     } catch (err) {
-        console.error(err);
+       
         throw err;
     }
 }
 
-export const followUserCount = async (name:string)=>{
+export const followUserCount = async (axiosInstance:any,name:string)=>{
     try {
-        const response = await axios.get("http://localhost:3000/customer/follow-user-count?name="+name);
+        const response = await axiosInstance.get(BASE_URL+"/follow-user-count?name="+name);
         return response.data;
     } catch (err) {
-        console.error(err);
+    
         throw err;
     }
 }
 
-export const getFollowingPhosts = async (name:string)=>{
+export const getFollowingPhosts = async (axiosInstance:any,name:string)=>{
      try {
-        const response = await axios.get("http://localhost:3000/customer/get-following-phosts?currentUser="+name);
+        const response = await axiosInstance.get(BASE_URL+"/get-following-phosts?currentUser="+name);
         return response.data;
     } catch (err) {
-        console.error(err);
+     
         throw err;
     }
 }

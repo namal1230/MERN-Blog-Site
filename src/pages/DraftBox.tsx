@@ -10,18 +10,20 @@ import {
   MenuItem
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useState,useEffect } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { deletePhost } from "../api/draftPhosts.api";
-interface propTypes{
-    draftId:string;
-    image:string |  null | undefined;
-    title:string;
-    createdAt:string;
-    status:string;
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+interface propTypes {
+  draftId: string;
+  image: string | null | undefined;
+  title: string;
+  createdAt: string;
+  status: string;
 }
 
-const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) => {
+const DraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, status }) => {
+  const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
@@ -32,18 +34,16 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
 
   const navigate = useNavigate();
 
-  useEffect(()=>{  
+  useEffect(() => {
     if (!createdAt) return;
 
     const date = new Date(createdAt);
     const formatted = date.toString().split(" GMT")[0];
-
-    console.log(formatted);
     setdarftId(draftId);
-    setimage(image?image:"");
+    setimage(image ? image : "");
     settitle(title);
     setcreatedAt(formatted);
-  },[]);
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -55,12 +55,11 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
 
   const open = Boolean(anchorEl);
 
-  const deletePhosts= async ()=>{
+  const deletePhosts = async () => {
     if (!darftIds) return;
-    
-    const result = await deletePhost(darftIds);
-    console.log(result);
-    
+
+    const result = await deletePhost(axiosPrivate, darftIds);
+
   }
 
   return (
@@ -73,20 +72,20 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
       />
 
       <Link key={darftIds} to={`/post-page?id=${darftIds}`}>
-      <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
-        <CardContent sx={{ p: 0 }}>
-          <Typography variant="h6">{titles}</Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            {createdAts}
-          </Typography>
-        </CardContent>
-      </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
+          <CardContent sx={{ p: 0 }}>
+            <Typography variant="h6">{titles}</Typography>
+            <Typography variant="subtitle2" color="text.secondary">
+              {createdAts}
+            </Typography>
+          </CardContent>
+        </Box>
       </Link>
 
       <Tooltip title="More" placement="left">
-        {status=="pending"?<IconButton onClick={handleClick} sx={{ ml: "auto" }}>
+        {status == "pending" ? <IconButton onClick={handleClick} sx={{ ml: "auto" }}>
           <MoreHorizIcon />
-        </IconButton>:<h1></h1>}
+        </IconButton> : <h1></h1>}
       </Tooltip>
 
       <Menu
@@ -101,11 +100,11 @@ const DraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) =
           vertical: "top",
           horizontal: "right"
         }}
-        sx={{width:"120vw"}}
+        sx={{ width: "120vw" }}
       >
-        <MenuItem onClick={()=>navigate(`/edit-post-page?id=${darftIds}`)}>Edit</MenuItem>
-        <MenuItem onClick={()=>deletePhosts()}>Delete</MenuItem>
-        <MenuItem onClick={()=>navigate(`/post-page?id=${darftIds}`)}>Preview</MenuItem>
+        <MenuItem onClick={() => navigate(`/edit-post-page?id=${darftIds}`)}>Edit</MenuItem>
+        <MenuItem onClick={() => deletePhosts()}>Delete</MenuItem>
+        <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}`)}>Preview</MenuItem>
       </Menu>
     </Card>
   );

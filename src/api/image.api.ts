@@ -1,8 +1,8 @@
-import axios from "axios";
+import { axiosPrivate } from "./axiosPrivate";
 
-export const searchImages = async (query: string) => {
-  const res = await axios.get(
-    `http://localhost:3000/api/images/search?q=${query}`
+export const searchImages = async (axiosInstance:any,query: string) => {
+  const res = await axiosInstance.get(
+    `/api/images/search?q=${query}`
   );
   return res.data.results;
 };

@@ -39,7 +39,7 @@ const AdminHeader = () => {
             dispatch(removeAuth());
             navigate("/");
         } catch (error) {
-            console.error("Failed to sign out:", error);
+            
         }
     };
 

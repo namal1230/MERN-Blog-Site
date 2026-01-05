@@ -18,6 +18,7 @@ import { SignOut } from './SignOut';
 import { getPublishedPhosts } from '../api/sendPhosts.api';
 import PublishedPosts from './PublishedPosts';
 import { Header } from '../components/Header';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export interface draft {
     _id: string;
@@ -25,11 +26,12 @@ export interface draft {
     createdAt: string;
     image?: string | null;
     username: string;
-    likeCount:number;
-    commentCount:number;
+    likeCount: number;
+    commentCount: number;
 }
 
-const  HomePage: React.FC = ()=>{
+const HomePage: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [draftData, setdraftData] = useState<draft[]>([]);
     const [lastId, setlastIds] = useState<string | null>(null);
     const [loading, setloading] = useState(false);
@@ -46,7 +48,7 @@ const  HomePage: React.FC = ()=>{
         setloading(true);
 
         try {
-            const res = await getPublishedPhosts(lastId, email);
+            const res = await getPublishedPhosts(axiosPrivate, lastId, email);
             setdraftData(prev => {
                 const existingIds = new Set(prev.map(p => p._id));
                 const newData = res.data.filter((p: draft) => !existingIds.has(p._id));
@@ -55,9 +57,9 @@ const  HomePage: React.FC = ()=>{
             setlastIds(res.nextCursor);
             setHasMore(Boolean(res.nextCursor));
 
-            console.log("Loaded posts ->", res.data);
+            
         } catch (err) {
-            console.error("Failed to fetch posts", err);
+            
         } finally {
             fetchingRef.current = false;
             setloading(false);
@@ -110,7 +112,7 @@ const  HomePage: React.FC = ()=>{
         handleMobileMenuClose();
     };
 
-    const changeDataState=(value:boolean)=>{
+    const changeDataState = (value: boolean) => {
         setdataStatus(value);
     }
 
@@ -190,7 +192,7 @@ const  HomePage: React.FC = ()=>{
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <Header action={changeDataState}/>
+            <Header action={changeDataState} />
             {dataStatus && draftData.map((draft) => (
                 <PublishedPosts
                     key={draft._id}

@@ -31,8 +31,9 @@ import type { RootState } from "../utilities/store/store";
 import { searchPhosts, getNotifications, setNotificationStatus } from "../api/sendPhosts.api";
 import PublishedPosts from "../pages/PublishedPosts";
 import { Title } from "chart.js";
-import { logout } from "../firebase/auth"; 
+import { logout } from "../firebase/auth";
 import { removeAuth } from "../utilities/slices/loginSlice";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export interface reaction {
   comment: string;
@@ -115,7 +116,7 @@ const drawer = (
       <Box sx={{ pt: 2 }}>
         <Link to={"/stories"}>My Library</Link>
       </Box>
-       <Box sx={{ pt: 2 }}>
+      <Box sx={{ pt: 2 }}>
         <Link to={"/follow-phosts"}>Followers Story</Link>
       </Box>
     </List>
@@ -125,6 +126,7 @@ const drawer = (
 const drawerWidth = 240;
 
 export const Header = ({ action }: { action: any }) => {
+  const axiosPrivate = useAxiosPrivate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -135,7 +137,7 @@ export const Header = ({ action }: { action: any }) => {
   const [totalreacts, settotalreacts] = useState<number>(0);
   const [topReactions, setTopReactions] = useState<notifications[]>([]);
   const [showTopUp, setShowTopUp] = useState(false);
-   const [anchorEls, setAnchorEls] = useState<null | HTMLElement>(null);
+  const [anchorEls, setAnchorEls] = useState<null | HTMLElement>(null);
 
   const email = useSelector((state: RootState) => state.persistedReducer.email);
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
@@ -153,9 +155,9 @@ export const Header = ({ action }: { action: any }) => {
     setAnchorEl(event.currentTarget);
   };
 
-   const handleMobileMenuClose = () => {
-        setAnchorEls(null);
-    };
+  const handleMobileMenuClose = () => {
+    setAnchorEls(null);
+  };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -163,33 +165,33 @@ export const Header = ({ action }: { action: any }) => {
 
   const setNotificationUpdate = async () => {
     if (showTopUp == false) {
-      console.log("trigger 55", showTopUp);
-      await setNotificationStatus(name);
+
+      await setNotificationStatus(axiosPrivate, name);
     }
 
   }
 
   const handleMobileMenuOpenSmall = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEls(event.currentTarget);
-    };
+    setAnchorEls(event.currentTarget);
+  };
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       navigate("/home-page");
       if (search == "") {
-        console.log("trigger this");
+
         action(true);
         setcurrentdata(false);
       } else {
         setcurrentdata(true);
         try {
-          console.log("trigger api");
+
           action(false);
-          const result = await searchPhosts(email, search);
+          const result = await searchPhosts(axiosPrivate, email, search);
           setdraftData(result);
-          console.log("Loaded posts ->", result.data);
+
         } catch (err) {
-          console.error("Failed to fetch posts", err);
+
         }
       }
     }
@@ -201,21 +203,21 @@ export const Header = ({ action }: { action: any }) => {
   };
 
   const handleSignOut = async () => {
-     try {
-      await logout(); 
+    try {
+      await logout();
       setAnchorEl(null);
       dispatch(removeAuth());
       navigate("/");
-     }catch(error){
-      console.error("Failed to sign out:", error);
-     }
+    } catch (error) {
+
+    }
   };
 
   useEffect(() => {
     const notification = async () => {
       try {
-        const response = await getNotifications(name);
-        console.log("API response:", response);
+        const response = await getNotifications(axiosPrivate, name);
+
 
         if (Array.isArray(response.data) && response.data.length > 0) {
           const total = response.data.reduce(
@@ -232,7 +234,6 @@ export const Header = ({ action }: { action: any }) => {
           setTopReactions([]);
         }
       } catch (err) {
-        console.error("Failed to fetch notifications:", err);
         settotalreacts(0);
         setTopReactions([]);
       }
@@ -241,9 +242,6 @@ export const Header = ({ action }: { action: any }) => {
     notification();
   }, [name]);
 
-  useEffect(() => {
-    console.log("Updated topReactions:", topReactions);
-  }, [topReactions]);
 
   return (
     <AppBar
@@ -348,17 +346,17 @@ export const Header = ({ action }: { action: any }) => {
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                    <IconButton
-                        size="large"
-                        aria-label="show more"
-                        aria-controls={mobileMenuId}
-                        aria-haspopup="true"
-                        onClick={handleMobileMenuOpenSmall}
-                        color="inherit"
-                    >
-                        <MoreIcon />
-                    </IconButton>
-                </Box>
+          <IconButton
+            size="large"
+            aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpenSmall}
+            color="inherit"
+          >
+            <MoreIcon />
+          </IconButton>
+        </Box>
       </Toolbar>
       {currentdata &&
         draftData.map((draft) => (
@@ -438,21 +436,21 @@ export const Header = ({ action }: { action: any }) => {
       </Box>
 
       <Menu
-                anchorEl={anchorEl}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                id={mobileMenuId}
-                open={Boolean(anchorEls)}
-                onClose={handleMobileMenuClose}
-            >
-                <MenuItem onClick={handleMobileMenuClose}>
-                    <Avatar sx={{ width: 24, height: 24, ml: 2 }} src={image} />
-                </MenuItem>
-                <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
-                <MenuItem onClick={handleSignOut}>
-                    <Typography variant="body2">Sign Out</Typography>
-                </MenuItem>
-            </Menu>
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        id={mobileMenuId}
+        open={Boolean(anchorEls)}
+        onClose={handleMobileMenuClose}
+      >
+        <MenuItem onClick={handleMobileMenuClose}>
+          <Avatar sx={{ width: 24, height: 24, ml: 2 }} src={image} />
+        </MenuItem>
+        <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+        <MenuItem onClick={handleSignOut}>
+          <Typography variant="body2">Sign Out</Typography>
+        </MenuItem>
+      </Menu>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

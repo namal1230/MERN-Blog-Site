@@ -23,6 +23,7 @@ import ReportContent from "./ReportContent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import PersonIcon from '@mui/icons-material/Person';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface propTypes {
   draftId: string;
@@ -30,12 +31,13 @@ interface propTypes {
   title: string;
   createdAt: string;
   status: string;
-  name:string;
-  like:number;
-  comment:number;
+  name: string;
+  like: number;
+  comment: number;
 }
 
-const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, status,name, like,comment }) => {
+const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, status, name, like, comment }) => {
+  const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorsEl, setAnchorsEl] = useState<null | HTMLElement>(null);
 
@@ -54,7 +56,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
     const date = new Date(createdAt);
     const formatted = date.toString().split(" GMT")[0];
 
-    console.log("title->",title);
     setdarftId(draftId);
     setimage(image ? image : "");
     settitle(title);
@@ -69,7 +70,7 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
 
   const downloadPdf = async () => {
     try {
-      const response = await downloadsPDF(darftIds);
+      const response = await downloadsPDF(axiosPrivate, darftIds);
 
       const url = window.URL.createObjectURL(
         new Blob([response], { type: "application/pdf" })
@@ -85,7 +86,7 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("PDF download failed", error);
+
     }
   }
 
@@ -105,10 +106,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
   const open2 = Boolean(anchorsEl);
   const reportContent = async () => {
     setvisible(!visible);
-
-
-    // const result = await deletePhost(darftIds);
-    // console.log(result);
 
   }
 
@@ -134,13 +131,13 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
 
               <Stack direction="row" spacing={0.5} alignItems="center">
                 <IconButton color="error" disabled>
-                  <FavoriteIcon /> 
+                  <FavoriteIcon />
                 </IconButton>
                 <Typography variant="body2">{like}</Typography>
               </Stack>
 
               <Stack direction="row" spacing={0.5} alignItems="center">
-                <ChatBubbleOutlineIcon fontSize="small"/>
+                <ChatBubbleOutlineIcon fontSize="small" />
                 <Typography variant="body2">{comment}</Typography>
               </Stack>
             </Stack>
@@ -151,7 +148,7 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
       {/* More Icon */}
       <Box sx={{ ml: "auto" }}>
         <Tooltip title="View profile" placement="left">
-          <IconButton onClick={()=>navigate("/user-profile?name="+name)} sx={{ ml: "auto" }}>
+          <IconButton onClick={() => navigate("/user-profile?name=" + name)} sx={{ ml: "auto" }}>
             <PersonIcon />
           </IconButton>
         </Tooltip>
@@ -166,26 +163,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
           </IconButton>
         </Tooltip>
       </Box>
-
-      {/* Top-up Menu */}
-      {/* <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right"
-        }}
-        sx={{ width: "120vw" }}
-      >
-        <MenuItem onClick={() => navigate(`/edit-post-page?id=${darftIds}`)}>Edit</MenuItem>
-        <MenuItem onClick={() => deletePhosts()}>Delete</MenuItem>
-        <MenuItem onClick={() => navigate(`/publihed-post-page?id=${darftIds}`)}>Preview</MenuItem>
-      </Menu> */}
 
       <Menu
         anchorEl={anchorsEl}
@@ -204,7 +181,7 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
         <MenuItem onClick={() => reportContent()}>Reported Content</MenuItem>
       </Menu>
 
-     {visible==true && <ReportContent ids={draftId} visibility={reportContent}/>}
+      {visible == true && <ReportContent ids={draftId} visibility={reportContent} />}
 
     </Card>
   );

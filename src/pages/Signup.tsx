@@ -14,9 +14,11 @@ import {
 import { authFire } from "../firebase/firebaseConfig";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { login } from "../api/auth.api"
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { setAuth } from "../utilities/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
+import UseAuth from "../context/UseAuth";
+import type { User } from "../types/User";
 export interface users {
   name: string,
   email: string,
@@ -26,6 +28,7 @@ export interface users {
 
 
 const Signup: React.FC = () => {
+  const { setUser: setUserAuth } = UseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<users>();
@@ -42,7 +45,9 @@ const Signup: React.FC = () => {
     setUser(loggedInUser);
 
     const result = await login(loggedInUser);
-    console.log("login->",result);
+   
+    const role = result.user.role;
+    const token = result.token;
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,
@@ -50,18 +55,28 @@ const Signup: React.FC = () => {
       profile: loggedInUser.profile,
       id: loggedInUser.id
     }));
+    const userFromApi: User = {
+      id: 123,
+      role: role, // TS now knows it's valid
+      token: token,
+    };
 
-    navigate("/home-page");
+    setUserAuth(userFromApi);
+    if (result.user.role === "user") {
+      navigate("/home-page");
+    } else if (result.user.role === "admin") {
+      navigate("/admin");
+    }
   };
 
   const handleGoogleLogin = async () => {
     try {
       const result = await loginWithGoogle();
 
-      console.log(result);
+      
 
       const currentUser = result.user || "";
-      const userData:users = {
+      const userData: users = {
         id: currentUser.uid || "",
         name: currentUser.displayName || currentUser.email?.split("@")[0] || "",
         email: currentUser.email || "",
@@ -73,7 +88,7 @@ const Signup: React.FC = () => {
       }
 
       const backendResult = await login(userData);
-
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -81,10 +96,21 @@ const Signup: React.FC = () => {
         profile: userData.profile,
         id: userData.id
       }));
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: role, // TS now knows it's valid
+        token: token,
+      };
 
-      navigate("/home-page");
+      setUserAuth(userFromApi);
+      if (role === "user") {
+        navigate("/home-page");
+      } else if (role === "admin") {
+        navigate("/admin");
+      }
     } catch (err) {
-      console.error("Google login failed:", err);
+      
     }
   };
 
@@ -96,7 +122,7 @@ const Signup: React.FC = () => {
       setUser(fbUser);
 
       const backendResult = await login(fbUser);
-
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: fbUser.name,
@@ -104,10 +130,20 @@ const Signup: React.FC = () => {
         profile: fbUser.profile,
         id: fbUser.id
       }));
-
-      navigate("/home-page");
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: role, // TS now knows it's valid
+        token: token,
+      };
+      setUserAuth(userFromApi);
+      if (role === "user") {
+        navigate("/home-page");
+      } else if (role === "admin") {
+        navigate("/admin");
+      }
     } catch (err) {
-      console.error("Facebook login failed:", err);
+      
     }
   };
 
@@ -126,7 +162,7 @@ const Signup: React.FC = () => {
       };
 
       const backendResult = await login(userData);
-
+      const role = backendResult.user.role;
       dispatch(setAuth({
         token: backendResult.token,
         name: userData.name,
@@ -135,7 +171,19 @@ const Signup: React.FC = () => {
         id: userData.id
       }));
 
-      navigate("/home-page");
+      const token = backendResult.token;
+      const userFromApi: User = {
+        id: 123,
+        role: role, // TS now knows it's valid
+        token: token,
+      };
+      setUserAuth(userFromApi);
+
+      if (role === "user") {
+        navigate("/home-page");
+      } else if (role === "admin") {
+        navigate("/admin");
+      }
     } catch (err) {
       handleEmailRegister();
     }
@@ -174,7 +222,7 @@ const Signup: React.FC = () => {
     };
 
     const backendResult = await login(userData);
-
+    const role = backendResult.user.role;
     dispatch(setAuth({
       token: backendResult.token,
       name: userData.name,
@@ -182,8 +230,18 @@ const Signup: React.FC = () => {
       profile: userData.profile,
       id: userData.id
     }));
-
-    navigate("/home-page");
+    const token = backendResult.token;
+    const userFromApi: User = {
+      id: 123,
+      role: role, // TS now knows it's valid
+      token: token,
+    };
+    setUserAuth(userFromApi);
+    if (role === "user") {
+      navigate("/home-page");
+    } else if (role === "admin") {
+      navigate("/admin");
+    }
   };
 
 

@@ -1,9 +1,10 @@
 import { createContext, type PropsWithChildren,useContext,useState } from "react";
 import type { User } from "../types/User";
+import useRefreshToken from "../hooks/useRefreshToken";
 
 type AuthContextType = {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,9 +23,8 @@ export const AuthProvider = ({ children, isSignedIn }: AuthProviderProps) => {
     isSignedIn
       ? { id: 1, role: "user", token: "demo-token" }
       : null
-
-    // if()
   );
+  
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
@@ -38,5 +38,5 @@ export const useAuth = () => {
   if (!context) {
     throw new Error("useAuth must be used inside an AuthProvider");
   }
-  return context; // { user, setUser }
+  return context; 
 };

@@ -10,7 +10,7 @@ import {
     Avatar
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import BeenhereIcon from "@mui/icons-material/Beenhere";
 import { getReportedUser } from "../api/admin.api";
 import PersonIcon from '@mui/icons-material/Person';
@@ -19,6 +19,7 @@ import { deleteReport } from "../api/draftPhosts.api";
 import { rejectedUserAccount } from "../api/admin.api";
 import ViewReportEmail from "./ViewReportEmail";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface User {
     _id: string;
@@ -31,27 +32,24 @@ interface User {
 
 }
 
-const ReportUsers = () => {
+const ReportUsers: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [users, setUsers] = useState<User[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [visibility,setVisibility] = useState<boolean>(false);
+    const [visibility, setVisibility] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const getUsers = async () => {
-            const response = await getReportedUser();
-            console.log("response->", response);
+            const response = await getReportedUser(axiosPrivate);
 
             setUsers(response.users);
         };
         getUsers();
     }, []);
 
-    useEffect(() => {
-        console.log(users);
-    }, [users])
     const formattedDate = (date: string) =>
         new Date(date).toString().split(" GMT")[0];
 
@@ -66,13 +64,13 @@ const ReportUsers = () => {
     const open = Boolean(anchorEl);
 
     const deleteReports = async (id: string) => {
-        if(!id) return;
-        const response = await deleteReport(id);
+        if (!id) return;
+        const response = await deleteReport(axiosPrivate, id);
     }
 
-    const rejectUser = async (name: string,reportId:string) => {
-        if(!name) return;
-        const response = await rejectedUserAccount(name,reportId);
+    const rejectUser = async (name: string, reportId: string) => {
+        if (!name) return;
+        const response = await rejectedUserAccount(axiosPrivate, name, reportId);
     }
 
     return (
@@ -82,14 +80,12 @@ const ReportUsers = () => {
                     key={user._id}
                     sx={{ display: "flex", alignItems: "center", p: 1, mb: 1 }}
                 >
-                    {/* Avatar */}
                     <Avatar
                         src={user.profile || ""}
                         alt={user.name}
                         sx={{ width: 56, height: 56 }}
                     />
 
-                    {/* User Info */}
                     <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
                         <CardContent sx={{ p: 0 }}>
                             <Typography variant="h6">{user.name}</Typography>
@@ -113,11 +109,11 @@ const ReportUsers = () => {
                             <ReportIcon />
                         </IconButton>
                     </Tooltip>
-                <Tooltip title="View Email" placement="left">
-                    <IconButton onClick={()=>setVisibility(!visibility)}>
-                        <VisibilityIcon/>
-                    </IconButton>
-                </Tooltip>
+                    <Tooltip title="View Email" placement="left">
+                        <IconButton onClick={() => setVisibility(!visibility)}>
+                            <Link to={`/report-email?id=${user.reportId}`}><VisibilityIcon /></Link>
+                        </IconButton>
+                    </Tooltip>
 
                     <Menu
                         anchorEl={anchorEl}
@@ -133,10 +129,10 @@ const ReportUsers = () => {
                         }}
                         sx={{ width: "120vw" }}
                     >
-                        <MenuItem onClick={() => rejectUser(user.name,user.reportId)}>Reported</MenuItem>
+                        <MenuItem onClick={() => rejectUser(user.name, user.reportId)}>Reported</MenuItem>
                         <MenuItem onClick={() => deleteReports(user.reportId)}>Cancel</MenuItem>
                     </Menu>
-                    {visibility && <Link to={`/report-email?id=${user.reportId}`}><ViewReportEmail/></Link>}
+                    {visibility && <ViewReportEmail />}
                 </Card>
             ))}
         </Box>

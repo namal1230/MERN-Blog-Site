@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { getReportEmail } from "../api/draftPhosts.api";
 import { useSearchParams } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface Report {
     acknowledge: string;
@@ -23,8 +24,9 @@ interface Report {
 }
 
 const ViewReportEmail: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [report, setReport] = useState<Report | null>(null);
-    
+
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
 
@@ -32,8 +34,8 @@ const ViewReportEmail: React.FC = () => {
         if (!id) return;
 
         const fetchReport = async () => {
-            const response = await getReportEmail(id);
-            console.log("email ->", response);
+            const response = await getReportEmail(axiosPrivate, id);
+            
             setReport(response.data);
         };
 

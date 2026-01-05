@@ -27,9 +27,9 @@ interface EmailContentProps {
     status?: string;
 }
 
-const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,body,createdAt,updatedAt,profile,status}) => {
+const EmailContent: React.FC<EmailContentProps> = ({ emailId, email, source, title, body, createdAt, updatedAt, profile, status }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [emailbox,setEmailBox] = useState<boolean>(false);
+    const [emailbox, setEmailBox] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -112,8 +112,8 @@ const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,b
                     {formattedDate}
                 </Typography>
                 <Tooltip title="Mark as Read">
-                    <IconButton onClick={()=>setEmailBox(!emailbox)}>
-                        <MarkEmailReadIcon/>
+                    <IconButton onClick={() => setEmailBox(!emailbox)}>
+                        <MarkEmailReadIcon />
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -141,7 +141,7 @@ const EmailContent: React.FC<EmailContentProps> = ({emailId,email,source,title,b
                 <MenuItem>Edit</MenuItem>
                 <MenuItem>Delete</MenuItem>
             </Menu>
-            {emailbox && <EmailResponse emailIds={emailId}/>}
+            {emailbox && <EmailResponse emailIds={emailId} />}
         </Card>
     );
 };

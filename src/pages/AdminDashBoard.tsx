@@ -9,17 +9,19 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { useEffect } from 'react';
 import { SignOut } from './SignOut';
-import {Chart as ChartJS,CategoryScale,LinearScale,Title,Tooltip,Legend,BarElement,
+import {
+    Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { getDashBoardStats } from '../api/admin.api';
 import { useState } from 'react';
 import AdminHeader from '../components/AdminHeader';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-ChartJS.register(CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const AdminDashBoard: React.FC = ()=>{
-
+const AdminDashBoard: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [validUser, setvalidUsers] = useState();
     const [rejectUser, setrejectUsers] = useState();
     const [reportedUser, setreportedUser] = useState();
@@ -71,7 +73,7 @@ const AdminDashBoard: React.FC = ()=>{
 
     useEffect(() => {
         const getDrafts = async () => {
-            const result = await getDashBoardStats();
+            const result = await getDashBoardStats(axiosPrivate);
 
             setpublishedPhosts(result.phosts.published);
             setunlistedPhosts(result.phosts.unlisted);
@@ -83,7 +85,7 @@ const AdminDashBoard: React.FC = ()=>{
 
         getDrafts();
 
-    }, [])
+    }, [axiosPrivate])
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -180,7 +182,7 @@ const AdminDashBoard: React.FC = ()=>{
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AdminHeader/>
+            <AdminHeader />
             {renderMobileMenu}
             {renderMenu}
             <Bar data={data} />;

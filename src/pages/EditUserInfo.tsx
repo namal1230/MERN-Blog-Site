@@ -3,31 +3,33 @@ import { Avatar, Box, Button, CardContent, Stack, TextField, Typography } from "
 import { saveInfo, getInfo } from "../api/user.api";
 import type { RootState } from "../utilities/store/store";
 import { useSelector } from "react-redux";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 export interface User {
     name: string;
     email: string;
     bio?: string;
-    jobTitle?:string;
+    jobTitle?: string;
     experienceYears?: string;
     portfolioUrl?: string;
-    githubUrl?:string;
-    linkdinUrl?:string;
-    anotherUrl?:string;
+    githubUrl?: string;
+    linkdinUrl?: string;
+    anotherUrl?: string;
     skills?: string;
 }
 
 
 const EditUserInfo: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [form, setForm] = useState<User>({
         name: "",
         email: "",
         bio: "",
-        jobTitle:"",
+        jobTitle: "",
         experienceYears: "",
         portfolioUrl: "",
-        githubUrl:"",
-        linkdinUrl:"",
-        anotherUrl:"",
+        githubUrl: "",
+        linkdinUrl: "",
+        anotherUrl: "",
         skills: "",
     });
 
@@ -40,18 +42,18 @@ const EditUserInfo: React.FC = () => {
 
     useEffect(() => {
         const getInfoReq = async () => {
-            const response = await getInfo(email);
-            console.log(response);
+            const response = await getInfo(axiosPrivate, email);
+
             setForm({
                 name: response.user.name,
                 email: response.user.email,
                 bio: response.user.bio,
-                jobTitle:response.user.jobTitle,
+                jobTitle: response.user.jobTitle,
                 experienceYears: response.user.experienceYears,
                 portfolioUrl: response.user.portfolioUrl,
-                githubUrl:response.user.githubUrl,
-                linkdinUrl:response.user.linkdinUrl,
-                anotherUrl:response.user.anotherUrl,
+                githubUrl: response.user.githubUrl,
+                linkdinUrl: response.user.linkdinUrl,
+                anotherUrl: response.user.anotherUrl,
                 skills: response.user.skills?.join(", ") || ""
 
             })
@@ -73,12 +75,12 @@ const EditUserInfo: React.FC = () => {
                 name: form.name,
                 email: form.email,
                 bio: form.bio || "",
-                jobTitle:form.jobTitle || "",
+                jobTitle: form.jobTitle || "",
                 experienceYears: form.experienceYears || "",
                 portfolioUrl: form.portfolioUrl || "",
-                githubUrl:form.githubUrl || "",
-                linkdinUrl:form.linkdinUrl || "",
-                anotherUrl:form.anotherUrl || "",
+                githubUrl: form.githubUrl || "",
+                linkdinUrl: form.linkdinUrl || "",
+                anotherUrl: form.anotherUrl || "",
                 skills: form.skills
                     ?.split(",")
                     .map((s) => s.trim())
@@ -86,14 +88,10 @@ const EditUserInfo: React.FC = () => {
                 profileUrl: image || ""
             };
 
-            console.log("Submitting user info:", payload);
-
-            const result = await saveInfo(payload);
-            console.log("User saved successfully:", result);
+            const result = await saveInfo(axiosPrivate, payload);
             alert("User info saved!");
         } catch (error) {
-            console.error("Error saving user info:", error);
-            alert("Failed to save user info. Check console for details.");
+            alert("Failed to save user info.");
         }
     };
 

@@ -1,129 +1,129 @@
-import axios from "axios"; 
-
-export const draftPhosts= async (data: { name: string; email: string; value:string })=>{
+import { axiosPrivate } from "./axiosPrivate"; 
+const BASE_URL = "/phosts";
+export const draftPhosts= async (axiosInstance:any,data: { name: string; email: string; value:string })=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/draft-phost?name="+data.name+"&email="+data.email+"&status="+data.value);
+        const response = await axiosInstance.get(BASE_URL+"/draft-phost?name="+data.name+"&email="+data.email+"&status="+data.value);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getDraftPhost= async (id:string)=>{
+export const getDraftPhost= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/get-draft-phost?id="+id);
+        const response = await axiosInstance.get(BASE_URL+"/get-draft-phost?id="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getReportedPhost= async (id:string)=>{
+export const getReportedPhost= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/get-reported-phost?phostId="+id);
+        const response = await axiosInstance.get(BASE_URL+"/get-reported-phost?phostId="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
 
 export const getDraftPhostByReportId = async (reportId: string) => {
-  const response = await axios.get(`http://localhost:3000/phosts/get-draft-phost?id=${reportId}`);
+  const response = await axiosPrivate.get(BASE_URL+`/get-draft-phost?id=${reportId}`);
   return response.data;
 };
 
-export const deletePhost= async (id:string)=>{
+export const deletePhost= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.delete("http://localhost:3000/phosts/delete-phost?id="+id);
+        const response = await axiosInstance.delete(BASE_URL+"/delete-phost?id="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const editPhost= async (id:string,data: { name: string; email: string; code: string; body:Array<{type:string; value?:string}>; title:string; })=>{
+export const editPhost= async (axiosInstance:any,id:string,data: { name: string; email: string; code: string; body:Array<{type:string; value?:string}>; title:string; })=>{
     try{
-        const response = await axios.put("http://localhost:3000/phosts/edit-phost?id="+id,data);
+        const response = await axiosInstance.put(BASE_URL+"/edit-phost?id="+id,data);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getAllPendingPhost= async ()=>{
+export const getAllPendingPhost= async (axiosInstance:any,)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/get-all-pending");
+        const response = await axiosInstance.get(BASE_URL+"/get-all-pending");
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const approvePhosts= async (id:string)=>{
+export const approvePhosts= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/approve-phost?id="+id);
+        const response = await axiosInstance.get(BASE_URL+"/get-phost?id="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const deleteReport= async (id:string)=>{
+export const deleteReport= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/remove-report?phostId="+id);
+        const response = await axiosInstance.get(BASE_URL+"/remove-report?phostId="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
 
-export const rejectPhosts= async (id:string)=>{
+export const rejectPhosts= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/reject-phost?id="+id);
+        const response = await axiosInstance.get(BASE_URL+"/reject-phost?id="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getAllReportPhost= async ()=>{
+export const getAllReportPhost= async (axiosInstance:any,)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/get-all-report");
+        const response = await axiosInstance.get(BASE_URL+"/get-all-report");
         return response.data;
         
     }catch(err) {
-        console.error(err);
+        
         throw err;
     }
 }
 
-export const getReportEmail= async (id:string)=>{
+export const getReportEmail= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axios.get("http://localhost:3000/phosts/get-report-email?id="+id);
+        const response = await axiosInstance.get(BASE_URL+"/get-report-email?id="+id);
         return response.data;
         
     }catch(err) {
-        console.error(err);
+       
         throw err;
     }
 }

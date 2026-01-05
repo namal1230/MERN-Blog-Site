@@ -16,9 +16,9 @@ export const SignOut: React.FC = () => {
             dispatch(removeAuth())
             await signOut(authFire);
             navigate(-1);
-            console.log("User signed out");
+            
         } catch (error) {
-            console.error("Sign out error:", error);
+            
         }
     }
 

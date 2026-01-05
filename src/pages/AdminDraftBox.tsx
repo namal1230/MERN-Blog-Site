@@ -9,19 +9,22 @@ import {
   Menu,
   MenuItem
 } from "@mui/material";
-import { useState,useEffect } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
-interface propTypes{
-    draftId:string;
-    image:string |  null | undefined;
-    title:string;
-    createdAt:string;
-    status:string;
+interface propTypes {
+  draftId: string;
+  image: string | null | undefined;
+  title: string;
+  createdAt: string;
+  status: string;
 }
 import BeenhereIcon from '@mui/icons-material/Beenhere';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,status}) => {
+const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, status }) => {
+
+  const axiosPrivate = useAxiosPrivate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
@@ -32,29 +35,28 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
 
   const navigate = useNavigate();
 
-  useEffect(()=>{  
+  useEffect(() => {
     if (!createdAt) return;
 
     const date = new Date(createdAt);
     const formatted = date.toString().split(" GMT")[0];
 
-    console.log(formatted);
     setdarftId(draftId);
-    setimage(image?image:"");
+    setimage(image ? image : "");
     settitle(title);
     setcreatedAt(formatted);
-  },[]);
+  }, []);
 
-  const approvePhost = async ()=>{
-    if(!darftIds) return
-    const result = await approvePhosts(darftIds)
-    console.log(result);
+  const approvePhost = async () => {
+    if (!darftIds) return
+    const result = await approvePhosts(axiosPrivate, darftIds)
+    
   }
 
-  const rejectPhost = async ()=>{
-    if(!darftIds) return
-    const result = await rejectPhosts(darftIds)
-    console.log(result);
+  const rejectPhost = async () => {
+    if (!darftIds) return
+    const result = await rejectPhosts(axiosPrivate, darftIds)
+    
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,14 +79,14 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
       />
 
       <Link key={darftIds} to={`/post-page?id=${darftIds}`}>
-      <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
-        <CardContent sx={{ p: 0 }}>
-          <Typography variant="h6">{titles}</Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            {createdAts}
-          </Typography>
-        </CardContent>
-      </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", pl: 2 }}>
+          <CardContent sx={{ p: 0 }}>
+            <Typography variant="h6">{titles}</Typography>
+            <Typography variant="subtitle2" color="text.secondary">
+              {createdAts}
+            </Typography>
+          </CardContent>
+        </Box>
       </Link>
 
       <Tooltip title="More" placement="left">
@@ -105,11 +107,11 @@ const AdminDraftBox: React.FC<propTypes> = ({draftId,image,title,createdAt,statu
           vertical: "top",
           horizontal: "right"
         }}
-        sx={{width:"120vw"}}
+        sx={{ width: "120vw" }}
       >
-        <MenuItem onClick={()=>approvePhost()}>Approve</MenuItem>
-        <MenuItem onClick={()=>rejectPhost()}>Reject</MenuItem>
-        <MenuItem onClick={()=>navigate(`/post-page?id=${darftIds}&status=draft`)}>Preview</MenuItem>
+        <MenuItem onClick={() => approvePhost()}>Approve</MenuItem>
+        <MenuItem onClick={() => rejectPhost()}>Reject</MenuItem>
+        <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}&status=draft`)}>Preview</MenuItem>
       </Menu>
     </Card>
   );

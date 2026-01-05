@@ -12,10 +12,7 @@ const DashTopup = ({ close }: ChildProps) => {
     const [signIn, setSignIn] = useState(true);
 
     const toggleSign = () => {
-        // console.log(signIn);
-        console.log("hii")
-
-        setSignIn(prev => !prev); // toggle between SignIn and SignUp
+        setSignIn(prev => !prev);
     };
 
     const navigate = useNavigate();
@@ -28,7 +25,7 @@ const DashTopup = ({ close }: ChildProps) => {
                 </Button>
                 <Button fullWidth sx={{ textTransform: "none", color: "black" }} onClick={toggleSign}>{signIn ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}</Button>
 
-                <Button fullWidth onClick={()=>navigate("/request-credentials")} sx={{ pt: 1, textTransform: "none", color: "black" }}>{!signIn && "Forgot email or trouble signing in?"}</Button>
+                <Button fullWidth onClick={() => navigate("/request-credentials")} sx={{ pt: 1, textTransform: "none", color: "black" }}>{!signIn && "Forgot email or trouble signing in?"}</Button>
 
             </Box>
         </div>

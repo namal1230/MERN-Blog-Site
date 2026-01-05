@@ -8,6 +8,7 @@ import { NavLink, useSearchParams } from 'react-router-dom';
 import DraftBox from './DraftBox';
 import { draftPhosts } from "../api/draftPhosts.api";
 import { Header } from '../components/Header';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export interface draft {
     _id: string;
@@ -17,7 +18,7 @@ export interface draft {
 }
 
 const DraftPage: React.FC = () => {
-
+    const axiosPrivate = useAxiosPrivate();
     const name = useSelector((state: RootState) => state.persistedReducer.name);
     const email = useSelector((state: RootState) => state.persistedReducer.email);
     const [draftData, setdraftData] = useState<draft[]>([]);
@@ -26,12 +27,10 @@ const DraftPage: React.FC = () => {
     const value = params.get("value");
 
     useEffect(() => {
-        console.log("log is worked", name, email);
 
         const getDrafts = async () => {
-            if(!value || !name) return
-            const result = await draftPhosts({ name, email, value })
-            console.log(result);
+            if (!value || !name) return
+            const result = await draftPhosts(axiosPrivate, { name, email, value })
             setdraftData(result);
         }
         getDrafts();
@@ -39,8 +38,8 @@ const DraftPage: React.FC = () => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <Header action={undefined}/>
-            
+            <Header action={undefined} />
+
             <Typography sx={{ mt: 7, ml: 5 }} variant="h4" gutterBottom>
                 Stories
             </Typography>
@@ -66,7 +65,7 @@ const DraftPage: React.FC = () => {
                     title={draft.title}
                     createdAt={draft.createdAt}
                     image={draft.image}
-                    status={value||""}
+                    status={value || ""}
                 />
             ))}
         </Box>

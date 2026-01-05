@@ -25,9 +25,6 @@ export const loginSlice = createSlice({
         state.email=action.payload.email;
         state.profile=action.payload.profile;
         state.id=action.payload.id;
-        console.log(state)
-        console.log(action.payload);
-        
     },
     removeAuth:(state: AuthState)=>{
       state.email="",

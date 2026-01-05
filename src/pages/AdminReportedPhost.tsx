@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteReport, approvePhosts, rejectPhosts } from "../api/draftPhosts.api";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
 interface propTypes {
     draftId: string;
     image: string | null | undefined;
@@ -22,8 +23,10 @@ interface propTypes {
 }
 import ReportIcon from '@mui/icons-material/Report';
 import ViewReportEmail from "./ViewReportEmail";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, createdAt, status }) => {
+    const axiosPrivate = useAxiosPrivate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
@@ -31,7 +34,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
     const [images, setimage] = useState<string>();
     const [titles, settitle] = useState<string>();
     const [createdAts, setcreatedAt] = useState<string>();
-    const [visibility,setVisibility] = useState<boolean>(false);
+    const [visibility, setVisibility] = useState<boolean>(false);
 
 
     const navigate = useNavigate();
@@ -41,7 +44,6 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
         const date = new Date(createdAt);
         const formatted = date.toString().split(" GMT")[0];
-        console.log(formatted);
         setdarftId(draftId);
         setimage(image ? image : "");
         settitle(title);
@@ -50,8 +52,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
     const rejectPhost = async () => {
         if (!darftIds) return
-        const result = await rejectPhosts(darftIds)
-        console.log("reject->",result);
+        const result = await rejectPhosts(axiosPrivate, darftIds)
     }
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -67,8 +68,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
     const deleteReports = async () => {
         if (!darftIds) return;
 
-        const result = await deleteReport(darftIds);
-         console.log("reject->",result);
+        const result = await deleteReport(axiosPrivate, darftIds);
 
     }
 
@@ -94,8 +94,8 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
             <Box sx={{ ml: "auto" }}>
                 <Tooltip title="View Email" placement="left">
-                    <IconButton onClick={()=>setVisibility(!visibility)}>
-                        <VisibilityIcon/>
+                    <IconButton onClick={() => setVisibility(!visibility)}>
+                        <Link to={`/report-email?id=${draftId}`}><VisibilityIcon /></Link>
                     </IconButton>
                 </Tooltip>
 
@@ -124,7 +124,7 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
                 <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}&status=report`)}>Preview</MenuItem>
                 <MenuItem onClick={() => deleteReports()}>Cancel</MenuItem>
             </Menu>
-            {visibility && <ViewReportEmail id={draftId} status="phost"/>}
+            {visibility && <Link to={`/report-email?id=${draftId}`}><ViewReportEmail /></Link>}
         </Card>
     );
 };

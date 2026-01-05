@@ -16,6 +16,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import { sendPhosts } from '../api/sendPhosts.api';
 import { useSearchParams } from 'react-router-dom';
 import { editPhost, getDraftPhost } from '../api/draftPhosts.api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -33,7 +34,8 @@ export interface phost {
   value?: string
 }
 
-const EditPhost: React.FC = ()=>{
+const EditPhost: React.FC = () => {
+  const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name = useSelector((state: RootState) => state.persistedReducer.name);
   const email = useSelector((state: RootState) => state.persistedReducer.email);
@@ -56,29 +58,28 @@ const EditPhost: React.FC = ()=>{
   const [params] = useSearchParams();
   const value = params.get("id");
 
-  const sendPhostRequest= async ()=>{
-    const result = await editPhost(value||"",{name,email,body:lines,code,title});
-    console.log(result);
-    
+  const sendPhostRequest = async () => {
+    const result = await editPhost(axiosPrivate, value || "", { name, email, body: lines, code, title });
+
+
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!value) return;
 
     const getDrafts = async () => {
-      const result = await getDraftPhost(value);
+      const result = await getDraftPhost(axiosPrivate, value);
       setTitle(result.title);
       setLines(result.body);
       setCode(result.code || "");
     };
 
     getDrafts();
-  },[value])
+  }, [value])
 
   useEffect(() => {
-    console.log(lines);
-    console.log(title);
-    
+
+
     if (lines[lines.length - 1].type === "IMG" || lines[lines.length - 1].type === "VEDIO") {
       const last = lines[lines.length - 1];
       const prev = lines[lines.length - 2];
@@ -93,10 +94,9 @@ const EditPhost: React.FC = ()=>{
 
     const upload = async () => {
       try {
-        const res = await fileTransfer({ file: selectedFile });
+        const res = await fileTransfer(axiosPrivate, { file: selectedFile });
         attachImage(res.url);
       } catch (err) {
-        console.error(err);
       }
     };
     upload();
@@ -143,43 +143,36 @@ const EditPhost: React.FC = ()=>{
   }
 
   const uploadUnsplash = () => {
-    console.log("unsplas upload set value trigger");
-    
+
     setLines((prev) => {
       const index = activeLine === 'title' ? 0 : (activeLine as number) + 1;
       const newLines = [...prev];
-        newLines.splice(index, 0, { type: "UNSPLASH", value: "" });
+      newLines.splice(index, 0, { type: "UNSPLASH", value: "" });
       return newLines;
     });
   }
 
-  const setEmbedImage=(img:string)=>{
-    console.log("trigger")
-    console.log(img);
-    console.log(" 22 unsplas upload set value trigger");
-
+  const setEmbedImage = (img: string) => {
     setLines((prev) => {
       const index = activeLine === 'title' ? 0 : (activeLine as number) + 1;
       const newLines = [...prev];
-        console.log("this boolean condi");
-        
-        newLines.splice(index, 0, { type: "UNSPLASH", value: img }); // insert image at cursor
-        setimageState(false);
-      
+
+      newLines.splice(index, 0, { type: "UNSPLASH", value: img }); // insert image at cursor
+      setimageState(false);
+
       newLines.push({ type: "TEXT", value: "" })
 
       const lastIndex = newLines.length - 1;
-  const beforeLastIndex = lastIndex - 1;
+      const beforeLastIndex = lastIndex - 1;
 
-  if (
-    newLines[lastIndex]?.type === "TEXT" &&
-    newLines[beforeLastIndex]?.type === "UNSPLASH"
-  ) {
-    newLines.splice(beforeLastIndex, 1);
-  }
+      if (
+        newLines[lastIndex]?.type === "TEXT" &&
+        newLines[beforeLastIndex]?.type === "UNSPLASH"
+      ) {
+        newLines.splice(beforeLastIndex, 1);
+      }
 
-      console.log(newLines);
-      
+
       return newLines;
     });
 
@@ -187,9 +180,8 @@ const EditPhost: React.FC = ()=>{
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (e.key === 'Enter') {
-      console.log(query);
 
-      const data = await searchImages(query);
+      const data = await searchImages(axiosPrivate, query);
       setImages(data);
       setimageState(true);
     }
@@ -198,12 +190,12 @@ const EditPhost: React.FC = ()=>{
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (e.key === 'Backspace') {
       const currentLine = lines[index];
-     if (currentLine.value === "" && index > 0) {
-      const newline = [...lines];
-      newline.splice(index - 1, 1);
-      setLines(newline)
-      setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
-    }
+      if (currentLine.value === "" && index > 0) {
+        const newline = [...lines];
+        newline.splice(index - 1, 1);
+        setLines(newline)
+        setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
+      }
     }
 
     if (e.key === 'Enter') {
@@ -234,7 +226,6 @@ const EditPhost: React.FC = ()=>{
       const newLines = [...lines];
       newLines.push({ type: "TEXT", value: "" });
       setLines(newLines);
-      console.log("lines new ", lines);
       e.preventDefault();
       setActiveLine(index);
       setTimeout(() => lineRefs.current[index + 1]?.focus(), 0);
@@ -250,10 +241,10 @@ const EditPhost: React.FC = ()=>{
           </Typography>
           Draft in {name}
           <Box sx={{ flexGrow: 1 }} />
-          <Button onClick={()=>setpostUIState(true)} variant="contained" sx={{borderRadius:"20px",height:"30px",width:"70px",fontSize:"12px"}} color="success">
+          <Button onClick={() => setpostUIState(true)} variant="contained" sx={{ borderRadius: "20px", height: "30px", width: "70px", fontSize: "12px" }} color="success">
             Publish
           </Button>
-          <IconButton onClick={()=>setcodeState(!codeState)} sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
+          <IconButton onClick={() => setcodeState(!codeState)} sx={{ pt: 2.3, color: "black" }} size="large" aria-label="write">
             <Badge>
               <Tooltip title="Add code Block">
                 <DataObjectIcon />
@@ -317,14 +308,14 @@ const EditPhost: React.FC = ()=>{
         } ref={fileInputRef} accept='image/*,vedio/*' hidden />
 
         <Input
-        value={title}
+          value={title}
           fullWidth
           placeholder="Title"
           disableUnderline
           inputRef={titleRef}
           sx={{ fontSize: "2.2rem", fontWeight: "bold", mb: 3 }}
           onFocus={() => setActiveLine('title')}
-          onChange={(e)=>setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
         {lines.map((line, index) => (
@@ -391,43 +382,43 @@ const EditPhost: React.FC = ()=>{
                       }}
                       onKeyDown={(e) => handleSearch(e, index)}
                     />
-                    :line.type == "UNSPLASH"?
-                     <img key={index} src={line.value} alt="file" />
-                    : <TextField
-                      key={index}
-                      fullWidth
-                      variant="standard"
-                      multiline
-                      rows={1}
-                      value={line.value || ""}
-                      placeholder={index === 0 ? "Tell your story..." : ""}
-                      inputRef={(el) => (lineRefs.current[index] = el)}
-                      InputProps={{ disableUnderline: true }}
-                      sx={{
-                        letterSpacing: "2px",
-                        p: 1,
-                        fontSize: "200%",
-                        width: "80%",
-                        ml: 0,
-                        mt: 2,
-                      }}
-                      onFocus={() => setActiveLine(index)}
-                      onChange={(e) => {
-                        const newLines = [...lines];
-                        newLines[index] = { ...newLines[index], value: e.target.value };
-                        setLines(newLines);
-                      }}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                    />
+                    : line.type == "UNSPLASH" ?
+                      <img key={index} src={line.value} alt="file" />
+                      : <TextField
+                        key={index}
+                        fullWidth
+                        variant="standard"
+                        multiline
+                        rows={1}
+                        value={line.value || ""}
+                        placeholder={index === 0 ? "Tell your story..." : ""}
+                        inputRef={(el) => (lineRefs.current[index] = el)}
+                        InputProps={{ disableUnderline: true }}
+                        sx={{
+                          letterSpacing: "2px",
+                          p: 1,
+                          fontSize: "200%",
+                          width: "80%",
+                          ml: 0,
+                          mt: 2,
+                        }}
+                        onFocus={() => setActiveLine(index)}
+                        onChange={(e) => {
+                          const newLines = [...lines];
+                          newLines[index] = { ...newLines[index], value: e.target.value };
+                          setLines(newLines);
+                        }}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                      />
         ))}
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
-          {imageState && images.map((img,index) => (
+          {imageState && images.map((img, index) => (
             <Box
-            onClick={()=>setEmbedImage(img.urls.small)}
-            key={index}
+              onClick={() => setEmbedImage(img.urls.small)}
+              key={index}
               sx={{
-                width:"20vw",
+                width: "20vw",
                 position: "relative",
                 overflow: "hidden",
                 borderRadius: 2,
@@ -445,7 +436,7 @@ const EditPhost: React.FC = ()=>{
                 src={img.urls.small}
                 alt={img.alt_description}
                 style={{
-                  width:"200px",
+                  width: "200px",
                   transition: "all 0.3s ease",
                 }}
               />
@@ -472,38 +463,38 @@ const EditPhost: React.FC = ()=>{
         </div>
       </Box>
 
-  {codeState && <div style={{ width: "100%" }}>
-      
-      <select
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      >
-        {LANGUAGES.map((lang) => (
-          <option key={lang.value} value={lang.value}>
-            {lang.label}
-          </option>
-        ))}
-      </select>
+      {codeState && <div style={{ width: "100%" }}>
 
-      
-      <Editor
-        height="400px"
-        theme="vs-dark"
-        language={language}
-        value={code}
-        onChange={(value) => setCode(value || "")}
-        options={{
-          fontSize: 14,
-          minimap: { enabled: false },
-          automaticLayout: true
-        }}
-      />
-    </div>}
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          style={{ marginBottom: "10px" }}
+        >
+          {LANGUAGES.map((lang) => (
+            <option key={lang.value} value={lang.value}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
 
-      {postUIState && <div style={{zIndex:"10",color:"black",backgroundColor:"white",width:"50%",height:"50%",position:"absolute",top:"0",bottom:"0",left:"0",right:"0",margin:"auto",alignItems:"center"}}>
 
- <h2> Confirm Publish Post</h2>
+        <Editor
+          height="400px"
+          theme="vs-dark"
+          language={language}
+          value={code}
+          onChange={(value) => setCode(value || "")}
+          options={{
+            fontSize: 14,
+            minimap: { enabled: false },
+            automaticLayout: true
+          }}
+        />
+      </div>}
+
+      {postUIState && <div style={{ zIndex: "10", color: "black", backgroundColor: "white", width: "50%", height: "50%", position: "absolute", top: "0", bottom: "0", left: "0", right: "0", margin: "auto", alignItems: "center" }}>
+
+        <h2> Confirm Publish Post</h2>
         <p>Are you sure you want to publish this post?</p>
         <ul>
           <li>1. Your post will first go to the Draft box. You can update or delete it there.</li>
@@ -512,7 +503,7 @@ const EditPhost: React.FC = ()=>{
           <li>4. Once published to everyone, your post cannot be changed or deleted.</li>
         </ul>
         <div>
-          <Button onClick={()=>setpostUIState(false)} variant="outlined" color="secondary">Cancel</Button> <Button onClick={()=>sendPhostRequest()} variant="outlined" color="info">Publish</Button>
+          <Button onClick={() => setpostUIState(false)} variant="outlined" color="secondary">Cancel</Button> <Button onClick={() => sendPhostRequest()} variant="outlined" color="info">Publish</Button>
         </div>
       </div>}
       <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={handleMenuClose}>

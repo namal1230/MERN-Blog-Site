@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import { reportPhost } from "../api/sendPhosts.api";
 import { useSelector } from "react-redux";
 import type { RootState } from "../utilities/store/store";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface ReportContentProps {
-  ids: string;
-  visibility: any;
+    ids: string;
+    visibility: any;
 }
 
-const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
+const ReportContent: React.FC<ReportContentProps> = ({ ids, visibility }) => {
+    const axiosPrivate = useAxiosPrivate();
     const [form, setForm] = useState({
         reportType: "POST",
         reason: "",
@@ -20,14 +22,10 @@ const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
     });
 
     const email = useSelector((state: RootState) => state.persistedReducer.email);
-    
+
     const handleChange = (e: any) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
-    useEffect(()=>{
-        console.log(form);
-        
-    },[form])
 
     const handleSubmit = async () => {
         if (
@@ -39,10 +37,8 @@ const ReportContent: React.FC<ReportContentProps>=({ids, visibility})=> {
             alert("Please fill all required fields");
             return;
         }
-        const response = await reportPhost(ids,email,form);
-        console.log(response);
-        
-        // onSubmit(form);
+        const response = await reportPhost(axiosPrivate, ids, email, form);
+
     };
 
     return (

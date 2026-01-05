@@ -9,7 +9,8 @@ import {
   Stack,
   Divider
 } from '@mui/material';
-import { getDraftPhost,getReportedPhost } from '../api/draftPhosts.api';
+import { getDraftPhost, getReportedPhost,approvePhosts } from '../api/draftPhosts.api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 type Format = "IMG" | "TEXT" | "VIDEO" | "EMBED" | "UNSPLASH";
 
@@ -19,9 +20,11 @@ export interface phost {
 }
 
 const PostUI: React.FC = () => {
+  const axiosPrivate = useAxiosPrivate();
   const [params] = useSearchParams();
   const value = params.get("id");
   const review = params.get("status");
+  const publi = params.get("value");
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
   const [lines, setLines] = useState<phost[]>([]);
@@ -35,21 +38,29 @@ const PostUI: React.FC = () => {
     let result;
     const getDrafts = async () => {
       if (review == "draft") {
-        result = await getDraftPhost(value);
+        result = await getDraftPhost(axiosPrivate, value);
         setTitle(result.title);
         setLines(result.body);
         setCode(result.code || "");
         setCreatedAt(result.createdAt);
         setUpdatedAt(result.updatedAt);
         setStatus(result.status);
-      }else if(review=="report"){
-        result = await getReportedPhost(value);
+      } else if (review == "report") {
+        result = await getReportedPhost(axiosPrivate, value);
         setTitle(result.title);
         setLines(result.body);
         setCode(result.code || "");
         setCreatedAt(result.createdAt);
         setUpdatedAt(result.updatedAt);
         setStatus(result.status);
+      } else {
+        result = await approvePhosts(axiosPrivate, value);
+        setTitle(result.data.title);
+        setLines(result.data.body);
+        setCode(result.data.code || "");
+        setCreatedAt(result.data.createdAt);
+        setUpdatedAt(result.data.updatedAt);
+        setStatus(result.data.status);
       }
 
     };

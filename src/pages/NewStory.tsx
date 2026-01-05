@@ -13,6 +13,7 @@ import { searchImages } from '../api/image.api';
 import Editor from "@monaco-editor/react";
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import { sendPhosts } from '../api/sendPhosts.api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -30,7 +31,8 @@ export interface phost {
   value?: string
 }
 
-const NewStory: React.FC = ()=>{
+const NewStory: React.FC = () => {
+  const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
   const email = useSelector((state: RootState) => state.persistedReducer.email);
@@ -51,12 +53,11 @@ const NewStory: React.FC = ()=>{
   const LINE_HEIGHT = 60;
 
   const sendPhostRequest = async () => {
-    await sendPhosts({ name, email, body: lines, code, title });
+    await sendPhosts(axiosPrivate, { name, email, body: lines, code, title });
   }
 
   React.useEffect(() => {
-    console.log(lines);
-    console.log(title);
+   
 
     if (lines[lines.length - 1].type === "IMG" || lines[lines.length - 1].type === "VEDIO") {
       const last = lines[lines.length - 1];
@@ -72,10 +73,10 @@ const NewStory: React.FC = ()=>{
 
     const upload = async () => {
       try {
-        const res = await fileTransfer({ file: selectedFile });
+        const res = await fileTransfer(axiosPrivate, { file: selectedFile });
         attachImage(res.url);
       } catch (err) {
-        console.error(err);
+        
       }
     };
     upload();
@@ -156,7 +157,7 @@ const NewStory: React.FC = ()=>{
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
     if (e.key === 'Enter') {
-      const data = await searchImages(query);
+      const data = await searchImages(axiosPrivate, query);
       setImages(data);
       setimageState(true);
     }

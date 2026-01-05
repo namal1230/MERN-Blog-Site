@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { email } from '../api/email.api';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 const navItems = ['Back to Home'];
 const drawerWidth = 240;
 
@@ -23,23 +24,24 @@ const Subtitle = styled('div')({
 });
 
 const ForgotCredentials: React.FC = () => {
+    const axiosPrivate = useAxiosPrivate();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [emailAddress, setEmailAddress] = useState<string>();
     const [descriptions, setDescription] = useState<string>();
 
-    const sendEmail=()=>{
+    const sendEmail = () => {
         if (!emailAddress || !descriptions) {
-            console.warn('Email and description are required');
+
             return;
         }
-        console.log(emailAddress,descriptions);
-        const response = email({email:emailAddress,description:descriptions});
-        if(!response) return
+
+        const response = email(axiosPrivate, { email: emailAddress, description: descriptions });
+        if (!response) return
         alert("Request Send Successfully");
         navigate(-1)
     }
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const handleDrawerToggle = () => {
         setMobileOpen((prev) => !prev);
@@ -99,8 +101,8 @@ const ForgotCredentials: React.FC = () => {
                         </Typography>
 
                         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                            <Button onClick={()=>navigate(-1)} sx={{ color: '#000' }}>
-                                Back to Home        
+                            <Button onClick={() => navigate(-1)} sx={{ color: '#000' }}>
+                                Back to Home
                             </Button>
                         </Box>
                     </Toolbar>
@@ -143,42 +145,21 @@ const ForgotCredentials: React.FC = () => {
 
                     <InputLabel sx={{ pt: 2 }} htmlFor="email">Your email address</InputLabel>
                     <Input
-                        onChange={(e)=>setEmailAddress(e.target.value)}
+                        onChange={(e) => setEmailAddress(e.target.value)}
                         sx={{ width: 400 }}
                         id="email"
                         aria-describedby="component-helper-text"
                     />
                     <InputLabel sx={{ pt: 5 }} htmlFor="description">Description</InputLabel>
                     <TextField
-                        onChange={(e)=>setDescription(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                         sx={{ width: 400 }}
                         id="description"
                         multiline
                         rows={4}
                         variant="standard"
                     />
-                    {/* <Subtitle>
-                        A place to read, find and solve real problems
-                    </Subtitle> */}
-
-                    {/* <Button
-                        onClick={handleClick}
-                        variant="contained"
-                        sx={{
-                            mt: 4,
-                            backgroundColor: '#000',
-                            borderRadius: '30px',
-                            px: 4,
-                            py: 1.2,
-                            fontWeight: 'bold',
-                            '&:hover': {
-                                backgroundColor: '#222',
-                            },
-                        }}
-                    >
-                        Start Reading
-                    </Button> */}
-                    <Button onClick={()=>sendEmail()} sx={{mt:2,width:400}} variant="contained" color="success">
+                    <Button onClick={() => sendEmail()} sx={{ mt: 2, width: 400 }} variant="contained" color="success">
                         Submit
                     </Button>
                 </Box>
