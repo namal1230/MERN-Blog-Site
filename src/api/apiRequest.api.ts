@@ -7,7 +7,7 @@ export const apiRequest = async (apiCall: () => Promise<any>) => {
     if (err.response?.status === 401) {
       try {
 
-        const { data } = await axios.get(
+         await axios.get(
           "https://mern-be-sigma.vercel.app/customer/refresh-token",
           { withCredentials: true } 
         );
