@@ -5,7 +5,7 @@ const useRefreshToken = ()=>{
      const { setUser } = useAuth();
 
     const refresh = async ()=>{
-        const response = await axios.get("https://mern-be-sigma.vercel.app/customer/refresh-token",{
+        const response = await axios.get("https://mern-be-production.up.railway.app/customer/refresh-token",{
             withCredentials:true
         });
 
