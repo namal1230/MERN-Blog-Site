@@ -12,12 +12,8 @@ export const apiRequest = async (apiCall: () => Promise<any>) => {
           { withCredentials: true } 
         );
 
-        localStorage.setItem("accessToken", data.accessToken);
-
         return await apiCall();
       } catch (refreshError) {
-
-        localStorage.removeItem("accessToken");
         window.location.href = "/login";
         throw refreshError;
       }
