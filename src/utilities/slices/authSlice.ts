@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import {axiosPrivate} from "../../api/axiosPrivate";
 
 export const fetchCurrentUser = createAsyncThunk(
@@ -15,12 +15,12 @@ export const fetchCurrentUser = createAsyncThunk(
 
 interface AuthState {
   user: {
-       id: string;
+    id: string;
     name: string;
     email: string;
     role: "user" | "admin";
-    status?: string;
-} | null ;
+    token: string;
+  } | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -38,7 +38,13 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
+    setToken: (state, action: PayloadAction<string>) => {
+      if (state.user) {
+        state.user.token = action.payload;
+      }
+    },
   },
+  
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
@@ -57,5 +63,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout,setToken } = authSlice.actions;
 export default authSlice.reducer;

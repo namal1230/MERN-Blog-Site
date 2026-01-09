@@ -1,24 +1,21 @@
-import { useAuth } from "../context/AuthContext";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../utilities/store/store";
 import axios from "axios";
+import { setToken } from "../utilities/slices/authSlice";
+const useRefreshToken = () => {
+  const dispatch = useDispatch<AppDispatch>();
 
-const useRefreshToken = ()=>{
-     const { setUser } = useAuth();
+  const refresh = async () => {
+    const response = await axios.get(
+      "https://mern-be-production.up.railway.app/customer/refresh-token",
+      { withCredentials: true }
+    );
 
-    const refresh = async ()=>{
-        const response = await axios.get("https://mern-be-production.up.railway.app/customer/refresh-token",{
-            withCredentials:true
-        });
+    dispatch(setToken(response.data.accessToken));
+    return response.data.accessToken;
+  };
 
-        setUser(prev =>
-        prev
-            ? {
-            ...prev,
-            token: response.data.accessToken,
-          }
-        : null);
-        return response.data.accessToken;
-    }
-    return refresh;
-}
+  return refresh;
+};
 
 export default useRefreshToken;

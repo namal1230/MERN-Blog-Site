@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import { useAuth } from "../context/AuthContext";
 import type { AxiosRequestConfig } from "axios";
 import { axiosPrivate } from "../api/axiosPrivate";
 import { useSelector } from "react-redux";
@@ -8,12 +7,12 @@ import type { RootState } from "../utilities/store/store";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
-  const { user } = useAuth();
 
-  const token = useSelector((state: RootState) => state.persistedReducer.token) || "";
+  const token = useSelector((state: RootState) =>  state.auth.user?.token) || "";
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
+      
       (config) => {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -54,7 +53,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [user, refresh]);
+  }, [token, refresh]);
 
   return axiosPrivate;
 };
