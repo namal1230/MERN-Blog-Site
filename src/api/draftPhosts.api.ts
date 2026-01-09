@@ -67,7 +67,7 @@ export const getAllPendingPhost= async (axiosInstance:any,)=>{
 
 export const approvePhosts= async (axiosInstance:any,id:string)=>{
     try{
-        const response = await axiosInstance.get(BASE_URL+"/get-phost?id="+id);
+        const response = await axiosInstance.get(BASE_URL+"/approve-phost?id="+id);
         return response.data;
         
     }catch(err) {

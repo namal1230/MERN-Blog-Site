@@ -3,12 +3,14 @@ import useRefreshToken from "./useRefreshToken";
 import type { AxiosRequestConfig } from "axios";
 import { axiosPrivate } from "../api/axiosPrivate";
 import { useSelector } from "react-redux";
-import type { RootState } from "../utilities/store/store";
+import type { AppDispatch, RootState } from "../utilities/store/store";
 import { logout } from "../utilities/slices/authSlice";
 import { removeAuth } from "../utilities/slices/loginSlice";
+import { useDispatch } from "react-redux";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
+  const dispatch = useDispatch<AppDispatch>();
 
   const token = useSelector((state: RootState) => state.auth.user?.token) || "";
 
@@ -67,7 +69,5 @@ const useAxiosPrivate = () => {
 };
 
 export default useAxiosPrivate;
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
+
 
