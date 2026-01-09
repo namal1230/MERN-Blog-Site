@@ -139,6 +139,17 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
             <SimCardDownloadIcon />
           </IconButton>
         </Tooltip>
+        <Tooltip title="Download PDF" placement="left">
+          <IconButton
+            component="a"
+            href={`https://mern-be-production.up.railway.app/phosts/download-phost?id=${darftIds}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ ml: "auto" }}
+          >
+            <SimCardDownloadIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Report" placement="left">
           <IconButton onClick={handlePrivacyClick} sx={{ ml: "auto" }}>
             <BeenhereIcon />
