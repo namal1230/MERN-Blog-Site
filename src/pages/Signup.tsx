@@ -40,12 +40,8 @@ const Signup: React.FC = () => {
 
     if (!loggedInUser) return;
 
-    setUser(loggedInUser);
-
     const result = await login(loggedInUser);
-   
-    const role = result.user.role;
-    const token = result.token;
+  
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,
@@ -54,13 +50,6 @@ const Signup: React.FC = () => {
       id: loggedInUser.id,
       role: result.user.role,
     }));
-    const userFromApi: User = {
-      id: 123,
-      role: role,
-      token: token,
-    };
-
-    setUserAuth(userFromApi);
   };
 
   const handleGoogleLogin = async () => {
