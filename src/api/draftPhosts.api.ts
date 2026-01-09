@@ -14,7 +14,6 @@ export const getDraftPhost= async (axiosInstance:any,id:string)=>{
     try{
         const response = await axiosInstance.get(BASE_URL+"/get-draft-phost?id="+id);
         return response.data;
-        
     }catch(err) {
         
         throw err;

@@ -34,7 +34,7 @@ const useAxiosPrivate = () => {
         };
 
         if (
-          error?.response?.status === 401 &&
+          error?.response?.status === 401 || error?.response?.status === 403 &&
           !prevRequest?._retry
         ) {
           prevRequest._retry = true;

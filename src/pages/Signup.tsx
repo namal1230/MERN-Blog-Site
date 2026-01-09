@@ -16,7 +16,6 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { login } from "../api/auth.api"
 import { useDispatch } from "react-redux";
 import { setAuth } from "../utilities/slices/loginSlice";
-import { useNavigate } from "react-router-dom";
 import UseAuth from "../context/UseAuth";
 import type { User } from "../types/User";
 export interface users {
@@ -35,7 +34,6 @@ const Signup: React.FC = () => {
   const [emailstate, setemailstate] = useState<boolean>(true);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleGitHubLogin = async () => {
     const loggedInUser = await loginWithGitHub();
@@ -63,11 +61,6 @@ const Signup: React.FC = () => {
     };
 
     setUserAuth(userFromApi);
-    if (result.user.role === "user") {
-      navigate("/home-page");
-    } else if (result.user.role === "admin") {
-      navigate("/admin");
-    }
   };
 
   const handleGoogleLogin = async () => {
@@ -106,11 +99,6 @@ const Signup: React.FC = () => {
       };
 
       setUserAuth(userFromApi);
-      if (role === "user") {
-        navigate("/home-page");
-      } else if (role === "admin") {
-        navigate("/admin");
-      }
     } catch (err) {
       
     }
@@ -140,11 +128,6 @@ const Signup: React.FC = () => {
         token: token,
       };
       setUserAuth(userFromApi);
-      if (role === "user") {
-        navigate("/home-page");
-      } else if (role === "admin") {
-        navigate("/admin");
-      }
     } catch (err) {
       
     }
@@ -182,12 +165,6 @@ const Signup: React.FC = () => {
         token: token,
       };
       setUserAuth(userFromApi);
-
-      if (role === "user") {
-        navigate("/home-page");
-      } else if (role === "admin") {
-        navigate("/admin");
-      }
     } catch (err) {
       handleEmailRegister();
     }
@@ -242,11 +219,6 @@ const Signup: React.FC = () => {
       token: token,
     };
     setUserAuth(userFromApi);
-    if (role === "user") {
-      navigate("/home-page");
-    } else if (role === "admin") {
-      navigate("/admin");
-    }
   };
 
 

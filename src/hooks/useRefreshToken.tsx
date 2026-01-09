@@ -7,7 +7,7 @@ const useRefreshToken = () => {
 
   const refresh = async () => {
     const response = await axios.get(
-      "https://mern-be-production.up.railway.app/customer/refresh-token",
+      "http://localhost:3000/customer/refresh-token",
       { withCredentials: true }
     );
 

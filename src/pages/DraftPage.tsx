@@ -31,6 +31,7 @@ const DraftPage: React.FC = () => {
         const getDrafts = async () => {
             if (!value || !name) return
             const result = await draftPhosts(axiosPrivate, { name, email, value })
+            console.log(result);
             setdraftData(result);
         }
         getDrafts();
