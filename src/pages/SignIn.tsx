@@ -44,11 +44,8 @@ const SignIn: React.FC = () => {
 
     if (!loggedInUser) return;
 
-    // setUser(loggedInUser);
-
     const result = await login(loggedInUser);
-    // const role = result.user.role;
-    // const token = result.token;
+ 
     dispatch(setAuth({
       token: result.token,
       name: loggedInUser.name,
@@ -58,13 +55,6 @@ const SignIn: React.FC = () => {
       role: result.user.role, 
     }));
 
-    // const userFromApi: User = {
-    //   id: 123,
-    //   role: role,
-    //   token: token,
-    // };
-
-    // setUserAuth(userFromApi);
     if (result.user.role === "user") {
       navigate("/home-page");
     } else if (result.user.role === "admin") {
