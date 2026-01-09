@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Button, TextField, Typography, MenuItem, Checkbox, FormControlLabel, Alert } from "@mui/material";
 import { useState } from "react";
 import { reportPhost } from "../api/sendPhosts.api";
 import { useSelector } from "react-redux";
@@ -37,8 +37,12 @@ const ReportContent: React.FC<ReportContentProps> = ({ ids, visibility }) => {
             alert("Please fill all required fields");
             return;
         }
+        try{
         await reportPhost(axiosPrivate, ids, email, form);
-
+        <Alert severity="success">Report Content SuccessFully.</Alert>
+        }catch(err){
+            <Alert severity="error">Report User Issue.</Alert>
+        }
     };
 
     return (
@@ -59,7 +63,6 @@ const ReportContent: React.FC<ReportContentProps> = ({ ids, visibility }) => {
                 boxShadow: 6,
             }}
         >
-            {ids}
             <Typography variant="h5" gutterBottom>
                 Report Content
             </Typography>

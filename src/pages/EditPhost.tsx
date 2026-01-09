@@ -1,4 +1,4 @@
-import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button } from '@mui/material';
+import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button, Alert } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -16,6 +16,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import { useSearchParams } from 'react-router-dom';
 import { editPhost, getDraftPhost } from '../api/draftPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -34,6 +35,7 @@ export interface phost {
 }
 
 const EditPhost: React.FC = () => {
+  const navigate= useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name = useSelector((state: RootState) => state.persistedReducer.name);
@@ -58,7 +60,13 @@ const EditPhost: React.FC = () => {
   const value = params.get("id");
 
   const sendPhostRequest = async () => {
+    try{
     await editPhost(axiosPrivate, value || "", { name:name||"", email, body: lines, code, title });
+    <Alert severity="success">Edit Phost SuccessFully.</Alert>
+      navigate("stories?value=pending")
+    }catch(err){
+      <Alert severity="error">Edit Phost Issue.</Alert>
+    }
   }
 
   useEffect(() => {

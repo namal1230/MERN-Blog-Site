@@ -71,9 +71,7 @@ const PublishedUI: React.FC = () => {
 
   useEffect(() => {
     if (activeLike) {
-      alert("trigger comment reaction")
-
-
+  
       const sendAPI = async () => {
         await sendReaction(axiosPrivate,value || "", liked, "", name, image)
       }

@@ -49,8 +49,12 @@ const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt }
 
   const approvePhost = async () => {
     if (!darftIds) return
+    try{
    await approvePhosts(axiosPrivate, darftIds)
-    
+    }catch(err){
+      console.log(err);
+      
+    }
   }
 
   const rejectPhost = async () => {

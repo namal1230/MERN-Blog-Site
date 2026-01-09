@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button } from '@mui/material';
+import { Box, AppBar, Stack, Toolbar, Typography, IconButton, Badge, Menu, MenuItem, Input, TextField, Avatar, Button, Alert } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CodeIcon from "@mui/icons-material/Code";
 import CropOriginalIcon from "@mui/icons-material/CropOriginal";
@@ -14,6 +14,7 @@ import Editor from "@monaco-editor/react";
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import { sendPhosts } from '../api/sendPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -32,6 +33,7 @@ export interface phost {
 }
 
 const NewStory: React.FC = () => {
+  const navigate =  useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
@@ -53,7 +55,13 @@ const NewStory: React.FC = () => {
   const LINE_HEIGHT = 60;
 
   const sendPhostRequest = async () => {
+    try{
     await sendPhosts(axiosPrivate, { name, email, body: lines, code, title });
+    <Alert severity="success">Phost Save SuccessFully.</Alert>
+    }catch(err){
+      <Alert severity="error">Phost Save Issue.</Alert>
+    }
+    navigate("/stories?value=pending");
   }
 
   React.useEffect(() => {

@@ -7,7 +7,8 @@ import {
   Typography,
   Tooltip,
   Menu,
-  MenuItem
+  MenuItem,
+  Alert
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState, useEffect } from "react";
@@ -57,9 +58,12 @@ const DraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, statu
 
   const deletePhosts = async () => {
     if (!darftIds) return;
-
+    try{
      await deletePhost(axiosPrivate, darftIds);
-
+     <Alert severity="success">Delete Phost SuccessFully.</Alert>
+    }catch(err){
+      <Alert severity="error">Delete Phost Issue.</Alert>
+    }
   }
 
   return (

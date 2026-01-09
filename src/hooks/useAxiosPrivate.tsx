@@ -4,15 +4,17 @@ import type { AxiosRequestConfig } from "axios";
 import { axiosPrivate } from "../api/axiosPrivate";
 import { useSelector } from "react-redux";
 import type { RootState } from "../utilities/store/store";
+import { logout } from "../utilities/slices/authSlice";
+import { removeAuth } from "../utilities/slices/loginSlice";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
 
-  const token = useSelector((state: RootState) =>  state.auth.user?.token) || "";
+  const token = useSelector((state: RootState) => state.auth.user?.token) || "";
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
-      
+
       (config) => {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -34,15 +36,21 @@ const useAxiosPrivate = () => {
           !prevRequest?._retry
         ) {
           prevRequest._retry = true;
+          try {
+            const newAccessToken = await refresh();
 
-          const newAccessToken = await refresh();
+            prevRequest.headers = {
+              ...prevRequest.headers,
+              Authorization: `Bearer ${newAccessToken}`,
+            };
 
-          prevRequest.headers = {
-            ...prevRequest.headers,
-            Authorization: `Bearer ${newAccessToken}`,
-          };
-
-          return axiosPrivate(prevRequest);
+            return axiosPrivate(prevRequest);
+          } catch (refreshError) {
+            dispatch(logout());
+            dispatch(removeAuth());
+            window.location.href = "/";
+            return Promise.reject(refreshError);
+          }
         }
 
         return Promise.reject(error);
@@ -59,3 +67,7 @@ const useAxiosPrivate = () => {
 };
 
 export default useAxiosPrivate;
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}
+
