@@ -133,13 +133,13 @@ const UserProfile: React.FC = () => {
         </Box>
 
         <Stack direction="row" justifyContent="center" sx={{ pl: 9 }} spacing={1} mt={1}>
-          {form.githubUrl != "" ? <IconButton component="a" href={form.githubUrl}>
+          {form.githubUrl != "" ? <IconButton component="a" href={"/"+form.githubUrl}>
             <GitHubIcon />
           </IconButton> : <h1></h1>}
-          {form.linkdinUrl != "" ? <IconButton component="a" href={form.linkdinUrl}>
+          {form.linkdinUrl != "" ? <IconButton component="a" href={"/"+form.linkdinUrl}>
             <LinkedInIcon />
           </IconButton> : <h1></h1>}
-          {form.anotherUrl != "" ? <IconButton component="a" href={form.anotherUrl}>
+          {form.anotherUrl != "" ? <IconButton component="a" href={"/"+form.anotherUrl}>
             <LanguageIcon />
           </IconButton> : <h1></h1>}
         </Stack>
