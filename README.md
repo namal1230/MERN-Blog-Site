@@ -1,11 +1,11 @@
 Smart Blog for Developers
-
+---------------------------------------------------------------------------------------------------------------------------------------------
 Live Demo: https://smart-blog-dev.vercel.app/
 
 A modern, interactive blog platform tailored for developers, built with React, Redux, and Firebase. This app provides a rich user experience with authentication, dynamic content, charts, and more.
----------------------------------------------------------------------------------------------------------------------------------------------
-Table of Contents
 
+Table of Contents
+---------------------------------------------------------------------------------------------------------------------------------------------
 Features
 
 Technologies Used
@@ -19,9 +19,9 @@ Architecture
 Setup & Installation
 
 Deployment
------------------------------------------------------------------------------------------------------------------------------------------------
-Features
 
+Features
+---------------------------------------------------------------------------------------------------------------------------------------------
 Firebase Authentication
 
 Login and signup using Google, Facebook, GitHub, or Email.
@@ -41,9 +41,9 @@ Axios interceptors for token handling and request security.
 Protected Routes
 
 AuthGuard to restrict access to authorized users only.
-------------------------------------------------------------------------------------------------------------------------------------------------
-Technologies Used
 
+Technologies Used
+---------------------------------------------------------------------------------------------------------------------------------------------
 Frontend: React, Redux, Redux Persist, Axios
 
 Authentication & Security: Firebase Auth, Axios Interceptors, PersistGate
@@ -53,9 +53,9 @@ UI & Styling: Material-UI (MUI), MUI Icons
 Charts & Visualization: Chart.js
 
 Deployment: Vercel
--------------------------------------------------------------------------------------------------------------------------------------------
-Security & State Management
 
+Security & State Management
+---------------------------------------------------------------------------------------------------------------------------------------------
 Axios Interceptor – Automatically attaches auth tokens to API requests.
 
 AuthGuard – Protects routes from unauthorized access.
@@ -63,13 +63,13 @@ AuthGuard – Protects routes from unauthorized access.
 Redux Persist – Persists state across browser reloads.
 
 Bootstrap Auth – Ensures proper initialization of authentication before rendering the app.
----------------------------------------------------------------------------------------------------------------------------------------------
+
 UI & Styling
-
+---------------------------------------------------------------------------------------------------------------------------------------------
 The app is styled using Material-UI (MUI) for a modern and responsive design. Icons are implemented using @mui/icons-material.
-----------------------------------------------------------------------------------------------------------------------------------------------
-Architecture
 
+Architecture
+---------------------------------------------------------------------------------------------------------------------------------------------
 The project wraps the entire application with providers to handle state and authentication:
 
 <AuthProvider isSignedIn={false}>
@@ -93,9 +93,9 @@ PersistGate – Handles Redux state persistence.
 AuthBootstrap – Initializes authentication before rendering routes.
 
 RouterProvider – Handles app routing.
-------------------------------------------------------------------------------------------------------------------------------------------
-Setup & Installation
 
+Setup & Installation
+---------------------------------------------------------------------------------------------------------------------------------------------
 Clone the repository:
 
 git clone <repo-url>
@@ -112,12 +112,12 @@ Create a .env file and add your Firebase credentials and Unsplash API key.
 Start the development server:
 
 npm start
-----------------------------------------------------------------------------------------------------------------------------------------------
-Deployment
 
+Deployment
+---------------------------------------------------------------------------------------------------------------------------------------------
 The project is deployed on Vercel:
 https://smart-blog-dev.vercel.app/
-----------------------------------------------------------------------------------------------------------------------------------------------
-License
 
+License
+---------------------------------------------------------------------------------------------------------------------------------------------
 This project is open-source and available under the MIT License.
