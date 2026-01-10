@@ -83,7 +83,7 @@ const EditPhost: React.FC = () => {
     try {
       await editPhost(axiosPrivate, value || "", { name: name || "", email, body: lines, code, title });
       alert("Edit Phost Success")
-      navigate("stories")
+      navigate("/stories")
     } catch (err) {
        alert("Phost Not Edited")
     }
