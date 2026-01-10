@@ -35,7 +35,7 @@ const PostUI: React.FC = () => {
 
     let result;
     const getDrafts = async () => {
-      if (review == "draft") {
+      if (review == "pending") {
         result = await getDraftPhost(axiosPrivate, value);
         setTitle(result.title);
         setLines(result.body);
