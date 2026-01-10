@@ -89,7 +89,6 @@ const EditUserInfo: React.FC = () => {
 
             await saveInfo(axiosPrivate, payload);
             alert("User info saved!");
-            navigate("/")
         } catch (error) {
             alert("Failed to save user info.");
         }
