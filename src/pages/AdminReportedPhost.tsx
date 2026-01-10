@@ -52,7 +52,13 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
     const rejectPhost = async () => {
         if (!darftIds) return
-        await rejectPhosts(axiosPrivate, darftIds)
+        try {
+            await rejectPhosts(axiosPrivate, darftIds)
+            alert("Phost Rejected Succefully")
+        } catch (err) {
+            alert("Phost Not Rejected")
+
+        }
     }
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -67,8 +73,13 @@ const AdminReportedPhost: React.FC<propTypes> = ({ draftId, image, title, create
 
     const deleteReports = async () => {
         if (!darftIds) return;
-
+        try{
         await deleteReport(axiosPrivate, darftIds);
+        alert("Phost Deleted SuccessFully")
+        }catch (err) {
+            alert("Phost Not Deleted")
+
+        }
 
     }
 
