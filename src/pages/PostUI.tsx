@@ -9,7 +9,7 @@ import {
   Stack,
   Divider
 } from '@mui/material';
-import { getDraftPhost, getReportedPhost } from '../api/draftPhosts.api';
+import { getDraftPhost, getReportedPhost, approvePhosts } from '../api/draftPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 type Format = "IMG" | "TEXT" | "VIDEO" | "EMBED" | "UNSPLASH";
@@ -49,7 +49,14 @@ const PostUI: React.FC = () => {
         setCode(result.code || "");
         setCreatedAt(result.createdAt);
         setStatus(result.status);
-      } 
+      } else {
+        result = await approvePhosts(axiosPrivate, value);
+        setTitle(result.data.title);
+        setLines(result.data.body);
+        setCode(result.data.code || "");
+        setCreatedAt(result.data.createdAt);
+        setStatus(result.data.status);
+      }
 
     };
 
