@@ -107,7 +107,7 @@ const DraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, statu
       >
         <MenuItem onClick={() => navigate(`/edit-post-page?id=${darftIds}`)}>Edit</MenuItem>
         <MenuItem onClick={() => deletePhosts()}>Delete</MenuItem>
-        <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}`)}>Preview</MenuItem>
+        <MenuItem onClick={() => navigate(`/post-page?id=${darftIds}&status=pending`)}>Preview</MenuItem>
       </Menu>
     </Card>
   );
