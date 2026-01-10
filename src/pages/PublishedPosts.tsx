@@ -18,8 +18,6 @@ import ReportContent from "./ReportContent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import PersonIcon from '@mui/icons-material/Person';
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-
 interface propTypes {
   draftId: string;
   image: string | null | undefined;

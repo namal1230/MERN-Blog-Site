@@ -4,7 +4,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import CodeIcon from "@mui/icons-material/Code";
 import CropOriginalIcon from "@mui/icons-material/CropOriginal";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../utilities/store/store';
 import { useState, useRef, useEffect } from 'react';
 import { Tooltip } from '@mui/material';
@@ -19,6 +19,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../firebase/auth';
 import { removeAuth } from '../utilities/slices/loginSlice';
+import { UseDispatch } from 'react-redux';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -37,6 +38,7 @@ export interface phost {
 }
 
 const EditPhost: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
@@ -538,7 +540,3 @@ const EditPhost: React.FC = () => {
 }
 
 export default EditPhost;
-
-function dispatch(arg0: any) {
-  throw new Error('Function not implemented.');
-}
