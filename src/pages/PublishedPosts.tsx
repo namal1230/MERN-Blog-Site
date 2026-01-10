@@ -14,7 +14,6 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import { downloadsPDF } from "../api/sendPhosts.api";
 import ReportContent from "./ReportContent";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -33,7 +32,6 @@ interface propTypes {
 }
 
 const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt, name, like, comment }) => {
-  const axiosPrivate = useAxiosPrivate();
   const [anchorsEl, setAnchorsEl] = useState<null | HTMLElement>(null);
 
   const [visible, setvisible] = useState<boolean>(false);
