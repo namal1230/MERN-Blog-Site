@@ -58,28 +58,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
     setnames(name);
   }, []);
 
-  const downloadPdf = async () => {
-    try {
-      const response = await downloadsPDF(axiosPrivate, darftIds);
-
-      const url = window.URL.createObjectURL(
-        new Blob([response], { type: "application/pdf" })
-      );
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${titles}.pdf`;
-
-      document.body.appendChild(link);
-      link.click();
-
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-
-    }
-  }
-
   const handlePrivacyClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorsEl(event.currentTarget);
   };

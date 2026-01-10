@@ -80,10 +80,10 @@ const EditPhost: React.FC = () => {
   const sendPhostRequest = async () => {
     try {
       await editPhost(axiosPrivate, value || "", { name: name || "", email, body: lines, code, title });
-      <Alert severity="success">Edit Phost SuccessFully.</Alert>
+      alert("Edit Phost Success")
       navigate("stories?value=pending")
     } catch (err) {
-      <Alert severity="error">Edit Phost Issue.</Alert>
+       alert("Phost Not Edited")
     }
   }
 
