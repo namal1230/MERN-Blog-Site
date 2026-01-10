@@ -22,7 +22,7 @@ const PersistLogin = ({ children }: ProtectedRouteProps) => {
                 console.error(err);
             }
             finally {
-                setIsLoading(false);
+                setIsLoading(true);
             }
         }
 
