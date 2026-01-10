@@ -31,6 +31,17 @@ export const getReportedPhost= async (axiosInstance:any,id:string)=>{
     }
 }
 
+export const getPhost= async (axiosInstance:any,id:string)=>{
+    try{
+        const response = await axiosInstance.get(BASE_URL+"/get-phost?id="+id);
+        return response.data;
+        
+    }catch(err) {
+        
+        throw err;
+    }
+}
+
 export const deletePhost= async (axiosInstance:any,id:string)=>{
     try{
         const response = await axiosInstance.delete(BASE_URL+"/delete-phost?id="+id);
