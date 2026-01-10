@@ -19,7 +19,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../firebase/auth';
 import { removeAuth } from '../utilities/slices/loginSlice';
-import { UseDispatch } from 'react-redux';
+
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
