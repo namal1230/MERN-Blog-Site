@@ -51,16 +51,22 @@ const AdminDraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt }
     if (!darftIds) return
     try{
    await approvePhosts(axiosPrivate, darftIds)
+   alert("Phost Published Successfully")
     }catch(err){
-      console.log(err);
+      alert("Phost Not Published")
       
     }
   }
 
   const rejectPhost = async () => {
     if (!darftIds) return
+    try{
     await rejectPhosts(axiosPrivate, darftIds)
-    
+    alert("Phost Rejected Failed")
+   }catch(err){
+      alert("Phost Not Rejected")
+      
+    }
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
