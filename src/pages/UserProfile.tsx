@@ -38,9 +38,9 @@ const UserProfile: React.FC = () => {
     if (names && currentUser) {
       try{
       await followUser(axiosPrivate, names, currentUser);
-      <Alert severity="success">Now You Following this user</Alert>
+      alert("You are now Followed this User.");
       }catch(err){
-        <Alert severity="error">User Following Issue.</Alert>
+        alert("User Followed Failed.");
       }
     }
   }
@@ -133,13 +133,13 @@ const UserProfile: React.FC = () => {
         </Box>
 
         <Stack direction="row" justifyContent="center" sx={{ pl: 9 }} spacing={1} mt={1}>
-          {form.githubUrl != "" ? <IconButton component="a" href={form.githubUrl} target="_blank">
+          {form.githubUrl != "" ? <IconButton component="a" href={form.githubUrl}>
             <GitHubIcon />
           </IconButton> : <h1></h1>}
-          {form.linkdinUrl != "" ? <IconButton component="a" href={form.linkdinUrl} target="_blank">
+          {form.linkdinUrl != "" ? <IconButton component="a" href={form.linkdinUrl}>
             <LinkedInIcon />
           </IconButton> : <h1></h1>}
-          {form.anotherUrl != "" ? <IconButton component="a" href={form.anotherUrl} target="_blank">
+          {form.anotherUrl != "" ? <IconButton component="a" href={form.anotherUrl}>
             <LanguageIcon />
           </IconButton> : <h1></h1>}
         </Stack>

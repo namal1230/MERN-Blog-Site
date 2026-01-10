@@ -60,9 +60,9 @@ const DraftBox: React.FC<propTypes> = ({ draftId, image, title, createdAt, statu
     if (!darftIds) return;
     try{
      await deletePhost(axiosPrivate, darftIds);
-     <Alert severity="success">Delete Phost SuccessFully.</Alert>
+     alert("Phost Deleted Successfully.")
     }catch(err){
-      <Alert severity="error">Delete Phost Issue.</Alert>
+      alert("Phost Not Deleted.")
     }
   }
 

@@ -17,6 +17,8 @@ import { useSearchParams } from 'react-router-dom';
 import { editPhost, getDraftPhost } from '../api/draftPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../firebase/auth';
+import { removeAuth } from '../utilities/slices/loginSlice';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -35,7 +37,7 @@ export interface phost {
 }
 
 const EditPhost: React.FC = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name = useSelector((state: RootState) => state.persistedReducer.name);
@@ -56,15 +58,31 @@ const EditPhost: React.FC = () => {
   const [activeLine, setActiveLine] = useState<number | 'title'>(0.1);
   const LINE_HEIGHT = 60;
 
+  const handleEditProfile = () => {
+    navigate("/edit-profile");
+    setAnchorEl(null);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      setAnchorEl(null);
+      dispatch(removeAuth());
+      navigate("/");
+    } catch (error) {
+      alert("Sign out issue.")
+    }
+  };
+
   const [params] = useSearchParams();
   const value = params.get("id");
 
   const sendPhostRequest = async () => {
-    try{
-    await editPhost(axiosPrivate, value || "", { name:name||"", email, body: lines, code, title });
-    <Alert severity="success">Edit Phost SuccessFully.</Alert>
+    try {
+      await editPhost(axiosPrivate, value || "", { name: name || "", email, body: lines, code, title });
+      <Alert severity="success">Edit Phost SuccessFully.</Alert>
       navigate("stories?value=pending")
-    }catch(err){
+    } catch (err) {
       <Alert severity="error">Edit Phost Issue.</Alert>
     }
   }
@@ -512,11 +530,15 @@ const EditPhost: React.FC = () => {
         </div>
       </div>}
       <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={handleMenuClose}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
       </Menu>
     </Box>
   );
 }
 
 export default EditPhost;
+
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}

@@ -15,6 +15,9 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import { sendPhosts } from '../api/sendPhosts.api';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../firebase/auth';
+import { removeAuth } from '../utilities/slices/loginSlice';
 export const LANGUAGES = [
   { label: "JavaScript", value: "javascript" },
   { label: "TypeScript", value: "typescript" },
@@ -33,12 +36,12 @@ export interface phost {
 }
 
 const NewStory: React.FC = () => {
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const image = useSelector((state: RootState) => state.persistedReducer.profile);
   const name: string = useSelector((state: RootState) => state.persistedReducer.name) || "";
   const email = useSelector((state: RootState) => state.persistedReducer.email);
-
+  const dispatch = useDispatch();
   const [postUIState, setpostUIState] = useState(false)
   const [title, setTitle] = useState<string>("");
   const [codeState, setcodeState] = useState(false);
@@ -54,18 +57,33 @@ const NewStory: React.FC = () => {
   const [activeLine, setActiveLine] = useState<number | 'title'>(0.1);
   const LINE_HEIGHT = 60;
 
+  const handleEditProfile = () => {
+    navigate("/edit-profile");
+    setAnchorEl(null);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      setAnchorEl(null);
+      dispatch(removeAuth());
+      navigate("/");
+    } catch (error) {
+      alert("Sign out issue.")
+    }
+  };
   const sendPhostRequest = async () => {
-    try{
-    await sendPhosts(axiosPrivate, { name, email, body: lines, code, title });
-    <Alert severity="success">Phost Save SuccessFully.</Alert>
-    }catch(err){
+    try {
+      await sendPhosts(axiosPrivate, { name, email, body: lines, code, title });
+      <Alert severity="success">Phost Save SuccessFully.</Alert>
+    } catch (err) {
       <Alert severity="error">Phost Save Issue.</Alert>
     }
     navigate("/stories?value=pending");
   }
 
   React.useEffect(() => {
-   
+
 
     if (lines[lines.length - 1].type === "IMG" || lines[lines.length - 1].type === "VEDIO") {
       const last = lines[lines.length - 1];
@@ -84,7 +102,7 @@ const NewStory: React.FC = () => {
         const res = await fileTransfer(axiosPrivate, { file: selectedFile });
         attachImage(res.url);
       } catch (err) {
-        
+
       }
     };
     upload();
@@ -485,8 +503,8 @@ const NewStory: React.FC = () => {
         </div>
       </div>}
       <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={handleMenuClose}>
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={handleEditProfile}>Edit Profile</MenuItem>
+        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
       </Menu>
     </Box>
   );

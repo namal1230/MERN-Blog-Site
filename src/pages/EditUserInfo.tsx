@@ -4,6 +4,8 @@ import { saveInfo, getInfo } from "../api/user.api";
 import type { RootState } from "../utilities/store/store";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
+
 export interface User {
     name: string;
     email: string;
@@ -19,6 +21,7 @@ export interface User {
 
 
 const EditUserInfo: React.FC = () => {
+    const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const [form, setForm] = useState<User>({
         name: "",
@@ -86,6 +89,7 @@ const EditUserInfo: React.FC = () => {
 
             await saveInfo(axiosPrivate, payload);
             alert("User info saved!");
+            navigate("/")
         } catch (error) {
             alert("Failed to save user info.");
         }
@@ -214,7 +218,7 @@ const EditUserInfo: React.FC = () => {
                 </Box>
 
                 <Stack direction="row" spacing={2} mt={4} justifyContent="flex-end">
-                    <Button variant="outlined">Cancel</Button>
+                    <Button variant="outlined" onClick={()=>navigate("/")}>Cancel</Button>
                     <Button variant="contained" onClick={handleSubmit}>
                         Save Changes
                     </Button>

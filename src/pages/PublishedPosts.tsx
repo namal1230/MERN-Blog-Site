@@ -134,11 +134,6 @@ const PublishedPosts: React.FC<propTypes> = ({ draftId, image, title, createdAt,
             <PersonIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Download pdf" placement="left">
-          <IconButton onClick={downloadPdf} sx={{ ml: "auto" }}>
-            <SimCardDownloadIcon />
-          </IconButton>
-        </Tooltip>
         <Tooltip title="Download PDF" placement="left">
           <IconButton
             component="a"

@@ -51,7 +51,7 @@ const ReportContent: React.FC<ReportContentProps> = ({ ids, visibility }) => {
                 zIndex: 10,
                 backgroundColor: "white",
                 width: "50%",
-                minHeight: "60%",
+                height: "90%",
                 position: "absolute",
                 top: 0,
                 bottom: 0,
