@@ -1,73 +1,123 @@
-# React + TypeScript + Vite
+Smart Blog for Developers
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live Demo: https://smart-blog-dev.vercel.app/
 
-Currently, two official plugins are available:
+A modern, interactive blog platform tailored for developers, built with React, Redux, and Firebase. This app provides a rich user experience with authentication, dynamic content, charts, and more.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Table of Contents
 
-## React Compiler
+Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Technologies Used
 
-## Expanding the ESLint configuration
+Security & State Management
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+UI & Styling
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Architecture
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Setup & Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Deployment
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Firebase Authentication
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Login and signup using Google, Facebook, GitHub, or Email.
+
+Dynamic Unsplash Images
+
+Fetch and display developer-related images using the Unsplash API.
+
+Charts with Chart.js
+
+Visualize blog statistics, such as views or likes.
+
+Secure API Requests
+
+Axios interceptors for token handling and request security.
+
+Protected Routes
+
+AuthGuard to restrict access to authorized users only.
+
+Technologies Used
+
+Frontend: React, Redux, Redux Persist, Axios
+
+Authentication & Security: Firebase Auth, Axios Interceptors, PersistGate
+
+UI & Styling: Material-UI (MUI), MUI Icons
+
+Charts & Visualization: Chart.js
+
+Deployment: Vercel
+
+Security & State Management
+
+Axios Interceptor – Automatically attaches auth tokens to API requests.
+
+AuthGuard – Protects routes from unauthorized access.
+
+Redux Persist – Persists state across browser reloads.
+
+Bootstrap Auth – Ensures proper initialization of authentication before rendering the app.
+
+UI & Styling
+
+The app is styled using Material-UI (MUI) for a modern and responsive design. Icons are implemented using @mui/icons-material.
+
+Architecture
+
+The project wraps the entire application with providers to handle state and authentication:
+
+<AuthProvider isSignedIn={false}>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <AuthBootstrap>
+        <RouterProvider router={routes} />
+        <App />
+      </AuthBootstrap>
+    </PersistGate>
+  </Provider>
+</AuthProvider>
+
+
+AuthProvider – Manages authentication state.
+
+Provider – Redux store provider.
+
+PersistGate – Handles Redux state persistence.
+
+AuthBootstrap – Initializes authentication before rendering routes.
+
+RouterProvider – Handles app routing.
+
+Setup & Installation
+
+Clone the repository:
+
+git clone <repo-url>
+cd smart-blog-for-developers
+
+
+Install dependencies:
+
+npm install
+
+
+Create a .env file and add your Firebase credentials and Unsplash API key.
+
+Start the development server:
+
+npm start
+
+Deployment
+
+The project is deployed on Vercel:
+https://smart-blog-dev.vercel.app/
+
+License
+
+This project is open-source and available under the MIT License.
