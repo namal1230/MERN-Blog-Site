@@ -64,18 +64,17 @@ const UserProfile: React.FC = () => {
 
     const getInfo = async () => {
       const response = await getInfobyName(axiosPrivate, names);
-     
 
       setForm({
         name: response.user.name,
         email: response.user.email,
         bio: response.user.bio,
         experienceYears: response.user.experienceYears,
-        portfolioUrl: response.user.portfolioUrl,
-        anotherUrl: response.user.anotherUrl,
-        githubUrl: response.user.githubUrl,
+        portfolioUrl: response.user.portfolioUrl.startsWith("/") ? response.user.portfolioUrl.slice(1) : response.user.portfolioUrl,
+        anotherUrl: response.user.anotherUrl.startsWith("/") ? response.user.anotherUrl.slice(1) : response.user.anotherUrl,
+        githubUrl: response.user.githubUrl.startsWith("/") ? response.user.githubUrl.slice(1) : response.user.githubUrl,
         jobTitle: response.user.jobTitle,
-        linkdinUrl: response.user.linkdinUrl,
+        linkdinUrl: response.user.linkdinUrl.startsWith("/") ? response.user.linkdinUrl.slice(1) : response.user.linkdinUrl,
         skills: response.user.skills,
       });
       setprofile(response.user.profileUrl);
