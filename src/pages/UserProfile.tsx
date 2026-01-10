@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Avatar, Box, Button, CardContent, Chip, Divider, Grid, IconButton, Stack, Typography, } from "@mui/material";
+import { Avatar, Box, Button, CardContent, Chip, Divider, Grid, IconButton, Stack, Typography, } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import LanguageIcon from "@mui/icons-material/Language";
