@@ -131,15 +131,14 @@ const UserProfile: React.FC = () => {
         <Box sx={{ pl: 0 }}>
           <Button sx={{ color: "white", backgroundColor: "#1976D2", mt: 2 }} onClick={followUsers}>Follow</Button>
         </Box>
-
         <Stack direction="row" justifyContent="center" sx={{ pl: 9 }} spacing={1} mt={1}>
-          {form.githubUrl != "" ? <IconButton component="a" href={"/"+form.githubUrl}>
+          {form.githubUrl != "" ? <IconButton component="a" href={form.githubUrl} target="_blank" rel="noopener noreferrer">
             <GitHubIcon />
           </IconButton> : <h1></h1>}
-          {form.linkdinUrl != "" ? <IconButton component="a" href={"/"+form.linkdinUrl}>
+          {form.linkdinUrl != "" ? <IconButton component="a" href={form.linkdinUrl} target="_blank" rel="noopener noreferrer">
             <LinkedInIcon />
           </IconButton> : <h1></h1>}
-          {form.anotherUrl != "" ? <IconButton component="a" href={"/"+form.anotherUrl}>
+          {form.anotherUrl != "" ? <IconButton component="a" href={form.anotherUrl} target="_blank" rel="noopener noreferrer">
             <LanguageIcon />
           </IconButton> : <h1></h1>}
         </Stack>
