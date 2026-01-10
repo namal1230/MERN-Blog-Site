@@ -4,41 +4,41 @@ import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 type ProtectedRouteProps = PropsWithChildren;
 
-const PersistLogin = ({children}:ProtectedRouteProps)=>{
+const PersistLogin = ({ children }: ProtectedRouteProps) => {
 
 
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
     const { user } = useAuth();
 
-    useEffect(()=>{
-        const verifyRefreshToken = async ()=>{
-            try{
-                 if (!user?.token) {
-          await refresh();
-        }
+    useEffect(() => {
+        const verifyRefreshToken = async () => {
+            try {
+                if (!user?.token) {
+                    await refresh();
+                }
             }
-            catch(err){
+            catch (err) {
                 console.error(err);
             }
-            finally{
-                setIsLoading(false);
+            finally {
+                setIsLoading(true);
             }
         }
 
-         verifyRefreshToken();
-    },[refresh, user?.token])
+        verifyRefreshToken();
+    }, [refresh, user?.token])
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
-     if (!user?.token) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+    if (!user?.token) {
+        return <Navigate to="/unauthorized" replace />;
+    }
 
-     return <>{children}</>;
-    
+    return <>{children}</>;
+
 }
 
 export default PersistLogin;
