@@ -4,6 +4,26 @@ Live Demo: https://smart-blog-dev.vercel.app/
 
 A modern, interactive blog platform tailored for developers, built with React, Redux, and Firebase. This app provides a rich user experience with authentication, dynamic content, charts, and more.
 
+Images
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+<img width="1072" height="844" alt="Screenshot 2026-01-15 220820" src="https://github.com/user-attachments/assets/ab4ac7d1-d975-41ec-98ce-e93a4ced2de3" />
+<img width="1075" height="1341" alt="Screenshot 2026-01-15 221148" src="https://github.com/user-attachments/assets/d4376e09-a762-478c-97bd-470f3b6a2b49" />
+<img width="1080" height="1195" alt="Screenshot 2026-01-15 221220" src="https://github.com/user-attachments/assets/e970ffb7-7526-41ab-a8d9-7abde6747533" />
+<img width="1051" height="1269" alt="Screenshot 2026-01-15 221304" src="https://github.com/user-attachments/assets/84b80c7b-0230-4cfc-b934-4b12c3771766" />
+<img width="1081" height="601" alt="Screenshot 2026-01-15 221351" src="https://github.com/user-attachments/assets/261f63c7-b5a3-45ac-9b3f-36f6db265e05" />
+<img width="1311" height="556" alt="Screenshot 2026-01-15 221453" src="https://github.com/user-attachments/assets/ead12c9b-8cbe-4808-b253-0f76bd6aa515" />
+<img width="1331" height="551" alt="Screenshot 2026-01-15 221559" src="https://github.com/user-attachments/assets/ffa6b4bf-69c3-4194-bc20-4f3abeb3166e" />
+<img width="1366" height="587" alt="Screenshot 2026-01-15 221617" src="https://github.com/user-attachments/assets/49c829ef-39b4-49d1-b84c-6f40c57cb1de" />
+<img width="1289" height="574" alt="Screenshot 2026-01-15 221813" src="https://github.com/user-attachments/assets/b1be67f5-2993-46fd-9b88-18e6355f8992" />
+<img width="1074" height="535" alt="Screenshot 2026-01-15 222008" src="https://github.com/user-attachments/assets/3c62c233-999e-468d-9fbb-4b35057579b1" />
+
+
+
+
+
+
 Table of Contents
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Features
